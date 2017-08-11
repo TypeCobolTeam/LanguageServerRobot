@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="7090db91-f95c-4707-9580-064df4b96fb7" name="RunClientMode" linkedPackageId="dd6c0f0f-1336-4cb6-9121-8fae68058384" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="13f9c6be-e057-4ad3-9c58-54f7c10e8bb5">
+      <profileInstance Id="6e477729-2664-42e4-991b-72df4561141a" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="57ce9720-8861-46c6-b79c-76884cda5fe9">
+      <profileInstance Id="aea361e7-7809-47bc-b72c-d93fafa46004" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <interaction Id="1db0cdf3-c8b4-4aae-98a8-82ee4f8d98ea" name="RunClientMode" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
+        <elementDefinition Id="1532df85-6ced-4884-9b4b-b03ca3aefd61" />
+        <lifelines>
+          <lifeline Id="7234f182-8188-45af-824b-122f7efe723c" name="TypeCobol.LanguageClient" isActor="false" lifelineDisplayName="TypeCobol.LanguageClient">
+            <elementDefinition Id="e4623fd5-9865-489b-9900-b858b93cca03" />
+          </lifeline>
+          <lifeline Id="3f56b6da-1baf-41a9-b5b5-14bf8083d046" name="LanguageServerRobot" isActor="false" lifelineDisplayName="LanguageServerRobot">
+            <elementDefinition Id="f7ced857-d63d-440a-bbaa-cc2ff734ffa9" />
+          </lifeline>
+          <lifeline Id="fcbd055e-e8e0-41d2-9360-c7c2bff34f56" name="TypeCobol.LanguageServer" isActor="false" lifelineDisplayName="TypeCobol.LanguageServer">
+            <elementDefinition Id="6160eb6f-3b62-45f5-9dd2-1bdcb43ae4c3" />
+          </lifeline>
+        </lifelines>
+      </interaction>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="dd6c0f0f-1336-4cb6-9121-8fae68058384" name="LanguageServerRobot">
+    <elementDefinition Id="87eac8a8-8edd-4f12-bef6-349f2c0052f8" />
+  </package>
+</SequenceDesignerModel>

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sequenceDesignerDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="RunClientMode">
+  <SequenceDesignerModelMoniker Id="7090db91-f95c-4707-9580-064df4b96fb7" />
+  <nestedChildShapes>
+    <lifelineShape Id="f6a61b2f-6068-44d0-8f9e-cd67b306d70f" absoluteBounds="1.3541666269302368, 1, 0.15, 3.197916666666667" visible="true" visualStyleMode="Modified">
+      <lifelineMoniker Id="7234f182-8188-45af-824b-122f7efe723c" LastKnownName="TypeCobol.LanguageClient" />
+      <relativeChildShapes>
+        <umlLifelineHeadShape Id="2c806711-133d-4edd-8285-2dab8ec0b52f" absoluteBounds="0.53988751888275144, 0.6, 1.7785582160949707, 0.4" customColor="White" visualStyleMode="Modified">
+          <lifelineMoniker Id="7234f182-8188-45af-824b-122f7efe723c" LastKnownName="TypeCobol.LanguageClient" />
+          <relativeChildShapes />
+        </umlLifelineHeadShape>
+        <lifelineHoverShape Id="aba86e7c-6ad5-4844-bdfe-5f865d8b7844" absoluteBounds="1.3541666269302368, 1, 0, 3.25">
+          <lifelineMoniker Id="7234f182-8188-45af-824b-122f7efe723c" LastKnownName="TypeCobol.LanguageClient" />
+        </lifelineHoverShape>
+      </relativeChildShapes>
+    </lifelineShape>
+    <lifelineShape Id="43814792-c95b-494d-a1f2-b18f8305f02e" absoluteBounds="3.8124999205271397, 1, 0.15, 3.2395833333333348" visible="true" visualStyleMode="Modified">
+      <lifelineMoniker Id="3f56b6da-1baf-41a9-b5b5-14bf8083d046" LastKnownName="LanguageServerRobot" />
+      <relativeChildShapes>
+        <umlLifelineHeadShape Id="5c1258d3-4fc9-4b58-ab66-b7d072ab6da0" absoluteBounds="3.1243872753779085, 0.6, 1.5262252902984619, 0.4" customColor="White" visualStyleMode="Modified">
+          <lifelineMoniker Id="3f56b6da-1baf-41a9-b5b5-14bf8083d046" LastKnownName="LanguageServerRobot" />
+          <relativeChildShapes />
+        </umlLifelineHeadShape>
+        <lifelineHoverShape Id="cc4da115-99aa-46d6-adb9-fe38b85c1d1a" absoluteBounds="3.8124999205271397, 1, 0, 3.25">
+          <lifelineMoniker Id="3f56b6da-1baf-41a9-b5b5-14bf8083d046" LastKnownName="LanguageServerRobot" />
+        </lifelineHoverShape>
+      </relativeChildShapes>
+    </lifelineShape>
+    <lifelineShape Id="54f49905-a677-4e1b-88b7-f17ae2b4ef09" absoluteBounds="6.3333334922790527, 1, 0.15, 3.3020833333333339" visible="true" visualStyleMode="Modified">
+      <lifelineMoniker Id="fcbd055e-e8e0-41d2-9360-c7c2bff34f56" LastKnownName="TypeCobol.LanguageServer" />
+      <relativeChildShapes>
+        <umlLifelineHeadShape Id="b70c512f-e878-4c42-a3d0-edd5ca070bbf" absoluteBounds="5.4992518734931943, 0.6, 1.8181632375717163, 0.4" customColor="White" visualStyleMode="Modified">
+          <lifelineMoniker Id="fcbd055e-e8e0-41d2-9360-c7c2bff34f56" LastKnownName="TypeCobol.LanguageServer" />
+          <relativeChildShapes />
+        </umlLifelineHeadShape>
+        <lifelineHoverShape Id="ea952269-7903-48aa-a8c3-be7302d5766d" absoluteBounds="6.3333334922790527, 1, 0, 3.25">
+          <lifelineMoniker Id="fcbd055e-e8e0-41d2-9360-c7c2bff34f56" LastKnownName="TypeCobol.LanguageServer" />
+        </lifelineHoverShape>
+      </relativeChildShapes>
+    </lifelineShape>
+  </nestedChildShapes>
+</sequenceDesignerDiagram>
