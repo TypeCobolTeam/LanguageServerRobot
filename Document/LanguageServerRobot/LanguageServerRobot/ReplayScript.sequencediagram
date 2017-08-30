@@ -1,19 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="6151dd40-a03f-4b9b-bc9c-93c45a851cff" name="ReplayScript" linkedPackageId="010f0129-73ab-471d-85a2-701b9f5aa19e" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="a8b6ab14-fd06-40f4-9a4d-719214020457">
-      <profileInstance Id="97f585ab-0c13-48fe-978d-7149e4ac4c95" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="3a8356bf-835d-45e3-9cb0-ed85bc9616cc">
-      <profileInstance Id="f012cdac-6a6d-43b8-8f45-57eb25774bba" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <packageHasNamedElement>
       <interaction Id="f5700d9f-94b1-4e80-afe9-d87e4b6a8e0a" name="ReplayScript" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
@@ -122,6 +108,20 @@ Tout message serveur ou réponse est à ignorer</body>
             <elementDefinition Id="39f6c648-4563-407c-891a-eb17f583912f" />
             <body>(4.3) Envoyer au serveur la notification de fermeture de document "textDocument/didClose"</body>
           </comment>
+          <comment Id="7e829b05-81cd-4d80-a5d7-1c0a864c84b2">
+            <elementDefinition Id="32322624-437e-4f41-8014-a0ec1446945c" />
+            <body>(2.1.3.1).	Si une option « s’arrêter à la première erreur a été spécifiée » alors comparer immédiatement le résultat de la requête avec la réponse original du serveur.</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker Id="81801da2-bf70-467d-8ba3-4df8e85e75d2" LastKnownName="BehaviorExecutionSpecification4" />
+            </annotatedElements>
+          </comment>
+          <comment Id="17b786a0-30c0-433b-90b8-2d36c28426b0">
+            <elementDefinition Id="27f088fc-01bf-4dd7-8a0d-565ead04cfaa" />
+            <body>(3.1).	Si une option « s’arrêter à la première erreur a été spécifiée » alors comparer immédiatement la notification reçue avec la notification originale du serveur du modèle en entrée.</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker Id="3a69160f-e94c-4916-886c-23c8a75cdf61" LastKnownName="BehaviorExecutionSpecification17" />
+            </annotatedElements>
+          </comment>
         </ownedCommentsInternal>
         <elementDefinition Id="c0ee9e4a-cc9d-45ec-8117-8441009517f5" />
         <fragments>
@@ -226,16 +226,16 @@ Tout message serveur ou réponse est à ignorer</body>
               <lifelineMoniker Id="7b59c89d-db9c-47c0-b835-2540063ea03b" LastKnownName="ScriptModel(Resultant de sortie)" />
             </covered>
           </messageOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="e30f82c0-4eac-455b-b14e-8923ad1f4ddc" name="MessageOccurrenceSpecification44">
-            <elementDefinition Id="94826c49-c244-497e-8da5-02c398e0663d" />
-            <covered>
-              <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="459cca6f-2737-4651-b3a0-521fbe3344c8" name="MessageOccurrenceSpecification43">
             <elementDefinition Id="c47a743d-f617-467d-84c5-33e373333345" />
             <covered>
               <lifelineMoniker Id="7b59c89d-db9c-47c0-b835-2540063ea03b" LastKnownName="ScriptModel(Resultant de sortie)" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="e30f82c0-4eac-455b-b14e-8923ad1f4ddc" name="MessageOccurrenceSpecification44">
+            <elementDefinition Id="94826c49-c244-497e-8da5-02c398e0663d" />
+            <covered>
+              <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="33f51216-49e3-406c-8964-7dbc47a39000" name="ExecutionOccurrenceSpecification22">
@@ -698,16 +698,16 @@ Tout message serveur ou réponse est à ignorer</body>
               <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
             </covered>
           </messageOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="a5aafe4c-5ec5-4329-b623-54ad04ab4651" name="MessageOccurrenceSpecification24">
-            <elementDefinition Id="8319c8cb-1e3d-40bc-a231-d020b312f6fa" />
-            <covered>
-              <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="33b40078-3ee0-4e2b-beae-3efa314b3a50" name="MessageOccurrenceSpecification23">
             <elementDefinition Id="fb203f37-93e8-4d65-8485-e80e96660008" />
             <covered>
               <lifelineMoniker Id="7b59c89d-db9c-47c0-b835-2540063ea03b" LastKnownName="ScriptModel(Resultant de sortie)" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="a5aafe4c-5ec5-4329-b623-54ad04ab4651" name="MessageOccurrenceSpecification24">
+            <elementDefinition Id="8319c8cb-1e3d-40bc-a231-d020b312f6fa" />
+            <covered>
+              <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="69412aad-22b6-4d5c-9bd0-8fbd6c0ed5ff" name="ExecutionOccurrenceSpecification12">
@@ -809,16 +809,16 @@ Tout message serveur ou réponse est à ignorer</body>
               <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="3484230e-88e7-40f3-b6cd-bafdc2c0983c" name="MessageOccurrenceSpecification60">
-            <elementDefinition Id="fd7b476b-f371-4e53-ac79-5d4a16ece054" />
-            <covered>
-              <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="130b1562-890e-41d3-bcc1-c2117c53d876" name="MessageOccurrenceSpecification59">
             <elementDefinition Id="36ab3c0b-bc20-4241-87c3-fd7ece178caf" />
             <covered>
               <lifelineMoniker Id="9d5d0699-e216-4250-900d-b24200c19359" LastKnownName="TypeCobol.LanguageServer" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="3484230e-88e7-40f3-b6cd-bafdc2c0983c" name="MessageOccurrenceSpecification60">
+            <elementDefinition Id="fd7b476b-f371-4e53-ac79-5d4a16ece054" />
+            <covered>
+              <lifelineMoniker Id="f226a9fa-0070-40b1-9671-d522d7e93d54" LastKnownName="LanguageServerRobot" />
             </covered>
           </messageOccurrenceSpecification>
           <behaviorExecutionSpecification Id="3a69160f-e94c-4916-886c-23c8a75cdf61" name="BehaviorExecutionSpecification17">
@@ -1544,5 +1544,19 @@ Tout message serveur ou réponse est à ignorer</body>
   </packagedElements>
   <package Id="010f0129-73ab-471d-85a2-701b9f5aa19e" name="LanguageServerRobot">
     <elementDefinition Id="87eac8a8-8edd-4f12-bef6-349f2c0052f8" />
+    <profileInstances>
+      <packageHasProfileInstances Id="a8b6ab14-fd06-40f4-9a4d-719214020457">
+        <profileInstance Id="97f585ab-0c13-48fe-978d-7149e4ac4c95" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="3a8356bf-835d-45e3-9cb0-ed85bc9616cc">
+        <profileInstance Id="f012cdac-6a6d-43b8-8f45-57eb25774bba" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </SequenceDesignerModel>
