@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -152,7 +153,7 @@ namespace LanguageServer.JsonRPC
                     $"{DateTime.Now} >> Message received : Content-Length={headers.contentLength}");
             }
 
-            // Read Http message body
+            // Read String message body
             using (MemoryStream stream = new MemoryStream(headers.contentLength))
             {
                 while (headers.contentLength > 0)

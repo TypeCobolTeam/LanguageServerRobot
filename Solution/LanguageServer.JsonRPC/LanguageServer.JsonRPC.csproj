@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\LanguageServerRobot\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,12 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionLogLevel.cs" />
+    <Compile Include="ErrorCodes.cs" />
     <Compile Include="IMessageConsumer.cs" />
+    <Compile Include="IMessageHandler.cs" />
     <Compile Include="IMessageProducer.cs" />
+    <Compile Include="IMessageConnection.cs" />
+    <Compile Include="IRPCConnection.cs" />
+    <Compile Include="IRPCHandler.cs" />
     <Compile Include="JsonMessageConstants.cs" />
+    <Compile Include="JsonRPCConnection.cs" />
+    <Compile Include="MessageConnection.cs" />
+    <Compile Include="NotificationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestType.cs" />
+    <Compile Include="ResponseError.cs" />
+    <Compile Include="ResponseWaitState.cs" />
     <Compile Include="StreamMessageProducer.cs" />
     <Compile Include="TextWriterMessageConsumer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
