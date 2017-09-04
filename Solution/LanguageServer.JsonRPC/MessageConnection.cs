@@ -11,8 +11,65 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// This class implements the Producer/Consumer message communication DataFlow concept.
     /// </summary>
-    public class MessageConnection : IMessageConnection
+    public class MessageConnection : IMessageConnection, IConnectionLog
     {
+        /// <summary>
+        /// The Connection State enumeration.
+        /// </summary>
+        public enum ConnectionState
+        {
+            New, Listening, Closed, Disposed
+        }
+
+        /// <summary>
+        /// A Connection exception class.
+        /// </summary>
+        public class ConnectionException : Exception
+        {
+            /// <summary>
+            /// The Exception error enumeration.
+            /// </summary>
+            public enum Error
+            {
+                /**
+                 * The connection is closed.
+                 */
+                Closed,
+                /**
+                 * The connection got disposed.
+                 */
+                Disposed,
+                /**
+                 * The connection is already in listening mode.
+                 */
+                AlreadyListening,
+            }
+
+            /// <summary>
+            /// Error code constructor
+            /// </summary>
+            /// <param name="error">Error code</param>
+            public ConnectionException(Error error)
+            {
+                ErrorCode = error;
+            }
+
+            /// <summary>
+            /// Error code + message constructor.
+            /// </summary>
+            /// <param name="error"></param>
+            /// <param name="message"></param>
+            public ConnectionException(Error error, String message) : base(message)
+            {
+                ErrorCode = error;
+            }
+
+            public Error ErrorCode
+            {
+                get;
+                private set;
+            }
+        }
         /// <summary>
         /// Constructor with Stream instance as InputStream Reader(producer's stream)
         /// and a TextWriter as writter (consumer's writer).
@@ -20,8 +77,8 @@ namespace LanguageServer.JsonRPC
         /// <param name="reader">The Input Stream reader</param>
         /// <param name="writer">The TextWriter instance</param>
         public MessageConnection(Stream reader, TextWriter writer)
+            : this(reader != null ? new StreamMessageProducer(reader) : null, writer != null ? new TextWriterMessageConsumer(writer) : null)
         {
-
         }
 
         /// <summary>
@@ -37,6 +94,15 @@ namespace LanguageServer.JsonRPC
                 throw new NullReferenceException("consumer is null");
             Producer = producer;
             Consumer = consumer;
+            this.State = ConnectionState.New;
+        }
+
+        /// <summary>
+        /// Internal empty constructor
+        /// </summary>
+        internal MessageConnection()
+        {
+
         }
 
         /// <summary>
@@ -44,14 +110,130 @@ namespace LanguageServer.JsonRPC
         /// </summary>
         public bool ShutdownAfterNextMessage
         {
-            get { return Producer.ShutdownAfterNextMessage; }
-            set { Producer.ShutdownAfterNextMessage = value; }
+            get
+            {
+                System.Diagnostics.Contracts.Contract.Assert(Producer != null);
+                return Producer.ShutdownAfterNextMessage;
+            }
+            set
+            {
+                System.Diagnostics.Contracts.Contract.Assert(Producer != null);
+                Producer.ShutdownAfterNextMessage = value;
+            }
         }
-        public StreamMessageProducer Producer { get; private set; }
-        public TextWriterMessageConsumer Consumer { get; private set; }
 
+        private int myState;
+        /// <summary>
+        /// Current Connection State
+        /// </summary>
+        public ConnectionState State
+        {
+            get
+            {
+                return (ConnectionState)System.Threading.Interlocked.Exchange(ref myState, myState);
+            }
+            protected set
+            {
+                System.Threading.Interlocked.Exchange(ref myState, (int)value);
+            }
+        }
+
+        /// <summary>
+        /// Is This connection in listening mode.
+        /// </summary>
+        public bool IsListening
+        {
+            get
+            {
+                return System.Threading.Interlocked.Exchange(ref myState, myState) == (int)ConnectionState.Listening;
+            }
+        }
+
+        /// <summary>
+        /// Is this connection closed
+        /// </summary>
+        /// <returns></returns>
+        public bool IsClosed
+        {
+            get
+            {
+                return System.Threading.Interlocked.Exchange(ref myState, myState) == (int)ConnectionState.Closed;
+            }
+        }
+
+        /// <summary>
+        /// Is this connection disposed
+        /// </summary>
+        public bool IsDisposed
+        {
+            get
+            {
+                return System.Threading.Interlocked.Exchange(ref myState, myState) == (int)ConnectionState.Disposed;
+            }
+        }
+
+        public StreamMessageProducer Producer { get; protected set; }
+        public TextWriterMessageConsumer Consumer { get; protected set; }
+
+        /// <summary>
+        /// General Log TextWriter
+        /// </summary>
+        public TextWriter LogWriter { get; set; }
+
+        /// <summary>
+        /// Protocol Log TextWriter
+        /// </summary>
+        public TextWriter ProtocolLogWriter { get; set; }
+
+        /// <summary>
+        /// Message Log TextWriter
+        /// </summary>
+        public TextWriter MessageLogWriter { get; set; }
+
+        /// <summary>
+        /// Throws an exception if the connection was Closed or Disposed.
+        /// </summary>
+        protected void ThrowIfClosedOrDisposed()
+        {
+            if (IsClosed) {
+                throw new ConnectionException(ConnectionException.Error.Closed); //$NON-NLS-1$
+            }
+            if (IsDisposed) {
+                throw new ConnectionException(ConnectionException.Error.Disposed); //$NON-NLS-1$
+            }
+        }
+
+        /// <summary>
+        /// Throws an error we are already in listening mode.
+        /// </summary>
+        private void ThrowIfListening()
+        {
+		    if (IsListening) {
+                throw new ConnectionException(ConnectionException.Error.AlreadyListening); //$NON-NLS-1$
+            }
+        }
+
+        /// <summary>
+        /// Start the connection, Listening of incoming message.
+        /// </summary>
+        /// <param name="messageConsumer">The message consumer of listened message</param>
+        /// <returns>Return the Listening task.</returns>
+        public virtual async Task<bool> Start(IMessageConsumer messageConsumer)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(messageConsumer != null);
+            System.Diagnostics.Contracts.Contract.Assert(Producer != null);            
+            ThrowIfClosedOrDisposed();
+            ThrowIfListening();
+            return await Producer.Listen(messageConsumer);
+        }
+
+        /// <summary>
+        /// Send a String message
+        /// </summary>
+        /// <param name="message">The message to be sent</param>
         public void SendMessage(string message)
         {
+            System.Diagnostics.Contracts.Contract.Assert(Consumer != null);
             Consumer.Consume(message); ;
         }
 

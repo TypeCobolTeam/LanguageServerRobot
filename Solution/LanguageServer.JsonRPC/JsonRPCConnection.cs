@@ -4,16 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace LanguageServer.JsonRPC
 {
     /// <summary>
     /// Implementation of a JsonRPC 2.0 message handler
     /// </summary>
-    public class JsonRPCConnection : IMessageHandler, IRPCConnection
+    public class JsonRPCConnection : IMessageHandler, IMessageConsumer, IRPCConnection, IConnectionLog
     {
         public JsonRPCConnection(IMessageConnection messageConnection)
         {
+            System.Diagnostics.Contracts.Contract.Assert(messageConnection != null);
+            if (messageConnection == null)
+                throw new NullReferenceException("messageConnection is null");
             this.messageConnection = messageConnection;
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
@@ -263,11 +267,49 @@ namespace LanguageServer.JsonRPC
         }
 
         /// <summary>
+        /// IMessageConsumer Consume method implementation
+        /// </summary>
+        /// <param name="message">The message to consume</param>
+        public void Consume(string message)
+        {
+            this.HandleMessage(message, messageConnection);
+        }
+
+        /// <summary>
+        /// General Log TextWriter
+        /// </summary>
+        public TextWriter LogWriter { get; set; }
+
+        /// <summary>
+        /// Protocol Log TextWriter
+        /// </summary>
+        public TextWriter ProtocolLogWriter { get; set; }
+
+        /// <summary>
+        /// Message Log TextWriter
+        /// </summary>
+        public TextWriter MessageLogWriter { get; set; }
+
+        /// <summary>
         /// Write a trace in the server log file
         /// </summary>
         public void WriteConnectionLog(string trace)
         {
-            messageConnection.WriteConnectionLog(trace);
+            LogWriter?.WriteLine(trace);
+        }
+
+        /// <summary>
+        /// Starts the connection
+        /// </summary>
+        /// <returns>The connection's listener task if any, null otherwise</returns>
+        public Task<bool> Start()
+        {
+            System.Diagnostics.Contracts.Contract.Assert(messageConnection != null);
+            if (messageConnection != null)
+            {
+                return messageConnection.Start(this);
+            }
+            return null;
         }
     }
 }

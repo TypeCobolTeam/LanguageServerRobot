@@ -45,8 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionLog.cs" />
     <Compile Include="ConnectionLogLevel.cs" />
     <Compile Include="ErrorCodes.cs" />
+    <Compile Include="IConnectionLog.cs" />
     <Compile Include="IMessageConsumer.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="IMessageProducer.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="JsonRPCConnection.cs" />
     <Compile Include="MessageConnection.cs" />
     <Compile Include="NotificationType.cs" />
+    <Compile Include="ProcessMessageConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestType.cs" />
     <Compile Include="ResponseError.cs" />

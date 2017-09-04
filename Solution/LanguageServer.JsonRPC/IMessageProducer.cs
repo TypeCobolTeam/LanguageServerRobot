@@ -15,6 +15,7 @@ namespace LanguageServer.JsonRPC
         /// Listen to all messages to be submitted to the given message consumer.
         /// </summary>
         /// <param name="messageConsumer">The message consumer.</param>
-        void Listen(IMessageConsumer messageConsumer);
+        /// <returns>The listening task.</returns>
+        Task<bool> Listen(IMessageConsumer messageConsumer);
     }
 }

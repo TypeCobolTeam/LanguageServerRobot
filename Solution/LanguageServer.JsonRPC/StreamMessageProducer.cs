@@ -11,7 +11,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// Class of an insatnce that produces message on a Stream.
     /// </summary>
-    public class StreamMessageProducer : IMessageProducer
+    public class StreamMessageProducer : IMessageProducer, IConnectionLog
     {
         /// <summary>
         /// Configure the Producer on the Console Input Stream
@@ -27,7 +27,8 @@ namespace LanguageServer.JsonRPC
         /// <param name="stream">The Input Stream</param>
         /// </summary>
         public StreamMessageProducer(Stream stream)
-        {            
+        {
+            System.Diagnostics.Contracts.Contract.Assert(stream != null);
             InputStream = stream;
         }
 
@@ -42,7 +43,7 @@ namespace LanguageServer.JsonRPC
         public Stream InputStream
         {
             get;
-            set;
+            private set;
         }
         /// <summary>
         /// The message encoding used
@@ -184,8 +185,10 @@ namespace LanguageServer.JsonRPC
         /// Each message received is passed to an IMessageConsumer on the current thread of the loop.
         /// This method blocks the current thread until Listen() is called. 
         /// </summary>
-        public void Listen(IMessageConsumer messageConsumer)
+        public async Task<bool> Listen(IMessageConsumer messageConsumer)
         {
+            System.Diagnostics.Contracts.Contract.Assert(messageConsumer != null);
+            System.Diagnostics.Contracts.Contract.Assert(InputStream != null);
             LogWriter?.WriteLine($"{DateTime.Now} -- Server startup");
 
             StringBuilder headerBuilder = null;
@@ -258,6 +261,7 @@ namespace LanguageServer.JsonRPC
             }
 
             LogWriter?.WriteLine($"{DateTime.Now} -- Server shutdown");
+            return ShutdownAfterNextMessage;
         }
     }
 }

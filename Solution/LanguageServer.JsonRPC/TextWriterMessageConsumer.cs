@@ -10,12 +10,12 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// A String Message consumer based on a TextWriter.
     /// </summary>
-    public class TextWriterMessageConsumer : IMessageConsumer
+    public class TextWriterMessageConsumer : IMessageConsumer, IConnectionLog
     {
         /// <summary>
-        /// Empty constructor
+        /// Empty constructor on the Console Output
         /// </summary>
-        public TextWriterMessageConsumer() : this(null)
+        public TextWriterMessageConsumer() : this(Console.Out)
         {            
         }
 
@@ -25,6 +25,7 @@ namespace LanguageServer.JsonRPC
         /// <param name="writer">The Text writer instance</param>
         public TextWriterMessageConsumer(TextWriter writer)
         {
+            System.Diagnostics.Contracts.Contract.Assert(writer != null);
             this.Writer = writer;
             WriterLock = new object();
         }
@@ -38,7 +39,7 @@ namespace LanguageServer.JsonRPC
         /// The TextWriter getter/setter
         /// </summary>
         public TextWriter Writer
-        {get; set; }
+        {get; private set; }
 
         /// <summary>
         /// General Log TextWriter
@@ -84,6 +85,7 @@ namespace LanguageServer.JsonRPC
         /// <param name="message">The text message to be consumed</param>
         public void Consume(string message)
         {
+            System.Diagnostics.Contracts.Contract.Assert(Writer != null);
             if (Writer != null && message != null)
             {
                 int contentLength = Writer.Encoding.GetByteCount(message);
