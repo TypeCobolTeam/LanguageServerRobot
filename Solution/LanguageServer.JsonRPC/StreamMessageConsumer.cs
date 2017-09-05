@@ -22,7 +22,7 @@ namespace LanguageServer.JsonRPC
         /// <summary>
         /// Stream instance constructor
         /// </summary>
-        /// <param name="writer">The Text writer instance</param>
+        /// <param name="writer">The Stream instance</param>
         public StreamMessageConsumer(Stream writer, Encoding encoding = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(writer != null);
@@ -45,7 +45,7 @@ namespace LanguageServer.JsonRPC
             private set;
         }
         /// <summary>
-        /// The TextWriter getter/setter
+        /// The Stream getter/setter
         /// </summary>
         public Stream Writer
         {get; private set; }
