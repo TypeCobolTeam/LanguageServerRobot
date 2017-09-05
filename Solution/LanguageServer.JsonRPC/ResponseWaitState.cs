@@ -9,7 +9,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// Utility class used to store all the necessary elements to handle the response to a request
     /// </summary>
-    class ResponseWaitState
+    public class ResponseWaitState
     {
         public ResponseWaitState(RequestType requestType, string requestId, TaskCompletionSource<ResponseResultOrError> taskCompletionSource)
         {

@@ -75,9 +75,9 @@ namespace LanguageServer.JsonRPC
         /// and a TextWriter as writter (consumer's writer).
         /// </summary>
         /// <param name="reader">The Input Stream reader</param>
-        /// <param name="writer">The TextWriter instance</param>
-        public MessageConnection(Stream reader, TextWriter writer)
-            : this(reader != null ? new StreamMessageProducer(reader) : null, writer != null ? new TextWriterMessageConsumer(writer) : null)
+        /// <param name="writer">The Output Stream instance</param>
+        public MessageConnection(Stream reader, Stream writer)
+            : this(reader != null ? new StreamMessageProducer(reader) : null, writer != null ? new StreamMessageConsumer(writer) : null)
         {
         }
 
@@ -86,7 +86,7 @@ namespace LanguageServer.JsonRPC
         /// </summary>
         /// <param name="reader">The producer instance reader</param>
         /// <param name="writer">The consumer instance writer</param>
-        public MessageConnection(StreamMessageProducer producer, TextWriterMessageConsumer consumer)
+        public MessageConnection(StreamMessageProducer producer, StreamMessageConsumer consumer)
         {
             if (producer == null)
                 throw new NullReferenceException("producer is null");
@@ -173,7 +173,7 @@ namespace LanguageServer.JsonRPC
         }
 
         public StreamMessageProducer Producer { get; protected set; }
-        public TextWriterMessageConsumer Consumer { get; protected set; }
+        public StreamMessageConsumer Consumer { get; protected set; }
 
         /// <summary>
         /// General Log TextWriter
@@ -239,7 +239,7 @@ namespace LanguageServer.JsonRPC
 
         public void WriteConnectionLog(string trace)
         {
-            throw new NotImplementedException();
+            LogWriter?.WriteLine(trace);
         }
     }
 }

@@ -8,24 +8,25 @@ using System.Threading.Tasks;
 namespace LanguageServer.JsonRPC
 {
     /// <summary>
-    /// A String Message consumer based on a TextWriter.
+    /// A String Message consumer based on a Stream.
     /// </summary>
-    public class TextWriterMessageConsumer : IMessageConsumer, IConnectionLog
+    public class StreamMessageConsumer : IMessageConsumer, IConnectionLog
     {
         /// <summary>
         /// Empty constructor on the Console Output
         /// </summary>
-        public TextWriterMessageConsumer() : this(Console.Out)
-        {            
+        public StreamMessageConsumer(Encoding encoding = null) : this(Console.OpenStandardOutput(), encoding)
+        {
         }
 
         /// <summary>
-        /// TextWriter instance constructor
+        /// Stream instance constructor
         /// </summary>
         /// <param name="writer">The Text writer instance</param>
-        public TextWriterMessageConsumer(TextWriter writer)
+        public StreamMessageConsumer(Stream writer, Encoding encoding = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(writer != null);
+            Encoding = encoding ?? Encoding.UTF8;
             this.Writer = writer;
             WriterLock = new object();
         }
@@ -36,9 +37,17 @@ namespace LanguageServer.JsonRPC
         }
 
         /// <summary>
+        /// The target encoding
+        /// </summary>
+        public Encoding Encoding
+        {
+            get;
+            private set;
+        }
+        /// <summary>
         /// The TextWriter getter/setter
         /// </summary>
-        public TextWriter Writer
+        public Stream Writer
         {get; private set; }
 
         /// <summary>
@@ -66,13 +75,10 @@ namespace LanguageServer.JsonRPC
         {
             StringBuilder headerBuffer = new StringBuilder();
             headerBuffer.AppendFormat("{0}:{1}{2}", JsonMessageConstants.ContentLengthHeader, contentLength, JsonMessageConstants.CrLf);
-            if (Writer != null)
+            if (!this.Encoding.BodyName.Equals(Encoding.UTF8.BodyName))
             {
-                if (!Writer.Encoding.EncodingName.Equals(Encoding.UTF8.EncodingName))
-                {
-                    headerBuffer.AppendFormat("{0}:{1}; charset={2}{3}", JsonMessageConstants.ContentTypeHeader, 
-                        JsonMessageConstants.JsonMimeType, Writer.Encoding.EncodingName, JsonMessageConstants.CrLf);
-                }
+                headerBuffer.AppendFormat("{0}:{1}; charset={2}{3}", JsonMessageConstants.ContentTypeHeader,
+                JsonMessageConstants.JsonMimeType, this.Encoding.BodyName, JsonMessageConstants.CrLf);
             }
             headerBuffer.Append(JsonMessageConstants.CrLf);
             return headerBuffer.ToString();
@@ -88,13 +94,15 @@ namespace LanguageServer.JsonRPC
             System.Diagnostics.Contracts.Contract.Assert(Writer != null);
             if (Writer != null && message != null)
             {
-                int contentLength = Writer.Encoding.GetByteCount(message);
+                int contentLength = this.Encoding.GetByteCount(message);
                 String jsonHeader = JsonHeader(contentLength);
                 lock(WriterLock)
                 {
-                    Writer.Write(jsonHeader);
+                    byte[] data = Encoding.ASCII.GetBytes(jsonHeader);
+                    Writer.Write(data, 0, data.Length);
                     MessageLogWriter?.WriteLine($"{DateTime.Now} << Message sent : Content-Length={contentLength}");
-                    Writer.Write(message);
+                    data = this.Encoding.GetBytes(message);
+                    Writer.Write(data, 0, data.Length);
                     Writer.Flush();
                     ProtocolLogWriter?.WriteLine(message);
                     ProtocolLogWriter?.WriteLine("----------");

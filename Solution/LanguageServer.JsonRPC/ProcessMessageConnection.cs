@@ -50,7 +50,7 @@ namespace LanguageServer.JsonRPC
                 else
                 {
                     base.Producer = new StreamMessageProducer(this.Process.StandardOutput.BaseStream);
-                    base.Consumer = new TextWriterMessageConsumer(this.Process.StandardInput);
+                    base.Consumer = new StreamMessageConsumer(this.Process.StandardInput.BaseStream);
                     base.State = ConnectionState.New;
                 }
             }

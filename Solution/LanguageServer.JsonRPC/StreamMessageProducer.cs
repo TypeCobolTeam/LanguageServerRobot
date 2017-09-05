@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace LanguageServer.JsonRPC
 {
     /// <summary>
-    /// Class of an insatnce that produces message on a Stream.
+    /// Class of an instance that produces message from a Stream.
     /// </summary>
     public class StreamMessageProducer : IMessageProducer, IConnectionLog
     {
