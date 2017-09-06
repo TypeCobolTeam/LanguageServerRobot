@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.JsonRPC", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.LanguageServer.JsonRPC", "..\LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC.csproj", "{35D8C4D8-9477-4A15-8BFD-3B729906018D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.Protocol", "..\LanguageServer.Protocol\LanguageServer.Protocol.csproj", "{2950DAC0-494D-46B6-A836-7EAB4810952A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{35D8C4D8-9477-4A15-8BFD-3B729906018D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35D8C4D8-9477-4A15-8BFD-3B729906018D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35D8C4D8-9477-4A15-8BFD-3B729906018D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2950DAC0-494D-46B6-A836-7EAB4810952A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2950DAC0-494D-46B6-A836-7EAB4810952A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2950DAC0-494D-46B6-A836-7EAB4810952A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2950DAC0-494D-46B6-A836-7EAB4810952A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
