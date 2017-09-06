@@ -9,7 +9,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// Predefined error codes.
     /// </summary>
-    enum ErrorCodes : int
+    public enum ErrorCodes : int
     {
         ParseError = -32700,
         InvalidRequest = -32600,

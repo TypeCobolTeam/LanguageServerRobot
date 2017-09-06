@@ -11,7 +11,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// Implementation of a JsonRPC 2.0 message handler
     /// </summary>
-    public class JsonRPCConnection : IMessageHandler, IMessageConsumer, IRPCConnection, IConnectionLog
+    public class JsonRPCConnection : IMessageHandler, IMessageConsumer, IMessageConnection, IRPCConnection, IConnectionLog
     {
         public JsonRPCConnection(IMessageConnection messageConnection)
         {
@@ -304,12 +304,36 @@ namespace LanguageServer.JsonRPC
         /// <returns>The connection's listener task if any, null otherwise</returns>
         public Task<bool> Start()
         {
+            return Start(this);
+        }
+
+        /// <summary>
+        /// Starts the connection, which dispatch received messages to the given message consumer instance.
+        /// </summary>
+        /// <param name="messageConsumer">The message consumer instance</param>
+        /// <returns>The connection's listener task if any, null otherwise</returns>
+        public Task<bool> Start(IMessageConsumer messageConsumer)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(messageConsumer != null);
             System.Diagnostics.Contracts.Contract.Assert(messageConnection != null);
             if (messageConnection != null)
             {
-                return messageConnection.Start(this);
+                return messageConnection.Start(messageConsumer);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Send a message.
+        /// </summary>
+        /// <param name="message">The message to be sent</param>
+        public void SendMessage(string message)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(messageConnection != null);
+            if (messageConnection != null)
+            {
+                messageConnection.SendMessage(message);
+            }
         }
     }
 }
