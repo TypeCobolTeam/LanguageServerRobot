@@ -55,6 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="JsonRPCConnectionTest.cs" />
     <Compile Include="MessageConnectionTest.cs" />
     <Compile Include="StreamMessageProducerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

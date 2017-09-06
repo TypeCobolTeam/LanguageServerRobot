@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LanguageServer.JsonRPC;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Tests.LanguageServer.JsonRPC
@@ -74,5 +76,32 @@ namespace Tests.LanguageServer.JsonRPC
         {
             WriteJsonMessage(stream, "");
         }
+
+        /// <summary>
+        /// Send a Json Reply in to the given message connection instance
+        /// </summary>
+        /// <param name="requestId">Id of teh original request</param>
+        /// <param name="resultOrError">The result or error</param>
+        /// <param name="messageConnection"><The message connection instance/param>
+        public static void SendReply(string requestId, ResponseResultOrError resultOrError, IMessageConnection messageConnection)
+        {
+            JObject jsonMessage = new JObject();
+            PrepareJsonPRCMessage(jsonMessage);
+
+            // Response properties
+            jsonMessage["id"] = requestId;
+            if (resultOrError.result != null)
+            {
+                jsonMessage["result"] = JToken.FromObject(resultOrError.result);
+            }
+            else if (resultOrError.code != null)
+            {
+                jsonMessage["error"] = JToken.FromObject(resultOrError);
+            }
+
+            //  Send text message
+            messageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
+        }
+
     }
 }
