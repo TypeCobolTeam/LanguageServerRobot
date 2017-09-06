@@ -11,7 +11,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// Implementation of a JsonRPC 2.0 message handler
     /// </summary>
-    public class JsonRPCConnection : IMessageHandler, IMessageConsumer, IMessageConnection, IRPCConnection, IConnectionLog
+    public class JsonRPCConnection : IRPCConnection, IMessageConnection, IMessageHandler, IMessageProducer, IMessageConsumer, IConnectionLog
     {
         public JsonRPCConnection(IMessageConnection messageConnection)
         {
@@ -334,6 +334,16 @@ namespace LanguageServer.JsonRPC
             {
                 messageConnection.SendMessage(message);
             }
+        }
+
+        /// <summary>
+        /// JonRPCConnection implements IMessageProducer.
+        /// </summary>
+        /// <param name="messageConsumer"></param>
+        /// <returns></returns>
+        public Task<bool> Listen(IMessageConsumer messageConsumer)
+        {
+            return Start(messageConsumer);
         }
     }
 }
