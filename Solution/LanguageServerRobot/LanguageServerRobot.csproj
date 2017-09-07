@@ -48,8 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\ClientRobotConnectionController.cs" />
+    <Compile Include="Controller\LanguageServerRobotController.cs" />
+    <Compile Include="Controller\ServerRobotConnectionController.cs" />
     <Compile Include="LanguageServerRobot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\DebugTextWriter.cs" />
+    <Compile Include="Utilities\Options.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -60,6 +65,13 @@
       <Project>{5a4cad5c-f178-45d2-86e8-a75d7eac13f4}</Project>
       <Name>LanguageServer.JsonRPC</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LanguageServer.Protocol\LanguageServer.Protocol.csproj">
+      <Project>{2950dac0-494d-46b6-a836-7eab4810952a}</Project>
+      <Name>LanguageServer.Protocol</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
