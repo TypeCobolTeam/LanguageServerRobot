@@ -14,7 +14,7 @@ namespace LanguageServer.JsonRPC
     {
         /// <summary>
         /// General Log TextWriter
-        /// </summary>
+        /// </summary>C:\Users\MAYANJE\Source\Repos\TypeCobol9\LanguageServerRobot\LanguageServerRobot\Solution\LanguageServer.JsonRPC\IConnectionLog.cs
         TextWriter LogWriter { get; set; }
 
         /// <summary>

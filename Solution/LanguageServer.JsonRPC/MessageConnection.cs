@@ -70,6 +70,15 @@ namespace LanguageServer.JsonRPC
                 private set;
             }
         }
+
+        /// <summary>
+        /// Default Message Connection constructor using current application
+        /// Standard Input/Ouput Streams.
+        /// </summary>
+        public MessageConnection() : this(new StreamMessageProducer(), new StreamMessageConsumer())
+        {
+
+        }
         /// <summary>
         /// Constructor with Stream instance as InputStream Reader(producer's stream)
         /// and a TextWriter as writter (consumer's writer).
@@ -95,14 +104,6 @@ namespace LanguageServer.JsonRPC
             Producer = producer;
             Consumer = consumer;
             this.State = ConnectionState.New;
-        }
-
-        /// <summary>
-        /// Internal empty constructor
-        /// </summary>
-        internal MessageConnection()
-        {
-
         }
 
         /// <summary>

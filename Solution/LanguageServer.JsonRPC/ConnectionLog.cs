@@ -49,6 +49,22 @@ namespace LanguageServer.JsonRPC
                 to_logger.ProtocolLogWriter = ProtocolLogWriter;
             }
         }
+
+        /// <summary>
+        /// Close all logs
+        /// </summary>
+        public void Close()
+        {
+            if (LogWriter != System.Console.Error)
+                LogWriter?.Close();
+            if (ProtocolLogWriter != LogWriter && ProtocolLogWriter != System.Console.Error)
+                ProtocolLogWriter?.Close();
+            if (MessageLogWriter != LogWriter && MessageLogWriter != ProtocolLogWriter && MessageLogWriter != System.Console.Error)
+                MessageLogWriter?.Close();
+            LogWriter = null;
+            ProtocolLogWriter = null;
+            MessageLogWriter = null;
+        }
         /// <summary>
         /// General Log TextWriter
         /// </summary>

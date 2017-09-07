@@ -70,6 +70,7 @@
     <Compile Include="StreamMessageProducer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LanguageServer.JsonRPC.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

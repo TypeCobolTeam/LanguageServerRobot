@@ -18,7 +18,7 @@ namespace LanguageServer.JsonRPC
             System.Diagnostics.Contracts.Contract.Assert(messageConnection != null);
             if (messageConnection == null)
                 throw new NullReferenceException("messageConnection is null");
-            this.messageConnection = messageConnection;
+            this.MessageConnection = messageConnection;
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -28,14 +28,18 @@ namespace LanguageServer.JsonRPC
         }
 
         // Message server used to send Remote Procedure Calls to the client
-        private IMessageConnection messageConnection;
+        protected IMessageConnection MessageConnection
+        {
+            get;
+            set;
+        }
 
         // Notification methods supported by this RPC server
-        private class NotificationMethod { public NotificationType Type; public NotificationHandler HandleNotification; }
-        private IDictionary<string, NotificationMethod> notificationMethods = new Dictionary<string, NotificationMethod>();
+        protected class NotificationMethod { public NotificationType Type; public NotificationHandler HandleNotification; }
+        protected IDictionary<string, NotificationMethod> notificationMethods = new Dictionary<string, NotificationMethod>();
         // Request methods supported by this RPC server
-        private class RequestMethod { public RequestType Type; public RequestHandler HandleRequest; }
-        private IDictionary<string, RequestMethod> requestMethods = new Dictionary<string, RequestMethod>();
+        protected class RequestMethod { public RequestType Type; public RequestHandler HandleRequest; }
+        protected IDictionary<string, RequestMethod> requestMethods = new Dictionary<string, RequestMethod>();
 
         /// <summary>
         /// Register a description of all the notification methods supported by the RPC server
@@ -68,11 +72,11 @@ namespace LanguageServer.JsonRPC
             }
 
             // Send text message
-            messageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
+            this.MessageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
         }
 
         // Add Json RPC standard property
-        private void PrepareJsonPRCMessage(JObject jsonMessage)
+        protected void PrepareJsonPRCMessage(JObject jsonMessage)
         {
             jsonMessage["jsonrpc"] = "2.0";
         }
@@ -81,12 +85,12 @@ namespace LanguageServer.JsonRPC
         private int sequenceNumber;
 
         // Remeber all requests sent and still waiting for a response 
-        private IDictionary<string, ResponseWaitState> responsesExpected = new Dictionary<string, ResponseWaitState>();
+        protected IDictionary<string, ResponseWaitState> responsesExpected = new Dictionary<string, ResponseWaitState>();
 
         /// <summary>
         /// Send an async request to the client and await later for the response or error
         /// </summary>
-        public Task<ResponseResultOrError> SendRequest(RequestType requestType, object parameters)
+        public virtual Task<ResponseResultOrError> SendRequest(RequestType requestType, object parameters)
         {
             JObject jsonMessage = new JObject();
             PrepareJsonPRCMessage(jsonMessage);
@@ -103,7 +107,7 @@ namespace LanguageServer.JsonRPC
             }
 
             //  Send text message
-            messageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
+            this.MessageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
 
             // Remember all elements which will be needed to handle correctly the response to the request
             TaskCompletionSource<ResponseResultOrError> taskCompletionSource = new TaskCompletionSource<ResponseResultOrError>();
@@ -117,7 +121,7 @@ namespace LanguageServer.JsonRPC
         /// <summary>
         /// Implementation of IMessageHandler
         /// </summary>
-        public void HandleMessage(string message, IMessageConnection server)
+        public virtual void HandleMessage(string message, IMessageConnection server)
         {
             JObject jsonObject = JObject.Parse(message);
 
@@ -146,7 +150,7 @@ namespace LanguageServer.JsonRPC
             }
         }
 
-        private void HandleNotification(string method, JToken parameters)
+        protected virtual void HandleNotification(string method, JToken parameters)
         {
             NotificationMethod notificationMethod = null;
             notificationMethods.TryGetValue(method, out notificationMethod);
@@ -175,7 +179,7 @@ namespace LanguageServer.JsonRPC
             }
         }
 
-        private void HandleRequest(string method, string requestId, JToken parameters)
+        protected virtual void HandleRequest(string method, string requestId, JToken parameters)
         {
             RequestMethod requestMethod = null;
             requestMethods.TryGetValue(method, out requestMethod);
@@ -204,7 +208,7 @@ namespace LanguageServer.JsonRPC
             }
         }
 
-        private void Reply(string requestId, ResponseResultOrError resultOrError)
+        protected virtual void Reply(string requestId, ResponseResultOrError resultOrError)
         {
             JObject jsonMessage = new JObject();
             PrepareJsonPRCMessage(jsonMessage);
@@ -221,10 +225,10 @@ namespace LanguageServer.JsonRPC
             }
 
             //  Send text message
-            messageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
+            this.MessageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
         }
 
-        private void HandleResponse(string requestId, JToken result, JToken error)
+        protected virtual void HandleResponse(string requestId, JToken result, JToken error)
         {
             ResponseWaitState responseWaitState = null;
             responsesExpected.TryGetValue(requestId, out responseWaitState);
@@ -272,7 +276,7 @@ namespace LanguageServer.JsonRPC
         /// <param name="message">The message to consume</param>
         public void Consume(string message)
         {
-            this.HandleMessage(message, messageConnection);
+            this.HandleMessage(message, this.MessageConnection);
         }
 
         /// <summary>
@@ -315,10 +319,10 @@ namespace LanguageServer.JsonRPC
         public Task<bool> Start(IMessageConsumer messageConsumer)
         {
             System.Diagnostics.Contracts.Contract.Assert(messageConsumer != null);
-            System.Diagnostics.Contracts.Contract.Assert(messageConnection != null);
-            if (messageConnection != null)
+            System.Diagnostics.Contracts.Contract.Assert(this.MessageConnection != null);
+            if (this.MessageConnection != null)
             {
-                return messageConnection.Start(messageConsumer);
+                return this.MessageConnection.Start(messageConsumer);
             }
             return null;
         }
@@ -329,10 +333,10 @@ namespace LanguageServer.JsonRPC
         /// <param name="message">The message to be sent</param>
         public void SendMessage(string message)
         {
-            System.Diagnostics.Contracts.Contract.Assert(messageConnection != null);
-            if (messageConnection != null)
+            System.Diagnostics.Contracts.Contract.Assert(this.MessageConnection != null);
+            if (this.MessageConnection != null)
             {
-                messageConnection.SendMessage(message);
+                this.MessageConnection.SendMessage(message);
             }
         }
 
