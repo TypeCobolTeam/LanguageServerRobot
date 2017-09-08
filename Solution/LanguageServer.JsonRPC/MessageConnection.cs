@@ -107,6 +107,14 @@ namespace LanguageServer.JsonRPC
         }
 
         /// <summary>
+        /// Dummy constructor used by subclasses for initializinf nothing.
+        /// </summary>
+        /// <param name="Dummy"></param>
+        protected MessageConnection(int Dummy)
+        {
+            this.State = ConnectionState.New;
+        }
+        /// <summary>
         /// Request a shutdown of the server after handling the current or the next message
         /// </summary>
         public bool ShutdownAfterNextMessage
@@ -207,7 +215,7 @@ namespace LanguageServer.JsonRPC
         /// <summary>
         /// Throws an error we are already in listening mode.
         /// </summary>
-        private void ThrowIfListening()
+        protected void ThrowIfListening()
         {
 		    if (IsListening) {
                 throw new ConnectionException(ConnectionException.Error.AlreadyListening); //$NON-NLS-1$
@@ -241,6 +249,18 @@ namespace LanguageServer.JsonRPC
         public void WriteConnectionLog(string trace)
         {
             LogWriter?.WriteLine(trace);
+        }
+
+        /// <summary>
+        /// Propagate Connection Log settings to this.
+        /// </summary>
+        /// <param name="log">The Connection Logs setting.</param>
+        public void PropagateConnectionLogs(ConnectionLog log = null)
+        {
+            log = log ?? ConnectionLog.GetInstance();
+            log.AssignTo(this);
+            Producer?.PropagateConnectionLogs(log);
+            Consumer?.PropagateConnectionLogs(log);
         }
     }
 }

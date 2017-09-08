@@ -349,5 +349,19 @@ namespace LanguageServer.JsonRPC
         {
             return Start(messageConsumer);
         }
+
+        /// <summary>
+        /// Propagate Connection Log settings to this.
+        /// </summary>
+        /// <param name="log">The Connection Logs setting.</param>
+        public void PropagateConnectionLogs(ConnectionLog log = null)
+        {
+            log = log ?? ConnectionLog.GetInstance();
+            log.AssignTo(this);
+            if (this.MessageConnection is LanguageServer.JsonRPC.MessageConnection)
+            {
+                (this.MessageConnection as LanguageServer.JsonRPC.MessageConnection).PropagateConnectionLogs(log);
+            }            
+        }
     }
 }
