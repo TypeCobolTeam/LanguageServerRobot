@@ -73,7 +73,6 @@ namespace LanguageServer.JsonRPC
         /// </summary>
         protected void Start()
         {
-            base.State = ConnectionState.Disposed;
             System.Diagnostics.Contracts.Contract.Assert(FullPath != null);
             this.Process = new System.Diagnostics.Process();
             this.Process.StartInfo.FileName = FullPath;

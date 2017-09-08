@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{35D8C4D8-9477-4A15-8BFD-3B729906018D}</ProjectGuid>
+    <ProjectGuid>{27912F85-E779-4EE0-A1BD-09469EB12863}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests.LanguageServer.JsonRPC</RootNamespace>
-    <AssemblyName>Tests.LanguageServer.JsonRPC</AssemblyName>
+    <RootNamespace>Tests.LanguageServerRobot</RootNamespace>
+    <AssemblyName>Tests.LanguageServerRobot</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -36,10 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\LanguageServerRobot\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -55,22 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="JsonRPCConnectionTest.cs" />
-    <Compile Include="MessageConnectionTest.cs" />
-    <Compile Include="ProcessMessageConnectionTest.cs" />
-    <Compile Include="StreamMessageProducerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestUtilities.cs" />
-    <Compile Include="StreamMessageConsumerTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LanguageServer.JsonRPC.csproj">
-      <Project>{5A4CAD5C-F178-45D2-86E8-A75D7EAC13F4}</Project>
-      <Name>LanguageServer.JsonRPC</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
