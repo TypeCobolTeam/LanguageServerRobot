@@ -17,6 +17,24 @@ namespace LanguageServerRobot.Controller
         /// </summary>
         /// <param name="messageConnection">The Message Connection with the client.</param>
         public ServerRobotConnectionController(IMessageConnection messageConnection) : base(messageConnection)
+        {            
+        }
+
+        /// <summary>
+        /// Constructor using a ProcessMessageConnection
+        /// </summary>
+        /// <param name="connection"></param>
+        public ServerRobotConnectionController(ProcessMessageConnection connection) : this((IMessageConnection)connection)
+        {
+            connection.ProcessExited += ProcessExitedEventHandler;
+        }
+
+        /// <summary>
+        /// Process exited event handler.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ProcessExitedEventHandler(object sender, EventArgs e)
         {
 
         }

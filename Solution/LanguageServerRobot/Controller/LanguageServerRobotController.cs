@@ -46,5 +46,77 @@ namespace LanguageServerRobot.Controller
             get;
             private set;
         }
+
+        /// <summary>
+        /// Constructor for the LanguageServerRobot running as Client for the Test replay mode.
+        /// </summary>
+        /// <param name="serverConnection">The target server</param>
+        public LanguageServerRobotController(ServerRobotConnectionController serverConnection)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
+            this.ServerConnection = serverConnection;
+            Mode = ConnectionMode.Client;
+        }
+
+        /// <summary>
+        /// Constructor for the LanguageServerRobot running as Client/Server for the test recording mode.
+        /// </summary>
+        /// <param name="clientConnection">The source client</param>
+        /// <param name="serverConnection">The target server</param>
+        public LanguageServerRobotController(ClientRobotConnectionController clientConnection, ServerRobotConnectionController serverConnection)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(clientConnection != null);
+            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
+            this.ClientConnection = clientConnection;
+            this.ServerConnection = serverConnection;
+            Mode = ConnectionMode.ClientServer;
+        }
+
+        /// <summary>
+        /// Propagate Connection Log settings to this.
+        /// </summary>
+        /// <param name="log">The Connection Logs setting.</param>
+        public void PropagateConnectionLogs(ConnectionLog log = null)
+        {
+            log = log ?? ConnectionLog.GetInstance();
+            ClientConnection?.PropagateConnectionLogs(log);
+            ServerConnection?.PropagateConnectionLogs(log);
+        }
+
+        /// <summary>
+        /// Start Roboting :-)
+        /// </summary>
+        protected async void StartRoboting()
+        {
+            if (this.ClientConnection != null)
+                this.ClientConnection.Start();
+            if (this.ServerConnection != null)
+                await this.ServerConnection.Start();
+        }
+
+        /// <summary>
+        /// Start Replaying
+        /// </summary>
+        protected async void StartReplaying()
+        {
+            if (this.ServerConnection != null)
+                await this.ServerConnection.Start();
+        }
+
+        /// <summary>
+        /// Start controlling according the mode.
+        /// </summary>
+        public void Start()
+        {
+            switch(Mode)
+            {
+                case ConnectionMode.Client:
+                    StartReplaying();
+                    break;
+                case ConnectionMode.ClientServer:
+                    StartRoboting();
+                    break;
+            }
+        }
     }
 }
