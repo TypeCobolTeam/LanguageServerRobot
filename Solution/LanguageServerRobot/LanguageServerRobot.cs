@@ -72,13 +72,20 @@ namespace LanguageServerRobot
             internal set;
         }
 
+        const string DefaultTypeCovolLanguageServerPath = "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
+
         /// <summary>
         /// Main Entry point of the Server.
         /// </summary>
         /// <param name="args">Arguments: arg[0] the LogLevel (0=Lifecycle,1=Message,2=Protocol) - args[1] a Log File</param>
         /// <see cref="TypeCobol.LanguageServer.StdioHttp.ServerLogLevel"/>
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+            bool help = false;
+            bool version = false;
+            //Default Connection Mod eid Client/Server
+            Mode = LanguageServerRobotController.ConnectionMode.ClientServer;
+
             var p = new OptionSet()
             {
                 "USAGE",
@@ -117,6 +124,26 @@ namespace LanguageServerRobot
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
             };
+            System.Collections.Generic.List<string> arguments;
+            try { arguments = p.Parse(args); }
+            catch (OptionException ex) { return exit(1, ex.Message); }
+
+            if (help)
+            {
+                p.WriteOptionDescriptions(System.Console.Out);
+                return 0;
+            }
+            if (version)
+            {
+                System.Console.WriteLine(Version);
+                return 0;
+            }
+
+            if (ServerPath == null)
+            {//No server path specified ==> THINK ABOUT HAVING a CONFIG FILE.
+                //Take the default.
+                ServerPath = DefaultTypeCovolLanguageServerPath;
+            }
 
             TextWriter logWriter = null;
             if (LogFile != null)
@@ -132,6 +159,10 @@ namespace LanguageServerRobot
                     System.Console.Error.WriteLine(e.Message);
                     logWriter = new DebugTextWriter();
                 }
+            }
+            else
+            {
+                logWriter = new DebugTextWriter();
             }
 
             //Prepare a Connection logger
@@ -178,6 +209,7 @@ namespace LanguageServerRobot
             {
                 logger.Close();
             }
+            return 0;
         }
 
         /// <summary>
@@ -187,6 +219,14 @@ namespace LanguageServerRobot
         {
             get;
             internal set;
+        }
+
+        static int exit(int code, string message)
+        {
+            string errmsg = ProgName + ": " + message + "\n";
+            errmsg += "Try " + ProgName + " --help for usage information.";
+            System.Console.WriteLine(errmsg);
+            return code;
         }
     }
 }

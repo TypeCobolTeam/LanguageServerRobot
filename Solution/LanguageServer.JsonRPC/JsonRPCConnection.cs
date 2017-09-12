@@ -34,6 +34,34 @@ namespace LanguageServer.JsonRPC
             set;
         }
 
+        /// <summary>
+        /// The Message Connection state
+        /// </summary>
+        public ConnectionState State
+        {
+            get
+            {
+                return MessageConnection != null ? MessageConnection.State : ConnectionState.Disposed;
+            }
+        }
+
+        /// <summary>
+        /// Add a State Change Event handler.
+        /// </summary>
+        public void AddStageChangedEventHandler(EventHandler handler)
+        {
+            MessageConnection?.AddStageChangedEventHandler(handler);
+        }
+
+        /// <summary>
+        /// Remove a State Change Event Handler. 
+        /// </summary>
+        /// <param name="handler"></param>
+        public void RemoveStageChangedEventHandler(EventHandler handler)
+        {
+            MessageConnection?.RemoveStageChangedEventHandler(handler);
+        }
+
         // Notification methods supported by this RPC server
         protected class NotificationMethod { public NotificationType Type; public NotificationHandler HandleNotification; }
         protected IDictionary<string, NotificationMethod> notificationMethods = new Dictionary<string, NotificationMethod>();

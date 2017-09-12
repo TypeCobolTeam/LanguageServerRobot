@@ -24,6 +24,25 @@ namespace LanguageServer.JsonRPC
         void SendMessage(string message);
 
         /// <summary>
+        /// The Connection state
+        /// </summary>
+        ConnectionState State
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Add a State Change Event handler.
+        /// </summary>
+        void AddStageChangedEventHandler(EventHandler handler);
+
+        /// <summary>
+        /// Remove a State Change Event Handler. 
+        /// </summary>
+        /// <param name="handler"></param>
+        void RemoveStageChangedEventHandler(EventHandler handler);
+
+        /// <summary>
         /// Write a trace in the connection log file
         /// </summary>
         void WriteConnectionLog(string trace);

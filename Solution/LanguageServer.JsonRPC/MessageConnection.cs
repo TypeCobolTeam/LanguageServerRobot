@@ -14,14 +14,6 @@ namespace LanguageServer.JsonRPC
     public class MessageConnection : IMessageConnection, IConnectionLog
     {
         /// <summary>
-        /// The Connection State enumeration.
-        /// </summary>
-        public enum ConnectionState
-        {
-            New, Listening, Closed, Disposed
-        }
-
-        /// <summary>
         /// A Connection exception class.
         /// </summary>
         public class ConnectionException : Exception
@@ -143,8 +135,33 @@ namespace LanguageServer.JsonRPC
             }
             protected set
             {
-                System.Threading.Interlocked.Exchange(ref myState, (int)value);
+                if (System.Threading.Interlocked.Exchange(ref myState, (int)value) != (int)value)
+                {
+                    if (StageChangedEvent != null)
+                    {
+                        StageChangedEvent(this, null);
+                    }
+                }
             }
+        }
+
+        event EventHandler StageChangedEvent;
+
+        /// <summary>
+        /// Add a State Change Event handler.
+        /// </summary>
+        public void AddStageChangedEventHandler(EventHandler handler)
+        {
+            StageChangedEvent += handler;
+        }
+
+        /// <summary>
+        /// Remove a State Change Event Handler. 
+        /// </summary>
+        /// <param name="handler"></param>
+        public void RemoveStageChangedEventHandler(EventHandler handler)
+        {
+            StageChangedEvent -= handler;
         }
 
         /// <summary>

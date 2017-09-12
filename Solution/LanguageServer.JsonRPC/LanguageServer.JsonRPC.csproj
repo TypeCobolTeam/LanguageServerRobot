@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ConnectionLog.cs" />
     <Compile Include="ConnectionLogLevel.cs" />
+    <Compile Include="ConnectionState.cs" />
     <Compile Include="DelegateMessageConsumer.cs" />
     <Compile Include="ErrorCodes.cs" />
     <Compile Include="IConnectionLog.cs" />

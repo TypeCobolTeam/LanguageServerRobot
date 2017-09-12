@@ -15,12 +15,9 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAQCDIACgADUBAICBAAECBAAAACAAQAAAABAAAABA=</HashCode>
+      <HashCode>AAAAQCDIACgACUBAICBAAECFAAAACAAQAABABAAAABA=</HashCode>
       <FileName>JsonRPCConnection.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="messageConnection" />
-    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServer.JsonRPC.DelegateMessageConsumer" Collapsed="true">
@@ -34,11 +31,6 @@
   <Class Name="LanguageServer.JsonRPC.MessageConnection">
     <Position X="8.5" Y="4.75" Width="2.5" />
     <NestedTypes>
-      <Enum Name="LanguageServer.JsonRPC.MessageConnection.ConnectionState" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>MessageConnection.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
       <Class Name="LanguageServer.JsonRPC.MessageConnection.ConnectionException" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>MessageConnection.cs</NewMemberFileName>
@@ -46,7 +38,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAQAQCAAACCAAAAAACAAABBBQAAQAEAAAAACBCAAABA=</HashCode>
+      <HashCode>AAQAQCAAACCAAAAAACAAABBFQAAQAEAAAAACBCAAABA=</HashCode>
       <FileName>MessageConnection.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -54,14 +46,14 @@
   <Class Name="LanguageServer.JsonRPC.ProcessMessageConnection">
     <Position X="5.25" Y="6.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAgACAAAAAAAAAAA=</HashCode>
+      <HashCode>CBAAAAAAACIAAAAAAgIAAAAAAAAAAgAAIAAAAAAAAAA=</HashCode>
       <FileName>ProcessMessageConnection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LanguageServer.JsonRPC.StreamMessageConsumer">
     <Position X="1.25" Y="10" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAQCAIAAAAAAAAAAAAAAARgAAAAAAAAEAAAAEAAAA=</HashCode>
+      <HashCode>AAAAQCAIAAAAAAAAAAAAAAAVgAAAAAAAAEAAAAEAAAA=</HashCode>
       <FileName>StreamMessageConsumer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -76,7 +68,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAgQCBACAAAAEAACAAAAABBAAABAAAAAAAAAAAAEAA=</HashCode>
+      <HashCode>AAAgQCBACAAAAEAACAAAAABFAAABAAAAAAAAAAAAEAA=</HashCode>
       <FileName>StreamMessageProducer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -112,7 +104,7 @@
   <Interface Name="LanguageServer.JsonRPC.IMessageConnection">
     <Position X="5.5" Y="3.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAAAABAAAABA=</HashCode>
       <FileName>IMessageConnection.cs</FileName>
     </TypeIdentifier>
   </Interface>

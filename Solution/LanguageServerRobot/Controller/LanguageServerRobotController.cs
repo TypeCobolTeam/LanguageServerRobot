@@ -84,39 +84,167 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// Start Roboting :-)
+        /// Task for waiting Client's the connection state change event at start time.
         /// </summary>
-        protected async void StartRoboting()
+        public TaskCompletionSource<ConnectionState> ClientTaskConnectionState
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Task for waiting Server's the connection state change event at start time.
+        /// </summary>
+        public TaskCompletionSource<ConnectionState> ServerTaskConnectionState
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Task for waiting the Client's termination
+        /// </summary>
+        public TaskCompletionSource<bool> ClientTaskCompletionSource
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Task for waiting the Server's termination
+        /// </summary>
+        public TaskCompletionSource<bool> ServerTaskCompletionSource
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The Client Task
+        /// </summary>
+        public Task<bool> ClientTask
+        {
+            get;
+            private set;
+        }
+
+        //The Sever Task
+        public Task<bool> ServerTask
+        {
+            get;
+            private set;
+        }
+
+
+        /// <summary>
+        /// Starts the client
+        /// </summary>
+        private void StartClient()
         {
             if (this.ClientConnection != null)
-                this.ClientConnection.Start();
+            {
+                ClientTaskConnectionState = new TaskCompletionSource<ConnectionState>();
+                this.ClientConnection.AddStageChangedEventHandler(ClientStateChanged);
+            }
+            ClientTaskCompletionSource = new TaskCompletionSource<bool>();
+            ClientTask = new Task<bool>(
+                () =>
+                {
+                    Task<bool> task = this.ClientConnection != null ? this.ClientConnection.Start() : null;
+                    bool bResult = task != null ? task.Result : false;
+                    ClientTaskCompletionSource.SetResult(bResult);
+                    return bResult;
+                }
+                );
+            ClientTask.Start();
+        }
+
+        /// <summary>
+        /// Starts the server
+        /// </summary>
+        private void StartServer()
+        {
             if (this.ServerConnection != null)
-                await this.ServerConnection.Start();
+            {
+                ServerTaskConnectionState = new TaskCompletionSource<ConnectionState>();
+                this.ServerConnection.AddStageChangedEventHandler(ServerStateChanged);
+            }
+            ServerTaskCompletionSource = new TaskCompletionSource<bool>();
+            ServerTask = new Task<bool>(
+                () =>
+                {
+                    Task<bool> task = this.ServerConnection != null ? this.ServerConnection.Start() : null;
+                    bool bResult = task != null ? task.Result : false;
+                    ServerTaskCompletionSource.SetResult(bResult);
+                    return bResult;
+                }
+                );
+            ServerTask.Start();
+        }
+
+        /// <summary>
+        /// Start Roboting :-)
+        /// <returns>true if both Client and Server have been launched, false otherwise.</returns>
+        /// </summary>
+        protected bool StartRoboting()
+        {
+            StartClient();
+            StartServer();            
+            //Wait till the client and the server are listening.
+            ConnectionState clientState = ConnectionState.Disposed;
+            if (ClientTaskConnectionState != null)
+            {
+                clientState = ClientTaskConnectionState.Task.Result;
+            }
+            ConnectionState serverState = ConnectionState.Disposed;
+            if (ClientTaskConnectionState != null)
+            {
+                serverState = ClientTaskConnectionState.Task.Result;
+            }
+            return clientState == ConnectionState.Listening && serverState == ConnectionState.Listening;
+        }
+
+        private void ServerStateChanged(object sender, EventArgs e)
+        {
+            if (ServerTaskConnectionState != null)
+                ServerTaskConnectionState.SetResult(this.ServerConnection.State);
+        }
+
+        private void ClientStateChanged(object sender, EventArgs e)
+        {
+            if (ClientTaskConnectionState != null)
+                ClientTaskConnectionState.SetResult(this.ClientConnection.State);
         }
 
         /// <summary>
         /// Start Replaying
+        /// <returns>true if the server has been launched, false otherwise.</returns>
         /// </summary>
-        protected async void StartReplaying()
+        protected bool StartReplaying()
         {
-            if (this.ServerConnection != null)
-                await this.ServerConnection.Start();
+            ServerTask.Start();
+            //Wait till the server is listening.
+            ConnectionState serverState = ConnectionState.Disposed;
+            if (ClientTaskConnectionState != null)
+            {
+                serverState = ClientTaskConnectionState.Task.Result;
+            }
+            return serverState == ConnectionState.Listening;
         }
 
         /// <summary>
         /// Start controlling according the mode.
         /// </summary>
-        public void Start()
+        public bool Start()
         {
             switch(Mode)
             {
                 case ConnectionMode.Client:
-                    StartReplaying();
-                    break;
+                    return StartReplaying();
                 case ConnectionMode.ClientServer:
-                    StartRoboting();
-                    break;
+                    return StartRoboting();
             }
+            return false;
         }
     }
 }
