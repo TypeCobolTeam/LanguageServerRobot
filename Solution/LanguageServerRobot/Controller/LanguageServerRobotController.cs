@@ -135,6 +135,45 @@ namespace LanguageServerRobot.Controller
             private set;
         }
 
+        /// <summary>
+        /// Method to filter messaged produced for the Client
+        /// </summary>
+        /// <param name="message">The mmessage to filter</param>
+        /// <param name="connection">The source connection of the message</param>
+        /// <returns>true if the message is filtered, fals eotherwise.</returns>
+        private bool ClientProducedMessageFilter(string message, IMessageConnection connection)
+        {
+            //If we have a server connection directly forward the message to it
+            if (ServerConnection != null && ServerConnection.State == ConnectionState.Listening)
+            {
+                ServerConnection.SendMessage(message);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Method to filter messaged produced for the Server
+        /// </summary>
+        /// <param name="message">The mmessage to filter</param>
+        /// <param name="connection">The source connection of the message</param>
+        /// <returns>true if the message is filtered, fals eotherwise.</returns>
+        private bool ServerProducedMessageFilter(string message, IMessageConnection connection)
+        {
+            //If we have a client connection directly forward the message to it
+            if (ClientConnection != null && ClientConnection.State == ConnectionState.Listening)
+            {
+                ClientConnection.SendMessage(message);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Starts the client
@@ -143,6 +182,8 @@ namespace LanguageServerRobot.Controller
         {
             if (this.ClientConnection != null)
             {
+                //Set Message filter to us
+                this.ClientConnection.ProducedMessageFilter = ClientProducedMessageFilter;
                 ClientTaskConnectionState = new TaskCompletionSource<ConnectionState>();
                 this.ClientConnection.AddStageChangedEventHandler(ClientStateChanged);
             }
@@ -166,6 +207,8 @@ namespace LanguageServerRobot.Controller
         {
             if (this.ServerConnection != null)
             {
+                //Set Message filter to us
+                this.ServerConnection.ProducedMessageFilter = ServerProducedMessageFilter;
                 ServerTaskConnectionState = new TaskCompletionSource<ConnectionState>();
                 this.ServerConnection.AddStageChangedEventHandler(ServerStateChanged);
             }
@@ -245,6 +288,31 @@ namespace LanguageServerRobot.Controller
                     return StartRoboting();
             }
             return false;
+        }
+
+        /// <summary>
+        /// Forces the calling thread to wait for Client/Server controller exit.
+        /// </summary>
+        public bool WaitExit()
+        {
+            switch (Mode)
+            {
+                case ConnectionMode.Client:
+                    if (ClientTaskCompletionSource != null)
+                    {
+                        bool bResult = ClientTaskCompletionSource.Task.Result;
+                        return bResult;
+                    }
+                    break;
+                case ConnectionMode.ClientServer:
+                    if (ClientTaskCompletionSource != null && ServerTaskCompletionSource != null)
+                    {
+                        bool bResult = ClientTaskCompletionSource.Task.Result && ServerTaskCompletionSource.Task.Result;
+                        return bResult;
+                    }
+                    break;
+            }
+            return true;
         }
     }
 }

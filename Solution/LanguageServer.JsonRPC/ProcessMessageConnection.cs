@@ -80,10 +80,10 @@ namespace LanguageServer.JsonRPC
                 this.Process.StartInfo.Arguments = Arguments;
             this.Process.StartInfo.UseShellExecute = false;
             this.Process.StartInfo.RedirectStandardOutput = true;
-            this.Process.StartInfo.RedirectStandardInput = true;
+            this.Process.StartInfo.RedirectStandardInput = true;            
             //Start the process
             try
-            {
+            {                
                 if (!this.Process.Start())
                 {   //We didn't succed to run the Process
                     base.State = ConnectionState.Disposed;

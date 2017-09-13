@@ -250,7 +250,10 @@ namespace LanguageServer.JsonRPC
             System.Diagnostics.Contracts.Contract.Assert(Producer != null);            
             ThrowIfClosedOrDisposed();
             ThrowIfListening();
-            return await Producer.Listen(messageConsumer);
+            State = ConnectionState.Listening;
+            bool bResult = await Producer.Listen(messageConsumer);
+            State = ConnectionState.Closed;
+            return bResult;
         }
 
         /// <summary>

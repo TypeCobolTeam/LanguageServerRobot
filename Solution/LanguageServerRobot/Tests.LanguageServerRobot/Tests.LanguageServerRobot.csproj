@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -51,7 +55,25 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AutoLanguageServerRobotTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\LanguageServer.JsonRPC\LanguageServer.JsonRPC.csproj">
+      <Project>{5a4cad5c-f178-45d2-86e8-a75d7eac13f4}</Project>
+      <Name>LanguageServer.JsonRPC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC.csproj">
+      <Project>{35d8c4d8-9477-4a15-8bfd-3b729906018d}</Project>
+      <Name>Tests.LanguageServer.JsonRPC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\LanguageServer.Protocol\LanguageServer.Protocol.csproj">
+      <Project>{2950dac0-494d-46b6-a836-7eab4810952a}</Project>
+      <Name>LanguageServer.Protocol</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

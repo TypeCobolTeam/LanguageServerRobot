@@ -147,10 +147,31 @@ namespace LanguageServer.JsonRPC
         }
 
         /// <summary>
+        /// Producer message filter if any
+        /// </summary>
+        ProducerMessageFilter m_MessageFilter;
+        public ProducerMessageFilter ProducedMessageFilter
+        {
+            get
+            {
+                return Interlocked.Exchange<ProducerMessageFilter>(ref m_MessageFilter, m_MessageFilter);
+            }
+            set
+            {
+                Interlocked.Exchange<ProducerMessageFilter>(ref m_MessageFilter, value);
+            }
+        }
+        /// <summary>
         /// Implementation of IMessageHandler
         /// </summary>
         public virtual void HandleMessage(string message, IMessageConnection server)
         {
+            // If a filter has captured the message --> then ignore it
+            ProducerMessageFilter filter = ProducedMessageFilter;
+            bool bHandled = filter != null ? filter(message, server) : false;
+            if (bHandled)
+                return;
+
             JObject jsonObject = JObject.Parse(message);
 
             // Try to read the JsonRPC message properties

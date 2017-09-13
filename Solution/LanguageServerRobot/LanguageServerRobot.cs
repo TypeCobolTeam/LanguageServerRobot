@@ -192,7 +192,15 @@ namespace LanguageServerRobot
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
                             var robot = new LanguageServerRobotController(client, server);
                             robot.PropagateConnectionLogs();
-                            robot.Start();
+                            if (!robot.Start())
+                            {
+                                return -1;
+                            }
+                            else
+                            {
+                                bool bResult = robot.WaitExit();
+                                return bResult ? 0 : -1;
+                            }
                         }
                         break;
                     case LanguageServerRobotController.ConnectionMode.Client:
@@ -200,7 +208,15 @@ namespace LanguageServerRobot
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
                             var robot = new LanguageServerRobotController(server);
                             robot.PropagateConnectionLogs();
-                            robot.Start();
+                            if (!robot.Start())
+                            {
+                                return -1;
+                            }
+                            else
+                            {
+                                bool bResult = robot.WaitExit();
+                                return bResult ? 0 : -1;
+                            }
                         }
                         break;
                 }
