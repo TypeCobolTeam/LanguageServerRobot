@@ -31,6 +31,7 @@ namespace Tests.LanguageServerRobot
             {
                 if (!process.Start())
                 {   //We didn't succed to run the Process
+                    Assert.Fail();
                     return;
                 }
                 else
