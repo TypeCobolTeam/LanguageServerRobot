@@ -127,7 +127,7 @@ namespace LanguageServer.JsonRPC
         /// <summary>
         /// Current Connection State
         /// </summary>
-        public ConnectionState State
+        public virtual ConnectionState State
         {
             get
             {

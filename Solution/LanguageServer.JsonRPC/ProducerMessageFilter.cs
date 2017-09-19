@@ -12,6 +12,6 @@ namespace LanguageServer.JsonRPC
     /// <param name="message">The message to filter</param>
     /// <param name="connection">The connection from which the message commes from.</param>
     /// <returns>true if the message has been filtered and thus shall be ignored, false if the message is not filtered
-    /// and shall be handle.</returns>
+    /// and shall be handled.</returns>
     public delegate bool ProducerMessageFilter(string message, IMessageConnection connection);
 }

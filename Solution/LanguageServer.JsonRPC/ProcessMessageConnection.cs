@@ -146,6 +146,29 @@ namespace LanguageServer.JsonRPC
             get;
             private set;
         }
+
+        /// <summary>
+        /// Current Connection State
+        /// </summary>
+        public override ConnectionState State
+        {
+            get
+            {
+                return base.State;
+            }
+            protected set
+            {                
+                if (value == ConnectionState.Closed || value == ConnectionState.Disposed)
+                {//Ensure that the process is killed
+                    if (!this.Process.HasExited)
+                    {
+                        this.Process.Kill();
+                    }
+                }
+                base.State = value;
+            }
+        }
+
         /// <summary>
         /// Process Exited event handler
         /// </summary>

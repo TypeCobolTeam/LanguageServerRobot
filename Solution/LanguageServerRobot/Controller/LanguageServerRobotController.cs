@@ -191,8 +191,26 @@ namespace LanguageServerRobot.Controller
             ClientTask = new Task<bool>(
                 () =>
                 {
-                    Task<bool> task = this.ClientConnection != null ? this.ClientConnection.Start() : null;
-                    bool bResult = task != null ? task.Result : false;
+                    bool bResult = false;
+                    Task <bool> task = null;
+                    try
+                    {
+                        task = this.ClientConnection != null ? this.ClientConnection.Start() : null;
+                        bResult = task != null ? task.Result : false;
+                    }                    
+                    catch(Exception e)
+                    {
+                        this.ClientConnection.LogWriter?.WriteLine(e.Message);
+                        switch (this.ClientConnection.State)
+                        {
+                            case ConnectionState.Closed:
+                                bResult = true;
+                                break;
+                            default:
+                                bResult = false;
+                                break;
+                        }                        
+                    }
                     ClientTaskCompletionSource.SetResult(bResult);
                     return bResult;
                 }
@@ -216,8 +234,26 @@ namespace LanguageServerRobot.Controller
             ServerTask = new Task<bool>(
                 () =>
                 {
-                    Task<bool> task = this.ServerConnection != null ? this.ServerConnection.Start() : null;
-                    bool bResult = task != null ? task.Result : false;
+                    bool bResult = false;
+                    Task<bool> task = null;
+                    try
+                    {
+                        task = this.ServerConnection != null ? this.ServerConnection.Start() : null;
+                        bResult = task != null ? task.Result : false;
+                    }
+                    catch (Exception e)
+                    {
+                        this.ServerConnection.LogWriter?.WriteLine(e.Message);
+                        switch (this.ServerConnection.State)
+                        {
+                            case ConnectionState.Closed:
+                                bResult = true;
+                                break;
+                            default:
+                                bResult = false;
+                                break;
+                        }
+                    }
                     ServerTaskCompletionSource.SetResult(bResult);
                     return bResult;
                 }
