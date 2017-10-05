@@ -36,6 +36,13 @@
       <SubType>Content</SubType>
       <DependentUpon>CreateScript.sequencediagram</DependentUpon>
     </Content>
+    <Content Include="LaunchingLSRRecordMode.usecasediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="LaunchingLSRRecordMode.usecasediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>LaunchingLSRRecordMode.usecasediagram</DependentUpon>
+    </Content>
     <Content Include="ReplayScript.sequencediagram">
       <SubType>Content</SubType>
     </Content>

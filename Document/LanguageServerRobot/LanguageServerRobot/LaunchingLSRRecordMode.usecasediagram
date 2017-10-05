@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="45988886-e2ae-4dd1-8ce5-1085b29f337d" name="LaunchingLSRRecordMode" linkedPackageId="3ee7cf6f-b599-4ff3-aaea-3556a56558be" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="b63c819c-911c-436d-873e-e65813a695e1">
+      <profileInstance Id="e59c9a70-1750-45d3-8844-66328e7d7ef5" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="a1e0def4-8290-4b16-aa85-117d8e0d6be6">
+      <profileInstance Id="2e8efe67-14e8-41bc-8919-05170b89f5cf" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="98af0bc3-7596-4959-b438-ca8e9ef3dd31" name="Utilisateur" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="9723f1c0-ab92-446a-a8f2-ca1df3a8c726" />
+        <targetEnds>
+          <association Id="5d809030-db2f-4f1a-b368-f2703cd44d83" isDerived="false" sourceEndRoleName="Utilisateur" targetEndRoleName="Editer un document TypeCobol" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="e5831544-5974-4993-9d0a-22f4c5ec033d" LastKnownName="Editer un document TypeCobol" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="023049bb-4d75-4e25-a795-10f9ba840a3f" name="Utilisateur" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="225c82ac-c176-45fa-87b8-ed86678ae736" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="5f90a849-b392-40df-9bf1-471bb6645c84" name="Editer un document TypeCobol" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="bdf6d5ca-08db-4581-a56b-81ecde0442f4" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="bfab975b-80e6-4b3d-a4c8-ddf52477c766" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="d4fed855-432a-4c8c-8382-708f25d9a029" name="TCOBPlugin" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="470242de-665d-4763-9ab0-b13e265d1782" />
+        <targetEnds>
+          <association Id="85675ac8-1ddb-46dc-9aef-51f43f349669" isDerived="false" sourceEndRoleName="TCOBPlugin" targetEndRoleName="1.Démarrer" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="bbbe1466-28ba-42fd-8acf-b67da58f1c9f" LastKnownName="1.Démarrer" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="c4f679aa-875f-479b-9b65-507f9028be99" name="TCOBPlugin" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="ebc4952c-cad3-490f-b98e-ce3b5d024f63" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0b307943-2059-4c91-a151-1c3cac5068e8" name="1.Démarrer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="12206297-424c-4125-ad42-45a8cec50578" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="db2a7869-45d4-4132-9b81-141f45d2aec8" />
+          </association>
+          <association Id="133ff3d0-536c-48b3-8517-13d553e029d7" isDerived="false" sourceEndRoleName="TCOBPlugin" targetEndRoleName="2.Démarrer" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="bc113fdd-f947-44a9-be19-c4215163624b" LastKnownName="3.Démarrer" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a697c538-d4be-4229-af9e-114377ae981f" name="TCOBPlugin" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="071fe519-c4e9-4b28-9414-bbf926abc532" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="423279ed-2f23-4da5-a250-8a0bd94c8f57" name="2.Démarrer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="68d6d788-c308-4886-8cbe-aa885600f251" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="4fda774b-7308-44ba-862e-1dcbfa9af216" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="e5831544-5974-4993-9d0a-22f4c5ec033d" name="Editer un document TypeCobol" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="bec07573-8651-468b-b88d-237c223eac8b" />
+        <targetEnds>
+          <association Id="4e94fd4c-f916-4995-b3f1-e13e5365aba4" isDerived="false" sourceEndRoleName="Editer un document TypeCobol" targetEndRoleName="TCOBPlugin" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="d4fed855-432a-4c8c-8382-708f25d9a029" LastKnownName="TCOBPlugin" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="95040980-e0ae-420d-9446-28595375553c" name="Editer un document TypeCobol" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="52aabe71-5e2d-4713-ba19-235bfe77ac0b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="2cea1bac-8333-4633-ac0c-f709b1f81af0" name="TCOBPlugin" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="565fa923-57c9-4cc8-936b-b4a34111bf4b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a171eded-33fd-40a1-ade5-94490fb9614e" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="bc113fdd-f947-44a9-be19-c4215163624b" name="3.Démarrer" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="82c397bf-a047-446b-b7d3-066b2493317c" />
+        <targetEnds>
+          <association Id="fcbf5e09-1e17-4458-859d-29069c7d80dc" isDerived="false" sourceEndRoleName="2.Démarrer" targetEndRoleName="TypeCobolEditorLanguageClient" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="15e6d51f-2515-441c-a0f4-fcc4fc363bde" LastKnownName="TypeCobolEditorLanguageClient" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="bab0539d-1753-4f43-8ccd-f5c173b4b11f" name="2.Démarrer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="5802d083-c5d7-4c77-8612-6aa94bbc52ca" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="38b2ecb7-f9df-43e2-99db-eeb23859d511" name="TypeCobolEditorLanguageClient" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="74919513-4cef-464a-9ad0-d161be64af83" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="8504a9f7-b88b-414e-b738-bf33adda959b" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="fa8be52f-54b8-43db-91c6-441659d36b5e" name="LanguageServerRobot" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="f27a1dc0-4028-46e4-9210-f5b276f613ba" />
+        <targetEnds>
+          <association Id="23db1189-e2eb-4a34-afc7-548b94cd2595" isDerived="false" sourceEndRoleName="LanguageServerRobot" targetEndRoleName="3.Démarrer" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="fd22efb1-3847-4601-ac5f-b46c088c32ea" LastKnownName="2.Démarrer" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="dd171e00-2a2b-4c38-9cb9-c7691d999800" name="LanguageServerRobot" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="45d1f15a-8c97-4faf-85fa-585c925ffcd7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="f9f27110-bed2-4b7a-8406-4ba8f80193fc" name="3.Démarrer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="58337871-3417-43b2-9470-92089558f54a" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="82e82ca9-3ff2-4e58-89ff-22c49175d180" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="bbbe1466-28ba-42fd-8acf-b67da58f1c9f" name="1.Démarrer" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="5be4e8d5-78e7-41e0-a3e2-92a6da7dc3cd" />
+        <targetEnds>
+          <association Id="9b8cca79-fb4a-417d-a161-f4079a537ce4" isDerived="false" sourceEndRoleName="1.Démarrer" targetEndRoleName="LanguageServerRobot" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="fa8be52f-54b8-43db-91c6-441659d36b5e" LastKnownName="LanguageServerRobot" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="078e6a22-5e59-4c83-9f57-5d462da919d2" name="1.Démarrer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="2c8c81a2-e67e-46fb-a947-e0f36e5e5437" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="1d8cf766-73a6-48ff-bef2-611ff5269d1d" name="LanguageServerRobot" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="5c315f78-5cc6-472c-b378-6248984ca1a7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="56a9aa16-c193-4a00-8dc1-42a3d7a8eda2" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="15e6d51f-2515-441c-a0f4-fcc4fc363bde" name="TypeCobolEditorLanguageClient" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="66a10511-7ffc-44ee-98d3-2f6fc90a3624" />
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="f448d7df-af8c-45e9-b168-3541f0e6fe0d" name="TypeCobol.LanguageServer" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="8bed2b55-5ffe-460d-bb84-c50b51133263" />
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="fd22efb1-3847-4601-ac5f-b46c088c32ea" name="2.Démarrer" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c671e6c6-5cd7-4803-adee-031624f28ccf" />
+        <targetEnds>
+          <association Id="d06988ef-947e-400e-92f0-ad1bd12ed45d" isDerived="false" sourceEndRoleName="3.Démarrer" targetEndRoleName="TypeCobol.LanguageServer" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="f448d7df-af8c-45e9-b168-3541f0e6fe0d" LastKnownName="TypeCobol.LanguageServer" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="153dcfe7-3684-4895-b47b-3516ed214662" name="3.Démarrer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b2c83bc9-e169-4ebb-8cfe-00f2ff4134d7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="652c79d9-c7ef-41f2-a6ed-67accc671fa8" name="TypeCobol.LanguageServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="f994cb7f-770f-4c24-a183-947e6d15e137" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="0e08470f-2548-442a-ba35-a46a979486af" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="3ee7cf6f-b599-4ff3-aaea-3556a56558be" name="LanguageServerRobot">
+    <elementDefinition Id="87eac8a8-8edd-4f12-bef6-349f2c0052f8" />
+  </package>
+</useCaseModelRoot>
