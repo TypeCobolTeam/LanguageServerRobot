@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="LanguageServer.JsonRPC.JsonRPCConnection">
-    <Position X="1.25" Y="3.25" Width="2.25" />
+    <Position X="1" Y="1.5" Width="3" />
     <NestedTypes>
       <Class Name="LanguageServer.JsonRPC.JsonRPCConnection.NotificationMethod" Collapsed="true">
         <TypeIdentifier>
@@ -15,13 +15,13 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAQCDIACgACUBAICBAAECFAAAACAAQAABABAAAABA=</HashCode>
+      <HashCode>AAAAQCDIACgACUBAICBAAECFAAAACAAQAABABQAAgBA=</HashCode>
       <FileName>JsonRPCConnection.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServer.JsonRPC.DelegateMessageConsumer" Collapsed="true">
-    <Position X="8.75" Y="3.5" Width="2.5" />
+    <Position X="8.75" Y="1.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAEAAAAAAAAAAA=</HashCode>
       <FileName>DelegateMessageConsumer.cs</FileName>
@@ -29,7 +29,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServer.JsonRPC.MessageConnection">
-    <Position X="8.5" Y="4.75" Width="2.5" />
+    <Position X="8.5" Y="3" Width="2.75" />
     <NestedTypes>
       <Class Name="LanguageServer.JsonRPC.MessageConnection.ConnectionException" Collapsed="true">
         <TypeIdentifier>
@@ -38,20 +38,20 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAQAQCAAACCAAAAAACAAABBFQAAQAEAAAAACBCAAABA=</HashCode>
+      <HashCode>AAQAQCAAACCAAAAAACACABBFQAAQAEAAAABCBCAAgBA=</HashCode>
       <FileName>MessageConnection.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServer.JsonRPC.ProcessMessageConnection">
-    <Position X="5.25" Y="6.25" Width="2.25" />
+    <Position X="4.5" Y="4.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>CBAAAAAAACIAAAAAAgIAAAAAAAAAAgAAIAAAAAAAAAA=</HashCode>
+      <HashCode>CBAAAAAAACIAAAAAAgIAAAAAAAAAAgAAIAAABAAAAAA=</HashCode>
       <FileName>ProcessMessageConnection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LanguageServer.JsonRPC.StreamMessageConsumer">
-    <Position X="1.25" Y="10" Width="3" />
+    <Position X="1.25" Y="9.75" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAQCAIAAAAAAAAAAAAAAAVgAAAAAAAAEAAAAEAAAA=</HashCode>
       <FileName>StreamMessageConsumer.cs</FileName>
@@ -59,7 +59,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServer.JsonRPC.StreamMessageProducer">
-    <Position X="4.5" Y="9.75" Width="3" />
+    <Position X="4.5" Y="8.75" Width="3" />
     <NestedTypes>
       <Class Name="LanguageServer.JsonRPC.StreamMessageProducer.Headers" Collapsed="true">
         <TypeIdentifier>
@@ -74,60 +74,131 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServer.JsonRPC.NotificationType">
-    <Position X="7.75" Y="10" Width="1.5" />
+    <Position X="7.75" Y="9.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>NotificationType.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LanguageServer.JsonRPC.ResponseResultOrError">
-    <Position X="9.5" Y="10" Width="2" />
+    <Position X="9.5" Y="9.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAABAAAAAAAIAAAAAAAAAAQAAAAACA=</HashCode>
       <FileName>ResponseError.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LanguageServer.JsonRPC.RequestType">
-    <Position X="7.75" Y="12" Width="1.5" />
+    <Position X="7.75" Y="11.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAAAAAAAgAAAAABAAAAAAAAAAAgAAAAA=</HashCode>
       <FileName>RequestType.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LanguageServer.JsonRPC.ResponseWaitState">
-    <Position X="9.5" Y="12" Width="2.25" />
+    <Position X="9.5" Y="11.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQABAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
       <FileName>ResponseWaitState.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="LanguageServer.JsonRPC.IMessageConnection">
-    <Position X="5.5" Y="3.25" Width="1.75" />
+  <Class Name="LanguageServer.JsonRPC.JsonMessageConstants">
+    <Position X="11.5" Y="5.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAAAABAAAABA=</HashCode>
+      <HashCode>AAAAAAAAgAAgAAAAAAAAAAAECAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>JsonMessageConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LanguageServer.JsonRPC.ConnectionLog" Collapsed="true">
+    <Position X="12" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQCAAAAAAAAAAAAAAAAABBAAAgAAIAAAAAACAAAA=</HashCode>
+      <FileName>ConnectionLog.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="LanguageServer.JsonRPC.IMessageConnection">
+    <Position X="4.75" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAABABAAAgBA=</HashCode>
       <FileName>IMessageConnection.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="LanguageServer.JsonRPC.IMessageConsumer">
-    <Position X="11.5" Y="3.5" Width="2.25" />
+    <Position X="11.5" Y="1.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IMessageConsumer.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="LanguageServer.JsonRPC.IMessageProducer">
-    <Position X="11.5" Y="4.75" Width="2.25" />
+    <Position X="11.5" Y="3" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IMessageProducer.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="LanguageServer.JsonRPC.IMessageHandler" Collapsed="true">
-    <Position X="11.5" Y="6" Width="2.25" />
+    <Position X="11.5" Y="4.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IMessageHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="LanguageServer.JsonRPC.IRPCConnection" Collapsed="true">
+    <Position X="11.75" Y="9.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAACAAAAACAAQAAAAAAAAABA=</HashCode>
+      <FileName>IRPCConnection.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LanguageServer.JsonRPC.IConnectionLog" Collapsed="true">
+    <Position X="11.75" Y="10" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAQCAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IConnectionLog.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="LanguageServer.JsonRPC.ErrorCodes" Collapsed="true">
+    <Position X="12" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAgAgAgAAAAAgAAAAAAAAAAAAAABAAAAAACA=</HashCode>
+      <FileName>ErrorCodes.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LanguageServer.JsonRPC.ConnectionState" Collapsed="true">
+    <Position X="12" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAACAAACCAAA=</HashCode>
+      <FileName>ConnectionState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LanguageServer.JsonRPC.ConnectionLogLevel" Collapsed="true">
+    <Position X="12" Y="12.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAEAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>ConnectionLogLevel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="LanguageServer.JsonRPC.ProducerMessageFilter" Collapsed="true">
+    <Position X="11.5" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>ProducerMessageFilter.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="LanguageServer.JsonRPC.NotificationHandler" Collapsed="true">
+    <Position X="11.5" Y="7.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>IRPCHandler.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="LanguageServer.JsonRPC.RequestHandler" Collapsed="true">
+    <Position X="11.5" Y="8.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>IRPCHandler.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

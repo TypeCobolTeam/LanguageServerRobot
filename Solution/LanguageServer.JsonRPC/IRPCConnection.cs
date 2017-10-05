@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LanguageServer.JsonRPC
 {
+    /// <summary>
+    /// Interface that describes an instance of a RPC Connection which is able to send Request, Notifications.
+    /// </summary>
     public interface IRPCConnection
     {
         /// <summary>

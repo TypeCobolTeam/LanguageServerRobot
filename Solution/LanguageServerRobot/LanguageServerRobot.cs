@@ -72,7 +72,16 @@ namespace LanguageServerRobot
             internal set;
         }
 
-        const string DefaultTypeCovolLanguageServerPath = "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
+        /// <summary>
+        /// The Scripts Repository path.
+        /// </summary>
+        public static string ScriptRepositoryPath
+        {
+            get;
+            internal set;
+        }
+
+        const string DefaultTypeCobolLanguageServerPath = "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
 
         /// <summary>
         /// Main Entry point of the Server.
@@ -123,6 +132,7 @@ namespace LanguageServerRobot
                         : LanguageServerRobotController.ConnectionMode.Client
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
+                { "d|Scripts repository directory=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
             };
             System.Collections.Generic.List<string> arguments;
             try { arguments = p.Parse(args); }
@@ -142,7 +152,7 @@ namespace LanguageServerRobot
             if (ServerPath == null)
             {//No server path specified ==> THINK ABOUT HAVING a CONFIG FILE.
                 //Take the default.
-                ServerPath = DefaultTypeCovolLanguageServerPath;
+                ServerPath = DefaultTypeCobolLanguageServerPath;
             }
 
             TextWriter logWriter = null;
