@@ -55,6 +55,7 @@
     <Compile Include="Model\Session.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DebugTextWriter.cs" />
+    <Compile Include="Utilities\Protocol.cs" />
     <Compile Include="Utilities\Options.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
+using LanguageServerRobot.Model;
 
 namespace LanguageServerRobot.Controller
 {
@@ -22,9 +23,46 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
+        /// The State of the LanguageServerRobot Controller
+        /// </summary>
+        public enum ControllerState
+        {
+            /// <summary>
+            /// The first State waiting for the Initialize request to start the session
+            /// </summary>
+            Initialize,
+            /// <summary>
+            /// Recording messages
+            /// </summary>
+            Recording,
+            /// <summary>
+            /// Replaying State
+            /// </summary>
+            Replaying,
+            /// <summary>
+            /// Shuting down
+            /// </summary>
+            Shutdown,
+            /// <summary>
+            /// Exiting
+            /// </summary>
+            Exit
+        }
+
+
+        /// <summary>
         /// The Connection mode
         /// </summary>
         public ConnectionMode Mode
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The Controller State
+        /// </summary>
+        public ControllerState State
         {
             get;
             private set;
@@ -48,6 +86,14 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
+        /// The Model of the current session.
+        /// </summary>
+        protected Session SessionModel
+        {
+            get;set;
+        }
+
+        /// <summary>
         /// Constructor for the LanguageServerRobot running as Client for the Test replay mode.
         /// </summary>
         /// <param name="serverConnection">The target server</param>
@@ -56,6 +102,7 @@ namespace LanguageServerRobot.Controller
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
+            State = ControllerState.Initialize;
         }
 
         /// <summary>
@@ -70,6 +117,7 @@ namespace LanguageServerRobot.Controller
             this.ClientConnection = clientConnection;
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.ClientServer;
+            State = ControllerState.Initialize;
         }
 
         /// <summary>
@@ -140,7 +188,7 @@ namespace LanguageServerRobot.Controller
         /// </summary>
         /// <param name="message">The mmessage to filter</param>
         /// <param name="connection">The source connection of the message</param>
-        /// <returns>true if the message is filtered, fals eotherwise.</returns>
+        /// <returns>true if the message is filtered, false otherwise.</returns>
         private bool ClientProducedMessageFilter(string message, IMessageConnection connection)
         {
             //If we have a server connection directly forward the message to it
@@ -160,7 +208,7 @@ namespace LanguageServerRobot.Controller
         /// </summary>
         /// <param name="message">The mmessage to filter</param>
         /// <param name="connection">The source connection of the message</param>
-        /// <returns>true if the message is filtered, fals eotherwise.</returns>
+        /// <returns>true if the message is filtered, false otherwise.</returns>
         private bool ServerProducedMessageFilter(string message, IMessageConnection connection)
         {
             //If we have a client connection directly forward the message to it
@@ -268,7 +316,16 @@ namespace LanguageServerRobot.Controller
         protected bool StartRoboting()
         {
             StartClient();
-            StartServer();            
+            StartServer();
+            return WaitClientServerTermination();
+        }
+
+        /// <summary>
+        /// Wait that the Client and the Server Terminate
+        /// </summary>
+        /// <returns></returns>
+        private bool WaitClientServerTermination()
+        {
             //Wait till the client and the server are listening.
             ConnectionState clientState = ConnectionState.Disposed;
             if (ClientTaskConnectionState != null)
