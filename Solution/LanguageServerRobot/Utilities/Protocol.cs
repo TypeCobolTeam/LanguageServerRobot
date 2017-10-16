@@ -149,7 +149,6 @@ namespace LanguageServerRobot.Utilities
                 )
             );
 
-            RequestsWithUriMap = new Dictionary<string, Tuple<RequestType, UriExtractor<RequestType>>>();
             RequestsWithUriMap.Add(CompletionRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
                     CompletionRequest.Type,
                     (RequestType type, JObject jsonObject, out object data_params) => {
@@ -163,6 +162,141 @@ namespace LanguageServerRobot.Utilities
                 )
             );
 
+            RequestsWithUriMap.Add(DocumentHighlightRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    DocumentHighlightRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        TextDocumentPosition data = (TextDocumentPosition)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : data.uri;
+                    }
+                )
+            );
+
+            RequestsWithUriMap.Add(DocumentSymbolRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    DocumentSymbolRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        TextDocumentIdentifier data = (TextDocumentIdentifier)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : data.uri;
+                    }
+                )
+            );
+
+            //Document Formating Request
+            RequestsWithUriMap.Add(DocumentFormattingRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    DocumentFormattingRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        DocumentFormattingParams data = (DocumentFormattingParams)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : (data.textDocument == null ? null : data.textDocument.uri);
+                    }
+                )
+            );
+
+            RequestsWithUriMap.Add(DocumentRangeFormattingRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    DocumentRangeFormattingRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        DocumentRangeFormattingParams data = (DocumentRangeFormattingParams)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : (data.textDocument == null ? null : data.textDocument.uri);
+                    }
+                )
+            );
+
+            RequestsWithUriMap.Add(DocumentOnTypeFormattingRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    DocumentOnTypeFormattingRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        DocumentOnTypeFormattingParams data = (DocumentOnTypeFormattingParams)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : (data.textDocument == null ? null : data.textDocument.uri);
+                    }
+                )
+            );
+
+            //Goto Definition
+            RequestsWithUriMap.Add(DefinitionRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    DefinitionRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        TextDocumentPosition data = (TextDocumentPosition)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : data.uri;
+                    }
+                )
+            );
+
+            //Hover Request
+            RequestsWithUriMap.Add(HoverRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    HoverRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        TextDocumentPosition data = (TextDocumentPosition)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : data.uri;
+                    }
+                )
+            );
+
+            //Reference Request
+            RequestsWithUriMap.Add(ReferencesRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    ReferencesRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        TextDocumentPosition data = (TextDocumentPosition)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : data.uri;
+                    }
+                )
+            );
+
+            //Rename
+            RequestsWithUriMap.Add(RenameRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    RenameRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        RenameParams data = (RenameParams)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : (data.textDocument == null ? null : data.textDocument.uri);
+                    }
+                )
+            );
+
+            //Signature Help
+            RequestsWithUriMap.Add(SignatureHelpRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    SignatureHelpRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null)
+                            return null;
+                        TextDocumentPosition data = (TextDocumentPosition)parameters.ToObject(type.ParamsType);
+                        return data == null ? null : data.uri;
+                    }
+                )
+            );
         }
 
         /// <summary>
@@ -196,8 +330,8 @@ namespace LanguageServerRobot.Utilities
         {
             if (jsonObject != null)
             {
-                string requestId = (string)jsonObject["id"];
-                string method = (string)jsonObject["method"];
+                string requestId = (string)jsonObject[String.Intern("id")];
+                string method = (string)jsonObject[String.Intern("method")];
 
                 // Check message type
                 // -- Notification --
@@ -210,8 +344,8 @@ namespace LanguageServerRobot.Utilities
                 {
                     return Message_Kind.Request;
                 }
-                JToken result = jsonObject["result"];
-                JToken error = jsonObject["error"];
+                JToken result = jsonObject[String.Intern("result")];
+                JToken error = jsonObject[String.Intern("error")];
                 // -- Response --
                 if (requestId != null && (result != null || error != null))
                 {
@@ -285,31 +419,6 @@ namespace LanguageServerRobot.Utilities
         }
 
         /// <summary>
-        /// Determine if the given message represents a LanguageServer "initialize" request.
-        /// </summary>
-        /// <param name="message">The message to check</param>
-        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
-        /// <returns>true if the message is a initialize message, false otherwise.</returns>
-        public static bool IsInitializeRequest(string message, out JObject jsonObject)
-        {            
-            return IsInitializeRequest(jsonObject = ToJson(message));
-        }
-
-        /// <summary>
-        /// Determine if the given JSon objects corresponds to the "initialize" request.
-        /// </summary>
-        /// <param name="jsonObject"></param>
-        /// <returns></returns>
-        public static bool IsInitializeRequest(JObject jsonObject)
-        {
-            if (IsRequest(jsonObject))
-            {
-                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.InitializeRequest.Type.Method);
-            }
-            return false;
-        }
-
-        /// <summary>
         /// Determine if the given message is a message associated to an uri.
         /// </summary>
         /// <param name="message">The message to check</param>
@@ -337,5 +446,130 @@ namespace LanguageServerRobot.Utilities
             return false;
         }
 
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "initialize" request.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a initialize message, false otherwise.</returns>
+        public static bool IsInitializeRequest(string message, out JObject jsonObject)
+        {
+            return IsInitializeRequest(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon objects corresponds to the "initialize" request.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns></returns>
+        public static bool IsInitializeRequest(JObject jsonObject)
+        {
+            if (IsRequest(jsonObject))
+            {
+                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.InitializeRequest.Type.Method);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "shutdown" request.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a shutdown message, false otherwise.</returns>
+        public static bool IsShutdownRequest(string message, out JObject jsonObject)
+        {
+            return IsShutdownRequest(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon object corresponds to the "shutdown" request.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns>true if the Json object is a shutdown message, false otherwise.</returns>
+        public static bool IsShutdownRequest(JObject jsonObject)
+        {
+            if (IsRequest(jsonObject))
+            {
+                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.ShutdownRequest.Type.Method);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "exit" notification.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is an exit notification, false otherwise.</returns>
+        public static bool IsExitNotification(string message, out JObject jsonObject)
+        {
+            return IsExitNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon object corresponds to the "exit" notification.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns>true if the Json object is an exit notification, false otherwise.</returns>
+        public static bool IsExitNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.ExitNotification.Type.Method);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "textDocument/didOpen" notification.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a "textDocument/didOpen" message, false otherwise.</returns>
+        public static bool IsDidOpenTextDocumentNotification(string message, out JObject jsonObject)
+        {
+            return IsDidOpenTextDocumentNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon objects corresponds to the "textDocument/didOpen" request.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns></returns>
+        public static bool IsDidOpenTextDocumentNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.DidOpenTextDocumentNotification.Type.Method);
+            }
+            return false;
+
+        }
+
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "textDocument/didClose" notification.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a "textDocument/didClose" message, false otherwise.</returns>
+        public static bool IsDidCloseTextDocumentNotification(string message, out JObject jsonObject)
+        {
+            return IsDidCloseTextDocumentNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon objects corresponds to the "textDocument/didClose" request.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns></returns>
+        public static bool IsDidCloseTextDocumentNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.DidCloseTextDocumentNotification.Type.Method);
+            }
+            return false;
+        }
     }
 }

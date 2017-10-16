@@ -10,16 +10,16 @@ namespace LanguageServer.Protocol
         /// <summary>
         /// The document to format.
         /// </summary>
-        TextDocumentIdentifier textDocument { get; set; }
+        public TextDocumentIdentifier textDocument { get; set; }
 
         /// <summary>
         /// The range to format
         /// </summary>
-        Range range { get; set; }
+        public Range range { get; set; }
 
         /// <summary>
         /// The format options
         /// </summary>
-        FormattingOptions options { get; set; }
+        public FormattingOptions options { get; set; }
     }
 }
