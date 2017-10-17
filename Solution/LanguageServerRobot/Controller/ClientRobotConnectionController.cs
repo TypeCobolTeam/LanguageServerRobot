@@ -10,8 +10,8 @@ namespace LanguageServerRobot.Controller
     /// <summary>
     /// Class that will handle the Client side Robot connection business logic
     /// </summary>
-    public class ClientRobotConnectionController : JsonRPCConnection
-    {
+    public class ClientRobotConnectionController : JsonRPCConnection, IRobotModeController
+    {        
         /// <summary>
         /// Default Client Robot Connection controller, using LanguageServerRobot's application
         /// Standard Input/Output Streams.
@@ -26,6 +26,58 @@ namespace LanguageServerRobot.Controller
         public ClientRobotConnectionController(IMessageConnection messageConnection) : base(messageConnection)
         {
 
+        }
+
+        public bool IsModeInitialized
+        {
+            get
+            {
+                return RobotModeController.IsModeInitialized;                
+            }
+        }
+
+        public bool IsModeStarted
+        {
+            get
+            {
+                return RobotModeController.IsModeStarted;
+            }
+        }
+
+        public bool IsModeStopped
+        {
+            get
+            {
+                return RobotModeController.IsModeStopped;
+            }
+        }
+
+        /// <summary>
+        /// The Robot Mode Controller for the Business Logic.
+        /// </summary>
+        public IRobotModeController RobotModeController
+        {
+            get;
+            internal set;
+        }
+        /// <summary>
+        /// Handling a message that comes from the Client: From Me.
+        /// </summary>
+        /// <param name="message"></param>
+        public void FromClient(string message)
+        {
+            System.Diagnostics.Contracts.Contract.Requires(RobotModeController != null);
+            RobotModeController.FromClient(message);
+        }
+
+        /// <summary>
+        /// handling a message that comes from the server.
+        /// </summary>
+        /// <param name="message"></param>
+        public void FromServer(string message)
+        {
+            //Do nothing let the server controller do its logic.
+            throw new NotImplementedException();
         }
     }
 }

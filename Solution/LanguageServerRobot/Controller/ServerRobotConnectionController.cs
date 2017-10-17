@@ -10,7 +10,7 @@ namespace LanguageServerRobot.Controller
     /// <summary>
     /// Class that will handle the Server side Robot connection business logic
     /// </summary>
-    public class ServerRobotConnectionController : JsonRPCConnection
+    public class ServerRobotConnectionController : JsonRPCConnection, IRobotModeController
     {
         /// <summary>
         /// Message Connection constructor
@@ -27,6 +27,58 @@ namespace LanguageServerRobot.Controller
         public ServerRobotConnectionController(ProcessMessageConnection connection) : this((IMessageConnection)connection)
         {
             connection.ProcessExited += ProcessExitedEventHandler;
+        }
+
+        public bool IsModeInitialized
+        {
+            get
+            {
+                return RobotModeController.IsModeInitialized;
+            }
+        }
+
+        public bool IsModeStarted
+        {
+            get
+            {
+                return RobotModeController.IsModeStarted;
+            }
+        }
+
+        public bool IsModeStopped
+        {
+            get
+            {
+                return RobotModeController.IsModeStopped;
+            }
+        }
+
+        /// <summary>
+        /// The Robot Mode Controller for the Business Logic.
+        /// </summary>
+        public IRobotModeController RobotModeController
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Handler for a message that commes from the Client
+        /// </summary>
+        /// <param name="message"></param>
+        public void FromClient(string message)
+        {
+            //Do Nothing, let the client controller do its logic.
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Handler for a message that comes from the Server, that is to say from me.
+        /// </summary>
+        /// <param name="message"></param>
+        public void FromServer(string message)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

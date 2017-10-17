@@ -5,13 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
 using LanguageServerRobot.Model;
+using LanguageServerRobot.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServerRobot.Controller
 {
     /// <summary>
     /// This class represents the Controller of the LanguageServerRobot business rules.
     /// </summary>
-    public class LanguageServerRobotController
+    public class LanguageServerRobotController : IRobotModeController
     {
         /// <summary>
         /// Language Server Robot Controller Connection mode
@@ -20,33 +22,6 @@ namespace LanguageServerRobot.Controller
         {
             Client,
             ClientServer,
-        }
-
-        /// <summary>
-        /// The State of the LanguageServerRobot Controller
-        /// </summary>
-        public enum ControllerState
-        {
-            /// <summary>
-            /// The first State waiting for the Initialize request to start the session
-            /// </summary>
-            Initialize,
-            /// <summary>
-            /// Recording messages
-            /// </summary>
-            Recording,
-            /// <summary>
-            /// Replaying State
-            /// </summary>
-            Replaying,
-            /// <summary>
-            /// Shuting down
-            /// </summary>
-            Shutdown,
-            /// <summary>
-            /// Exiting
-            /// </summary>
-            Exit
         }
 
 
@@ -59,14 +34,6 @@ namespace LanguageServerRobot.Controller
             private set;
         }
 
-        /// <summary>
-        /// The Controller State
-        /// </summary>
-        public ControllerState State
-        {
-            get;
-            private set;
-        }
         /// <summary>
         /// The Connection with the Client if the Connection mode is ClientServer, null otherwise.
         /// </summary>
@@ -102,7 +69,6 @@ namespace LanguageServerRobot.Controller
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
-            State = ControllerState.Initialize;
         }
 
         /// <summary>
@@ -117,7 +83,10 @@ namespace LanguageServerRobot.Controller
             this.ClientConnection = clientConnection;
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.ClientServer;
-            State = ControllerState.Initialize;
+            //Transfert the roboting mode controller instance to the client and server controller
+            RobotModeController = new RecordingModeController();
+            clientConnection.RobotModeController = RobotModeController;
+            serverConnection.RobotModeController = RobotModeController;
         }
 
         /// <summary>
@@ -191,10 +160,11 @@ namespace LanguageServerRobot.Controller
         /// <returns>true if the message is filtered, false otherwise.</returns>
         private bool ClientProducedMessageFilter(string message, IMessageConnection connection)
         {
+            JObject jsonMessage = null;
             //If we have a server connection directly forward the message to it
             if (ServerConnection != null && ServerConnection.State == ConnectionState.Listening)
             {
-                ServerConnection.SendMessage(message);
+                FromClient(message);                
                 return true;
             }
             else
@@ -211,10 +181,11 @@ namespace LanguageServerRobot.Controller
         /// <returns>true if the message is filtered, false otherwise.</returns>
         private bool ServerProducedMessageFilter(string message, IMessageConnection connection)
         {
+            JObject jsonMessage = null;
             //If we have a client connection directly forward the message to it
             if (ClientConnection != null && ClientConnection.State == ConnectionState.Listening)
             {
-                ClientConnection.SendMessage(message);
+                FromServer(message);                
                 return true;
             }
             else
@@ -406,6 +377,51 @@ namespace LanguageServerRobot.Controller
                     break;
             }
             return true;
+        }
+
+        /// <summary>
+        /// The Robot Mode Controller for the Business Logic.
+        /// </summary>
+        public IRobotModeController RobotModeController
+        {
+            get;
+            internal set;
+        }
+
+        public bool IsModeInitialized
+        {
+            get
+            {
+                return RobotModeController.IsModeInitialized;
+            }
+        }
+
+        public bool IsModeStarted
+        {
+            get
+            {
+                return RobotModeController.IsModeStarted;
+            }
+        }
+
+        public bool IsModeStopped
+        {
+            get
+            {
+                return RobotModeController.IsModeStopped;
+            }
+        }
+
+        public void FromClient(string message)
+        {
+            ClientConnection.FromClient(message);
+            ServerConnection.SendMessage(message);
+        }
+
+        public void FromServer(string message)
+        {
+            ServerConnection.FromServer(message);
+            ClientConnection.SendMessage(message);
         }
     }
 }

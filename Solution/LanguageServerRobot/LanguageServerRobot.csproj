@@ -49,7 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\ClientRobotConnectionController.cs" />
+    <Compile Include="Controller\IRobotModeController.cs" />
     <Compile Include="Controller\LanguageServerRobotController.cs" />
+    <Compile Include="Controller\RecordingModeController.cs" />
     <Compile Include="Controller\ServerRobotConnectionController.cs" />
     <Compile Include="LanguageServerRobot.cs" />
     <Compile Include="Model\Session.cs" />

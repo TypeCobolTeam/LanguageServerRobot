@@ -418,6 +418,60 @@ namespace LanguageServerRobot.Utilities
             return MessageKind(jsonObject) == Message_Kind.Response;
         }
 
+        public static bool IsErrorResponse(JObject jsonObject)
+        {
+            System.Diagnostics.Contracts.Contract.Requires(IsResponse(jsonObject));            
+            return jsonObject[String.Intern("error")] != null;
+        }
+
+        /// <summary>
+        /// Get the Id corresponding toa JSON request or response.
+        /// </summary>
+        /// <param name="jsonObject">The JSon request or response</param>
+        /// <returns>The Request or Response Id.</returns>
+        public static string GetRequestId(JObject jsonObject)
+        {
+            System.Diagnostics.Contracts.Contract.Requires(IsRequest(jsonObject) || IsResponse(jsonObject));
+            string requestId = (string)jsonObject[String.Intern("id")];
+            return requestId;
+        }
+
+        /// <summary>
+        /// Get the Id corresponding toa JSON notification, request or response.
+        /// </summary>
+        /// <param name="jsonObject">The JSon notification, request or response</param>
+        /// <returns>The Notification, Request or Response method.</returns>
+        public static string GetMessageMethod(JObject jsonObject)
+        {
+            System.Diagnostics.Contracts.Contract.Requires(IsNotification(jsonObject) || IsRequest(jsonObject) || IsResponse(jsonObject));
+            string method = (string)jsonObject[String.Intern("method")];
+            return method;
+        }
+
+        /// <summary>
+        /// Get the result of a response
+        /// </summary>
+        /// <param name="jsonObject">The JSOn object of the response</param>
+        /// <returns>The result if any, null otherwise.</returns>
+        public static JToken GetResponseResult(JObject jsonObject)
+        {
+            System.Diagnostics.Contracts.Contract.Requires(IsResponse(jsonObject));
+            JToken result = (string)jsonObject[String.Intern("result")];
+            return result;
+        }
+
+        /// <summary>
+        /// Get the error object of a response
+        /// </summary>
+        /// <param name="jsonObject">The JSOn object of the response</param>
+        /// <returns>The error object if any, null otherwise.</returns>
+        public static JToken GetResponseError(JObject jsonObject)
+        {
+            System.Diagnostics.Contracts.Contract.Requires(IsResponse(jsonObject));
+            JToken error = jsonObject[String.Intern("error")];
+            return error;
+        }
+
         /// <summary>
         /// Determine if the given message is a message associated to an uri.
         /// </summary>
@@ -441,7 +495,23 @@ namespace LanguageServerRobot.Utilities
             uri = null;
             if (jsonObject != null)
             {
-
+                Message_Kind kind = MessageKind(jsonObject);
+                switch(kind)
+                {
+                    case Message_Kind.Notification:
+                        {
+                            string method = GetMessageMethod(jsonObject);
+                            return NotificationsWithUriMap.ContainsKey(method);
+                        }                        
+                    case Message_Kind.Request:
+                        {
+                            string method = GetMessageMethod(jsonObject);
+                            return RequestsWithUriMap.ContainsKey(method);
+                        }
+                        break;
+                    default:
+                        return false;
+                }
             }
             return false;
         }
