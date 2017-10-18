@@ -78,7 +78,8 @@ namespace LanguageServerRobot.Controller
         /// <param name="message"></param>
         public void FromServer(string message)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Contracts.Contract.Requires(RobotModeController != null);
+            RobotModeController.FromServer(message);
         }
 
         /// <summary>

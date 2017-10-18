@@ -373,7 +373,7 @@ namespace LanguageServerRobot.Utilities
         /// <returns>true if the Json object is a request, false otherwise.</returns>
         public static bool IsRequest(JObject jsonObject)
         {
-            return MessageKind(jsonObject) == Message_Kind.Response;
+            return MessageKind(jsonObject) == Message_Kind.Request;
         }
 
         /// <summary>
@@ -536,7 +536,32 @@ namespace LanguageServerRobot.Utilities
         {
             if (IsRequest(jsonObject))
             {
-                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.InitializeRequest.Type.Method);
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.InitializeRequest.Type.Method);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "initialized" notification.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a initialized notification, false otherwise.</returns>
+        public static bool IsInitializedNotification(string message, out JObject jsonObject)
+        {
+            return IsInitializedNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon objects corresponds to the "initialized" notification.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns></returns>
+        public static bool IsInitializedNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return ((string)jsonObject[String.Intern("method")]).Equals("initialized");
             }
             return false;
         }
@@ -561,7 +586,7 @@ namespace LanguageServerRobot.Utilities
         {
             if (IsRequest(jsonObject))
             {
-                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.ShutdownRequest.Type.Method);
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.ShutdownRequest.Type.Method);
             }
             return false;
         }
@@ -586,7 +611,7 @@ namespace LanguageServerRobot.Utilities
         {
             if (IsNotification(jsonObject))
             {
-                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.ExitNotification.Type.Method);
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.ExitNotification.Type.Method);
             }
             return false;
         }
@@ -611,7 +636,7 @@ namespace LanguageServerRobot.Utilities
         {
             if (IsNotification(jsonObject))
             {
-                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.DidOpenTextDocumentNotification.Type.Method);
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.DidOpenTextDocumentNotification.Type.Method);
             }
             return false;
 
@@ -637,9 +662,35 @@ namespace LanguageServerRobot.Utilities
         {
             if (IsNotification(jsonObject))
             {
-                return jsonObject[String.Intern("method")].Equals(LanguageServer.Protocol.DidCloseTextDocumentNotification.Type.Method);
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.DidCloseTextDocumentNotification.Type.Method);
             }
             return false;
         }
+
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "window/showMessage" notification.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a "window/showMessage" notification, false otherwise.</returns>
+        public static bool IsShowMessageNotification(string message, out JObject jsonObject)
+        {
+            return IsShowMessageNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon object corresponds to the "window/showMessage" notification.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns>true if the Json object is a "window/showMessage" notification, false otherwise.</returns>
+        public static bool IsShowMessageNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.ShowMessageNotification.Type.Method);
+            }
+            return false;
+        }
+
     }
 }

@@ -98,6 +98,8 @@ namespace LanguageServerRobot.Controller
             log = log ?? ConnectionLog.GetInstance();
             ClientConnection?.PropagateConnectionLogs(log);
             ServerConnection?.PropagateConnectionLogs(log);
+            if (RobotModeController is IConnectionLog)
+                log.AssignTo(RobotModeController as IConnectionLog);            
         }
 
         /// <summary>

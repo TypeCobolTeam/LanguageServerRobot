@@ -100,7 +100,7 @@ namespace LanguageServer.JsonRPC
             }
 
             // Send text message
-            this.MessageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
+            SendMessage(jsonMessage.ToString(Formatting.None));
         }
 
         // Add Json RPC standard property
@@ -135,7 +135,7 @@ namespace LanguageServer.JsonRPC
             }
 
             //  Send text message
-            this.MessageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
+            SendMessage(jsonMessage.ToString(Formatting.None));
 
             // Remember all elements which will be needed to handle correctly the response to the request
             TaskCompletionSource<ResponseResultOrError> taskCompletionSource = new TaskCompletionSource<ResponseResultOrError>();
@@ -274,7 +274,7 @@ namespace LanguageServer.JsonRPC
             }
 
             //  Send text message
-            this.MessageConnection.SendMessage(jsonMessage.ToString(Formatting.None));
+            SendMessage(jsonMessage.ToString(Formatting.None));
         }
 
         protected virtual void HandleResponse(string requestId, JToken result, JToken error)
@@ -380,7 +380,7 @@ namespace LanguageServer.JsonRPC
         /// Send a message.
         /// </summary>
         /// <param name="message">The message to be sent</param>
-        public void SendMessage(string message)
+        public virtual void SendMessage(string message)
         {
             System.Diagnostics.Contracts.Contract.Assert(this.MessageConnection != null);
             if (this.MessageConnection != null)

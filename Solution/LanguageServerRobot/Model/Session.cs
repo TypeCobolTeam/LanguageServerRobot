@@ -37,6 +37,28 @@ namespace LanguageServerRobot.Model
         /// </summary>
         public string initialize_result { get; set; }
         /// <summary>
+        /// The "initialize" notification from the client.
+        /// </summary>
+        public string initialized_notification { get; set; }
+        /// <summary>
+        /// All messages from the client that occured after the "initialize" request result.
+        /// </summary>
+        public List<string> client_in_initialize_messages { get; protected set; }
+        /// <summary>
+        /// All messages from the client that occured after the "initialized" notification ==> in the start.
+        /// Are not not messages an opened document.
+        /// </summary>
+        public List<string> client_in_start_messages { get; protected set; }
+        /// <summary>
+        /// All messages from the server that occured after the "initialize" request result.
+        /// </summary>
+        public List<string> server_in_initialize_messages { get; protected set; }
+        /// <summary>
+        /// All messages from the server that occured after the "initialized" notification ==> in the start.
+        /// Are not not messages an opened document.
+        /// </summary>
+        public List<string> server_in_start_messages { get; protected set; }
+        /// <summary>
         /// The list of session's script files.
         /// </summary>
         public List<string> scripts { get; set; }
@@ -53,6 +75,12 @@ namespace LanguageServerRobot.Model
             scripts = new List<string>();
             date = System.DateTime.Today.ToString();
             user = Environment.UserName;
+
+            client_in_initialize_messages = new List<string>();
+            client_in_start_messages = new List<string>();
+
+            server_in_initialize_messages = new List<string>();
+            server_in_start_messages = new List<string>();
         }
     }
 }

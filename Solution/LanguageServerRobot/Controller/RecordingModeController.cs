@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LanguageServer.JsonRPC;
 using LanguageServerRobot.Model;
 using LanguageServerRobot.Utilities;
 using Newtonsoft.Json.Linq;
@@ -12,7 +14,7 @@ namespace LanguageServerRobot.Controller
     /// <summary>
     /// Robot Recording Mode Controller.
     /// </summary>
-    public class RecordingModeController : IRobotModeController
+    public class RecordingModeController : AbstractModeController
     {
         /// <summary>
         /// The recording State
@@ -30,12 +32,12 @@ namespace LanguageServerRobot.Controller
             /// <summary>
             /// The Recording is started.
             /// </summary>
-            Start = 0x01 << 1,
+            Start = 0x01 << 2,
 
             /// <summary>
             /// The recording is stopped
             /// </summary>
-            Stop = 0x01 << 2,
+            Stop = 0x01 << 3,
 
             /// <summary>
             /// Initialization request error
@@ -79,7 +81,7 @@ namespace LanguageServerRobot.Controller
             set;
         }
 
-        public bool IsModeInitialized
+        public override bool IsModeInitialized
         {
             get
             {
@@ -87,7 +89,7 @@ namespace LanguageServerRobot.Controller
             }
         }
 
-        public bool IsModeStarted
+        public override bool IsModeStarted
         {
             get
             {
@@ -95,7 +97,7 @@ namespace LanguageServerRobot.Controller
             }
         }
 
-        public bool IsModeStopped
+        public override bool IsModeStopped
         {
             get
             {
@@ -111,7 +113,6 @@ namespace LanguageServerRobot.Controller
             }
         }
 
-
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -124,10 +125,11 @@ namespace LanguageServerRobot.Controller
         /// Handle message incoming from the client side.
         /// </summary>
         /// <param name="message">The client side message</param>
-        public void FromClient(string message)
+        public override void FromClient(string message)
         {
             System.Diagnostics.Contracts.Contract.Assert(message != null);
             JObject jsonObject = null;
+            bool consumed = false;
             switch(State)
             {
                 case RecordingState.NotInitialized:
@@ -139,9 +141,43 @@ namespace LanguageServerRobot.Controller
                             {   //Save the original initialization object.
                                 JInitializeObject = jsonObject;
                                 InitializeRequest = message;
+                                consumed = true;
                             }
                         }
+                        if (!consumed)
+                        {
+                            LogNotConsumedMessage(message);
+                        }
                     }
+                    break;
+                case RecordingState.Initialized:
+                    {
+                        if (Protocol.IsNotification(message, out jsonObject))
+                        {
+                            if (Protocol.IsInitializedNotification(message, out jsonObject))
+                            {   //Notification from the Client that it has take in account the "initialize" result from the server.
+                                //==> We can start both Client and Server are OK.
+                                State |= RecordingState.Start;
+                                SessionModel.initialized_notification = message;
+                                consumed = true;
+                            }
+                        }
+                        if (!consumed)
+                        {
+                            SessionModel.client_in_initialize_messages.Add(message);
+                        }
+                    }
+                    break;
+                case RecordingState.Initialized | RecordingState.Start:
+                    {
+
+                    }
+                    if (!consumed)
+                    {
+                        SessionModel.client_in_start_messages.Add(message);
+                    }
+                    break;
+                default:
                     break;
             }
         }
@@ -150,10 +186,11 @@ namespace LanguageServerRobot.Controller
         /// Handle message comming from the server side.
         /// </summary>
         /// <param name="message">The Server side message.</param>
-        public void FromServer(string message)
+        public override void FromServer(string message)
         {
             System.Diagnostics.Contracts.Contract.Assert(message != null);
             JObject jsonObject = null;
+            bool consumed = false;
             switch (State)
             {
                 case RecordingState.NotInitialized:
@@ -168,10 +205,32 @@ namespace LanguageServerRobot.Controller
                                 if (requestId != null && responseIde != null && requestId.Equals(responseIde))
                                 {//Ok Initalization result
                                     InitializeSession(message, jsonObject);
+                                    consumed = true;
                                 }
                             }
                         }
+                        if (!consumed)
+                        {
+                            LogNotConsumedMessage(message);
+                        }
                     }
+                    break;
+                case RecordingState.Initialized:
+                    if (!consumed)
+                    {
+                        SessionModel.server_in_initialize_messages.Add(message);
+                    }
+                    break;
+                case RecordingState.Initialized | RecordingState.Start:
+                    {
+
+                    }
+                    if (!consumed)
+                    {
+                        SessionModel.server_in_start_messages.Add(message);
+                    }
+                    break;
+                default:
                     break;
             }
         }
@@ -190,8 +249,8 @@ namespace LanguageServerRobot.Controller
             }
             else
             {
-                State |= RecordingState.Initialized;
-                State |= RecordingState.Start;
+                State &= ~RecordingState.NotInitialized;
+                State |= RecordingState.Initialized;                                
                 SessionModel = new Session();
                 SessionModel.initialize = InitializeRequest;
                 SessionModel.initialize_result = message;
