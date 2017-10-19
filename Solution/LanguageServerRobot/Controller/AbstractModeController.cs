@@ -55,5 +55,14 @@ namespace LanguageServerRobot.Controller
             }
         }
 
+        /// <summary>
+        /// Log an unexpected message from the protocol
+        /// </summary>
+        /// <param name="format">The format of message to usse</param>
+        /// <param name="message">The message to log</param>
+        public void LogUnexpectedMessage(string format, string message)
+        {
+            ProtocolLogWriter?.WriteLine(string.Format(format,message));
+        }
     }
 }

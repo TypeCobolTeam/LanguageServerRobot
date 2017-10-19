@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.Protocol;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServerRobot.Model
 {
@@ -66,6 +67,16 @@ namespace LanguageServerRobot.Model
         /// The shutdown message
         /// </summary>
         public string shutdown { get; set; }
+
+        /// <summary>
+        /// Dump to the Debug Output Stream
+        /// </summary>
+        public void DebugDump()
+        {
+            JObject jobject = JObject.FromObject(this);
+            string text = jobject.ToString();
+            System.Diagnostics.Debug.WriteLine(text);
+        }
 
         /// <summary>
         /// Empty constructor
