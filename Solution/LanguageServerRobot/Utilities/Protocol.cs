@@ -492,6 +492,7 @@ namespace LanguageServerRobot.Utilities
         /// <returns>true if the Json object is associated to an uri, false otherwise.</returns>
         public static bool IsMessageWithUri(JObject jsonObject, out string uri)
         {
+            bool bResult = false;
             uri = null;
             if (jsonObject != null)
             {
@@ -501,19 +502,30 @@ namespace LanguageServerRobot.Utilities
                     case Message_Kind.Notification:
                         {
                             string method = GetMessageMethod(jsonObject);
-                            return NotificationsWithUriMap.ContainsKey(method);
-                        }                        
+                            bResult = NotificationsWithUriMap.ContainsKey(method);
+                            if (bResult)
+                            {
+                                object parameter = null;
+                                uri = NotificationsWithUriMap[method].Item2(NotificationsWithUriMap[method].Item1, jsonObject, out parameter);
+                            }
+                        }
+                        break;                     
                     case Message_Kind.Request:
                         {
                             string method = GetMessageMethod(jsonObject);
-                            return RequestsWithUriMap.ContainsKey(method);
+                            bResult = RequestsWithUriMap.ContainsKey(method);
+                            if (bResult)
+                            {
+                                object parameter = null;
+                                uri = RequestsWithUriMap[method].Item2(RequestsWithUriMap[method].Item1, jsonObject, out parameter);
+                            }
                         }
                         break;
                     default:
-                        return false;
+                        break;
                 }
             }
-            return false;
+            return bResult;
         }
 
         /// <summary>

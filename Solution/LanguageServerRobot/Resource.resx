@@ -129,6 +129,9 @@
   <data name="UnexpectedResponseFromServer" xml:space="preserve">
     <value>An Unexpected Response has been received from the server without a corresponding request: {0}</value>
   </data>
+  <data name="UnmatcheDidCloseNotification" xml:space="preserve">
+    <value>No "did/Open" notification that matches the "did/Close" notification: {0}</value>
+  </data>
   <data name="UriNotAssociatedToAScript" xml:space="preserve">
     <value>The given uri is not associated to a script: {0}</value>
   </data>

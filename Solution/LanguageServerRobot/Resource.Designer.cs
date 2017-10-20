@@ -97,6 +97,15 @@ namespace LanguageServerRobot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No &quot;did/Open&quot; notification that matches the &quot;did/Close&quot; notification: {0}.
+        /// </summary>
+        internal static string UnmatcheDidCloseNotification {
+            get {
+                return ResourceManager.GetString("UnmatcheDidCloseNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given uri is not associated to a script: {0}.
         /// </summary>
         internal static string UriNotAssociatedToAScript {

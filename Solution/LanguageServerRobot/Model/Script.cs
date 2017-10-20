@@ -83,6 +83,10 @@ namespace LanguageServerRobot.Model
         /// </summary>
         public string description { get; set; }
         /// <summary>
+        /// The Uri corresponding to this stript.
+        /// </summary>
+        public string uri { get; set; }
+        /// <summary>
         /// Parameters of the Initialization message request request
         /// </summary>
         public string initialize { get; set; }
@@ -154,6 +158,19 @@ namespace LanguageServerRobot.Model
         }
 
         /// <summary>
+        /// Determine if this script is a valid script. A Valid script is a script that have received
+        /// a didOpen and a didClose notification.
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                JObject jdidOpen = null;
+                JObject jdidClose = null;
+                return Protocol.IsDidOpenTextDocumentNotification(this.didOpen, out jdidOpen) && Protocol.IsDidCloseTextDocumentNotification(this.didClose, out jdidClose);
+            }
+        }
+        /// <summary>
         /// Dump to the Debug Output Stream
         /// </summary>
         public void DebugDump()
@@ -166,11 +183,21 @@ namespace LanguageServerRobot.Model
         /// <summary>
         /// Empty constructor
         /// </summary>
-        public Script()
+        public Script() : this(null)
+        {            
+        }
+
+        /// <summary>
+        /// Constructor with uri
+        /// </summary>
+        /// <param name="uri">The script uri</param>
+        public Script(string uri)
         {
+            this.uri = uri;
             user = Environment.UserName;
             date = System.DateTime.Today.ToString();
             messages = new List<Message>();
         }
+
     }
 }

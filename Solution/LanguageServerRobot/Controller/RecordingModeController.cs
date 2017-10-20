@@ -125,6 +125,11 @@ namespace LanguageServerRobot.Controller
         Dictionary<string, string> RequestIdUriMap;
 
         /// <summary>
+        /// The list of valid script of the session.
+        /// </summary>
+        List<Script> Scripts;
+
+        /// <summary>
         /// Empty constructor.
         /// </summary>
         public RecordingModeController()
@@ -213,6 +218,11 @@ namespace LanguageServerRobot.Controller
                             if (Protocol.IsDidOpenTextDocumentNotification(jsonObject))
                             {
                                 StartScript(message, jsonObject);
+                                consumed = true;
+                            }
+                            else if (Protocol.IsDidCloseTextDocumentNotification(jsonObject))
+                            {
+                                StopScript(message, jsonObject);
                                 consumed = true;
                             }
                             else if (Protocol.IsMessageWithUri(jsonObject, out uri))
@@ -359,8 +369,9 @@ namespace LanguageServerRobot.Controller
             }
             else
             {
-                script = new Script();
+                script = new Script(uri);
                 script.didOpen = message;
+                this[uri] = script;
             }
         }
 
@@ -399,5 +410,40 @@ namespace LanguageServerRobot.Controller
                 return true;
             }            
         }
+
+        /// <summary>
+        /// Stop a script
+        /// </summary>
+        /// <param name="message">The original "textDocument/didClose" notification</param>
+        /// <param name="jsonObject">The Json object corresponding to the "textDocument/didClose" notification</param>
+        private void StopScript(string message, JObject jsonObject)
+        {
+            string uri = null;
+            Protocol.IsMessageWithUri(jsonObject, out uri);
+            System.Diagnostics.Contracts.Contract.Assume(uri != null);
+            Script script = this[uri];
+            if (script == null)
+            {//Hum...No script with the same uri??? ==> Log This
+                base.ProtocolLogWriter?.WriteLine(string.Format(Resource.UnmatcheDidCloseNotification, message));
+            }
+            else
+            {
+                script.didClose = message;
+                if (script.IsValid)
+                {//We have a valid script.
+                    script.uri = uri;
+                    //Store the script in the list of valid script.
+                    if (Scripts == null)
+                        Scripts = new List<Script>();
+                    Scripts.Add(script);
+                    //Remove the uri in the entry Map, because one can reopen the document, thus creates a new script.
+                    ScriptMap.Remove(uri);
+#if DEBUG
+                    script.DebugDump();
+#endif
+                }
+            }
+        }
     }
 }
+
