@@ -84,7 +84,7 @@ namespace LanguageServerRobot.Model
         public Session()
         {
             scripts = new List<string>();
-            date = System.DateTime.Today.ToString();
+            date = System.DateTime.Now.ToString();
             user = Environment.UserName;
 
             client_in_initialize_messages = new List<string>();

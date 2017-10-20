@@ -15,17 +15,17 @@ namespace LanguageServerRobot.Controller
         /// <summary>
         /// Default Client Robot Connection controller, using LanguageServerRobot's application
         /// Standard Input/Output Streams.
-        /// </summary>
-        public ClientRobotConnectionController() : base(new MessageConnection())
-        {
+        /// </summary>       
+        public ClientRobotConnectionController() : this(new MessageConnection())
+        {                        
         }
         /// <summary>
         /// Message Connection constructor
         /// </summary>
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
         /// <param name="messageConnection">The Message Connection with the source client.</param>
         public ClientRobotConnectionController(IMessageConnection messageConnection) : base(messageConnection)
-        {
-
+        {            
         }
 
         public bool IsModeInitialized

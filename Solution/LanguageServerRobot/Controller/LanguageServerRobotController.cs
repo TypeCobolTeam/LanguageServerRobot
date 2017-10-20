@@ -53,22 +53,15 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// The Model of the current session.
-        /// </summary>
-        protected Session SessionModel
-        {
-            get;set;
-        }
-
-        /// <summary>
         /// Constructor for the LanguageServerRobot running as Client for the Test replay mode.
         /// </summary>
         /// <param name="serverConnection">The target server</param>
-        public LanguageServerRobotController(ServerRobotConnectionController serverConnection)
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
+        public LanguageServerRobotController(ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ServerConnection = serverConnection;
-            Mode = ConnectionMode.Client;
+            Mode = ConnectionMode.Client;            
         }
 
         /// <summary>
@@ -76,15 +69,16 @@ namespace LanguageServerRobot.Controller
         /// </summary>
         /// <param name="clientConnection">The source client</param>
         /// <param name="serverConnection">The target server</param>
-        public LanguageServerRobotController(ClientRobotConnectionController clientConnection, ServerRobotConnectionController serverConnection)
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
+        public LanguageServerRobotController(ClientRobotConnectionController clientConnection, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(clientConnection != null);
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ClientConnection = clientConnection;
             this.ServerConnection = serverConnection;
-            Mode = ConnectionMode.ClientServer;
+            Mode = ConnectionMode.ClientServer;            
             //Transfert the roboting mode controller instance to the client and server controller
-            RobotModeController = new RecordingModeController();
+            RobotModeController = new RecordingModeController(scriptRepositoryPath);
             clientConnection.RobotModeController = RobotModeController;
             serverConnection.RobotModeController = RobotModeController;
         }

@@ -131,9 +131,10 @@ namespace LanguageServerRobot.Controller
 
         /// <summary>
         /// Empty constructor.
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
         /// </summary>
-        public RecordingModeController()
-        {
+        public RecordingModeController(string scriptRepositoryPath = null) : base(scriptRepositoryPath)
+        {            
             State = RecordingState.NotInitialized;
             RequestIdUriMap = new Dictionary<string, string> ();
         }
@@ -443,6 +444,17 @@ namespace LanguageServerRobot.Controller
 #endif
                 }
             }
+        }
+
+        /// <summary>
+        /// Save a script in a file
+        /// </summary>
+        /// <param name="script">The script to be saved</param>
+        private void SaveScript(Script script)
+        {
+            System.Diagnostics.Contracts.Contract.Assume(script.IsValid);
+            System.Diagnostics.Contracts.Contract.Requires(script.uri != null);
+            string filename = Util.UriToIdentifierName(script.uri + '_' + script.date);
         }
     }
 }

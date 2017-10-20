@@ -154,6 +154,10 @@ namespace LanguageServerRobot
                 //Take the default.
                 ServerPath = DefaultTypeCobolLanguageServerPath;
             }
+            if (ScriptRepositoryPath == null)
+            {//Default path the user document path
+                ScriptRepositoryPath = Util.DefaultScriptRepositorPath;
+            }
 
             TextWriter logWriter = null;
             if (LogFile != null)

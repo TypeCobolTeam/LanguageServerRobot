@@ -89,7 +89,6 @@ namespace LanguageServerRobot.Controller
         /// <param name="e"></param>
         private void ProcessExitedEventHandler(object sender, EventArgs e)
         {
-
         }
     }
 }

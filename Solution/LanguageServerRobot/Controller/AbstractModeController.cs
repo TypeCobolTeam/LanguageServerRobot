@@ -39,6 +39,24 @@ namespace LanguageServerRobot.Controller
         public abstract void FromServer(string message);
 
         /// <summary>
+        /// The default script repository path
+        /// </summary>
+        public string ScriptRepositoryPath
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// Protectec constructor
+        /// </summary>
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
+        protected AbstractModeController(string scriptRepositoryPath = null)
+        {
+            ScriptRepositoryPath = scriptRepositoryPath == null ? Utilities.Util.DefaultScriptRepositorPath : scriptRepositoryPath;
+        }
+
+        /// <summary>
         /// Log a message that has not been consumed.
         /// </summary>
         /// <param name="message"></param>

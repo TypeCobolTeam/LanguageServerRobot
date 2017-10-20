@@ -195,7 +195,7 @@ namespace LanguageServerRobot.Model
         {
             this.uri = uri;
             user = Environment.UserName;
-            date = System.DateTime.Today.ToString();
+            date = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss fff");
             messages = new List<Message>();
         }
 

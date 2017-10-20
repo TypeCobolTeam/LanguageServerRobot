@@ -77,6 +77,7 @@
     <Compile Include="Utilities\DebugTextWriter.cs" />
     <Compile Include="Utilities\Protocol.cs" />
     <Compile Include="Utilities\Options.cs" />
+    <Compile Include="Utilities\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
