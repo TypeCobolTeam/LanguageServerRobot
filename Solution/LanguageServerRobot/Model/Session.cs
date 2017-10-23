@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.Protocol;
+using LanguageServerRobot.Utilities;
 using Newtonsoft.Json.Linq;
 
 namespace LanguageServerRobot.Model
@@ -29,6 +30,10 @@ namespace LanguageServerRobot.Model
         /// Session description
         /// </summary>
         public string description { get; set; }
+        /// <summary>
+        /// The session directory.
+        /// </summary>
+        public string directory;
         /// <summary>
         /// Parameters of the Initialization message request request
         /// </summary>
@@ -79,13 +84,38 @@ namespace LanguageServerRobot.Model
         }
 
         /// <summary>
+        /// Write the session in the given FileStream using UTF8 encoding.
+        /// </summary>
+        public void Write(System.IO.FileStream stream)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(stream != null);
+            System.Diagnostics.Contracts.Contract.Requires(stream.CanWrite);
+            JObject jobject = JObject.FromObject(this);
+            string text = jobject.ToString();
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
+        /// <summary>
+        /// Get the session file name
+        /// </summary>
+        /// <returns></returns>
+        public string GetSessionFileName()
+        {
+            string filename = Util.UriToIdentifierName("TestSuite" + '_' + date);
+            filename += Util.SESSION_FILE_EXTENSION;
+            return directory != null ? System.IO.Path.Combine(directory, filename): filename;
+        }
+
+
+        /// <summary>
         /// Empty constructor
         /// </summary>
         public Session()
         {
             scripts = new List<string>();
-            date = System.DateTime.Now.ToString();
-            user = Environment.UserName;
+            date = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss fff");
+            user = Environment.UserName;            
 
             client_in_initialize_messages = new List<string>();
             client_in_start_messages = new List<string>();

@@ -81,6 +81,24 @@ namespace LanguageServerRobot.Controller
             set;
         }
 
+        /// <summary>
+        /// The original "shutdown" request
+        /// </summary>
+        protected string ShutdownRequest
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The original JSON Object of "shutdown" request
+        /// </summary>
+        protected JObject JShutdownObject
+        {
+            get;
+            set;
+        }
+
         public override bool IsModeInitialized
         {
             get
@@ -237,6 +255,12 @@ namespace LanguageServerRobot.Controller
                             {
                                 consumed = RecordScriptMessage(Script.MessageCategory.Client, Protocol.Message_Kind.Request, message, uri, jsonObject);
                             }
+                            else if (Protocol.IsShutdownRequest(jsonObject))
+                            {
+                                JShutdownObject = jsonObject;
+                                ShutdownRequest = message;
+                                consumed = true;
+                            }
                         }
                         else if (Protocol.IsErrorResponse(jsonObject))
                         {//Hum...A response receive from the Client this cannot happend ==> Log it.
@@ -302,6 +326,19 @@ namespace LanguageServerRobot.Controller
                                 consumed = RecordScriptMessage(Script.MessageCategory.Server, Protocol.Message_Kind.Notification, message, uri, jsonObject);
                             }
                         }
+                        else if (Protocol.IsResponseAndNotError(jsonObject))
+                        {
+                            string id = Protocol.GetRequestId(jsonObject);
+                            if (JShutdownObject != null)
+                            {
+                                string id_shutdown = Protocol.GetRequestId(JShutdownObject);
+                                if (id.Equals(id_shutdown))
+                                {//Shutdown response
+                                    StopSession(message, jsonObject);
+                                    consumed = true;
+                                }
+                            }
+                        }
                         else if (Protocol.IsErrorResponse(jsonObject))
                         {
                             string id = Protocol.GetRequestId(jsonObject);
@@ -348,6 +385,24 @@ namespace LanguageServerRobot.Controller
                 State &= ~RecordingState.NotInitialized;
                 State |= RecordingState.Initialized;                                
                 SessionModel = new Session();
+                string sessionDirectoryPath = null;
+                if (!Util.CreateSessionDirectory(out sessionDirectoryPath, this.ScriptRepositoryPath))                
+                {
+                    string defaultDirectoryPath;
+                    if (Util.CreateSessionDirectory(out defaultDirectoryPath))
+                    {
+                        LogWriter?.WriteLine(string.Format(Resource.FailCreateSessionDirectoryUseDefaultPath, sessionDirectoryPath, defaultDirectoryPath));
+                        SessionModel.directory = defaultDirectoryPath;
+                    }
+                    else
+                    {
+                        LogWriter?.WriteLine(string.Format(Resource.FailtoCreateSessionDirectory, sessionDirectoryPath));
+                    }
+                }
+                else
+                {
+                    SessionModel.directory = sessionDirectoryPath;
+                }
                 SessionModel.initialize = InitializeRequest;
                 SessionModel.initialize_result = message;
             }
@@ -413,7 +468,7 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// Stop a script
+        /// Stop a script and save it
         /// </summary>
         /// <param name="message">The original "textDocument/didClose" notification</param>
         /// <param name="jsonObject">The Json object corresponding to the "textDocument/didClose" notification</param>
@@ -439,6 +494,7 @@ namespace LanguageServerRobot.Controller
                     Scripts.Add(script);
                     //Remove the uri in the entry Map, because one can reopen the document, thus creates a new script.
                     ScriptMap.Remove(uri);
+                    SaveScript(script);
 #if DEBUG
                     script.DebugDump();
 #endif
@@ -447,14 +503,154 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// Save a script in a file
+        /// Save a script in a file using UTF-8 encoding.
         /// </summary>
         /// <param name="script">The script to be saved</param>
-        private void SaveScript(Script script)
+        /// <param name="scriptFile">The script firl path</param>
+        private bool SaveScript(Script script)
         {
             System.Diagnostics.Contracts.Contract.Assume(script.IsValid);
             System.Diagnostics.Contracts.Contract.Requires(script.uri != null);
-            string filename = Util.UriToIdentifierName(script.uri + '_' + script.date);
+            string scriptFile = Util.UriToIdentifierName(script.uri + '_' + script.date);
+            scriptFile += Util.SCRIPT_FILE_EXTENSION;
+            if (SessionModel.directory == null)
+            {
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScriptNoSessionDirectory, scriptFile));
+                return false;
+            }
+            scriptFile = System.IO.Path.Combine(SessionModel.directory, scriptFile);
+            bool bResult = false;
+            script.session = SessionModel.GetSessionFileName();
+            SessionModel.scripts.Add(scriptFile);
+            try
+            {
+                using (FileStream stream = System.IO.File.Create(scriptFile))
+                {
+                    script.Write(stream);
+                    bResult = true;
+                }
+            }
+            catch (System.UnauthorizedAccessException uae)
+            {
+                //     The caller does not have the required permission.-or- path specified a file that
+                //     is read-only.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, scriptFile, uae.Message));
+            }
+            catch (System.ArgumentNullException ane)
+            {
+                //     path is null.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, scriptFile, ane.Message));
+            }
+            catch (System.ArgumentException ae)
+            {
+                //     path is a zero-length string, contains only white space, or contains one or more
+                //     invalid characters as defined by System.IO.Path.InvalidPathChars.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, scriptFile, ae.Message));
+            }
+            catch (System.IO.PathTooLongException ptle)
+            {
+                //     The specified path, file name, or both exceed the system-defined maximum length.
+                //     For example, on Windows-based platforms, paths must be less than 248 characters,
+                //     and file names must be less than 260 characters.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, scriptFile, ptle.Message));
+            }
+            catch (System.IO.DirectoryNotFoundException dnfe)
+            {
+                //     The specified path is invalid (for example, it is on an unmapped drive).
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, scriptFile, dnfe.Message));
+            }
+            catch (System.IO.IOException ioe)
+            {
+                //     An I/O error occurred while creating the file.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, scriptFile, ioe.Message));
+            }
+            catch (System.NotSupportedException nse)
+            {
+                //     path is in an invalid format.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, scriptFile, nse.Message));
+            }
+            return bResult;
+        }
+
+        /// <summary>
+        /// Stops the current session and save it.
+        /// </summary>
+        /// <param name="message">The "shutdown" message</param>
+        /// <param name="jsonObject">The JSON object corresponding to the shutdown message.</param>
+        private void StopSession(string message, JObject jsonObject)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(SessionModel != null);
+            SessionModel.shutdown = ShutdownRequest;
+            SaveSession();
+#if DEBUG
+            SessionModel.DebugDump();
+#endif
+            //No session anymore
+            SessionModel = null;
+        }
+
+        /// <summary>
+        /// Save the curreent session
+        /// </summary>
+        /// <returns>true if the session has been saved false otherwise</returns>
+        private bool SaveSession()
+        {
+            System.Diagnostics.Contracts.Contract.Assume(SessionModel != null);
+            if (SessionModel.directory == null)
+            {
+                LogWriter?.WriteLine(Resource.FailToSaveSessionNoDirectory);
+                return false;
+            }
+            bool bResult = false;
+            string sessionFile = SessionModel.GetSessionFileName();
+            try
+            {
+                using (FileStream stream = System.IO.File.Create(sessionFile))
+                {
+                    SessionModel.Write(stream);
+                    bResult = true;
+                }
+            }
+            catch (System.UnauthorizedAccessException uae)
+            {
+                //     The caller does not have the required permission.-or- path specified a file that
+                //     is read-only.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, uae.Message));
+            }
+            catch (System.ArgumentNullException ane)
+            {
+                //     path is null.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, ane.Message));
+            }
+            catch (System.ArgumentException ae)
+            {
+                //     path is a zero-length string, contains only white space, or contains one or more
+                //     invalid characters as defined by System.IO.Path.InvalidPathChars.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, ae.Message));
+            }
+            catch (System.IO.PathTooLongException ptle)
+            {
+                //     The specified path, file name, or both exceed the system-defined maximum length.
+                //     For example, on Windows-based platforms, paths must be less than 248 characters,
+                //     and file names must be less than 260 characters.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, ptle.Message));
+            }
+            catch (System.IO.DirectoryNotFoundException dnfe)
+            {
+                //     The specified path is invalid (for example, it is on an unmapped drive).
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, dnfe.Message));
+            }
+            catch (System.IO.IOException ioe)
+            {
+                //     An I/O error occurred while creating the file.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, ioe.Message));
+            }
+            catch (System.NotSupportedException nse)
+            {
+                //     path is in an invalid format.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, nse.Message));
+            }
+            return true;
         }
     }
 }

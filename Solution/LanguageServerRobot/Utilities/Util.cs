@@ -10,7 +10,16 @@ namespace LanguageServerRobot.Utilities
     /// Utility class
     /// </summary>
     public class Util
-    {        
+    {
+        /// <summary>
+        /// Scrip file extension
+        /// </summary>
+        public static readonly String SCRIPT_FILE_EXTENSION = ".tlsp";
+        /// <summary>
+        /// Session file extension
+        /// </summary>
+        public static readonly String SESSION_FILE_EXTENSION = ".slsp";
+
         /// <summary>
         /// Get the identifier name corresponding to an URI. This by replace characters like: \, /, ", . by an underscore.
         /// </summary>
@@ -69,21 +78,23 @@ namespace LanguageServerRobot.Utilities
         /// </summary>
         /// <param name="root">The root directory</param>
         /// <returns>The directory for the session if one can be created, null otherwise</returns>
-        public static string CreateSessionDirectory(string root = null)
+        public static bool CreateSessionDirectory(out string sessionDirectoryPath, string root = null)
         {
             string path = root == null ? DefaultScriptRepositorPath : root;
             path = System.IO.Path.Combine(path, "Session");
             String date = System.DateTime.Now.ToString();
             date.Replace(':', '_').Replace('.', '_').Replace(' ', '_');
             path = System.IO.Path.Combine(path, "Session" + date);
+            sessionDirectoryPath = path;
             try
-            {
+            {                
                 System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(path);//Create the directory
-                return di.FullName;
+                sessionDirectoryPath = di.FullName;
+                return true;
             }
             catch (Exception e)
             {
-                return null;
+                return false;
             }
         }
     }

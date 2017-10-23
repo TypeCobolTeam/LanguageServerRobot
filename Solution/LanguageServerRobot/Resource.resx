@@ -120,6 +120,24 @@
   <data name="DuplicateDidOpenNotification" xml:space="preserve">
     <value>A document with the same uri is already opened: {0}</value>
   </data>
+  <data name="FailCreateSessionDirectoryUseDefaultPath" xml:space="preserve">
+    <value>Fail to create the session directory '{0}', using default directory '{1}'</value>
+  </data>
+  <data name="FailtoCreateSessionDirectory" xml:space="preserve">
+    <value>Fail to create the session directory : {0}</value>
+  </data>
+  <data name="FailToSaveScript" xml:space="preserve">
+    <value>Fail to save script '{0}' : '{1}'</value>
+  </data>
+  <data name="FailToSaveScriptNoSessionDirectory" xml:space="preserve">
+    <value>Cannot save script '{0}' there is no session directory.</value>
+  </data>
+  <data name="FailToSaveSession" xml:space="preserve">
+    <value>Fail to session script '{0}' : '{1}'</value>
+  </data>
+  <data name="FailToSaveSessionNoDirectory" xml:space="preserve">
+    <value>Fail to save the session there is no directory associated to it.</value>
+  </data>
   <data name="UnexpectedRequestFromServer" xml:space="preserve">
     <value>An Unexpected Request has been sent from the server: {0}</value>
   </data>

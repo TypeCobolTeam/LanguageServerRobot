@@ -70,6 +70,60 @@ namespace LanguageServerRobot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to create the session directory &apos;{0}&apos;, using default directory &apos;{1}&apos;.
+        /// </summary>
+        internal static string FailCreateSessionDirectoryUseDefaultPath {
+            get {
+                return ResourceManager.GetString("FailCreateSessionDirectoryUseDefaultPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to create the session directory : {0}.
+        /// </summary>
+        internal static string FailtoCreateSessionDirectory {
+            get {
+                return ResourceManager.GetString("FailtoCreateSessionDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to save script &apos;{0}&apos; : &apos;{1}&apos;.
+        /// </summary>
+        internal static string FailToSaveScript {
+            get {
+                return ResourceManager.GetString("FailToSaveScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot save script &apos;{0}&apos; there is no session directory..
+        /// </summary>
+        internal static string FailToSaveScriptNoSessionDirectory {
+            get {
+                return ResourceManager.GetString("FailToSaveScriptNoSessionDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to session script &apos;{0}&apos; : &apos;{1}&apos;.
+        /// </summary>
+        internal static string FailToSaveSession {
+            get {
+                return ResourceManager.GetString("FailToSaveSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to save the session there is no directory associated to it..
+        /// </summary>
+        internal static string FailToSaveSessionNoDirectory {
+            get {
+                return ResourceManager.GetString("FailToSaveSessionNoDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An Unexpected Request has been sent from the server: {0}.
         /// </summary>
         internal static string UnexpectedRequestFromServer {

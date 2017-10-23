@@ -409,7 +409,7 @@ namespace LanguageServerRobot.Utilities
         }
 
         /// <summary>
-        /// Determine is the given JSon object correspond to a response.
+        /// Determine fs the given JSon object correspond to a response.
         /// </summary>
         /// <param name="jsonObject">The Json Object to check</param>
         /// <returns>true if the Json object is a response, false otherwise.</returns>
@@ -422,6 +422,27 @@ namespace LanguageServerRobot.Utilities
         {
             System.Diagnostics.Contracts.Contract.Requires(IsResponse(jsonObject));            
             return jsonObject[String.Intern("error")] != null;
+        }
+
+        /// <summary>
+        /// Determines if the given message correspond to a response message that is not an error.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the corresponding Json Object if any, null otherwise</param>
+        /// <returns>true if the message is a response message that is not an error, false otherwise</returns>
+        public static bool IsResponseAndNotError(string message, out JObject jsonObject)
+        {
+            return IsResponseAndNotError(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given jsonObject represents a response that is not an error.
+        /// </summary>
+        /// <param name="jsonObject">The Json object to check</param>
+        /// <returns>true if the given Json Object is a response that is not an error, false otherwise.</returns>
+        public static bool IsResponseAndNotError(JObject jsonObject)
+        {            
+            return IsResponse(jsonObject) && jsonObject[String.Intern("error")] == null;
         }
 
         /// <summary>

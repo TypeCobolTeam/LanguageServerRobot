@@ -181,6 +181,19 @@ namespace LanguageServerRobot.Model
         }
 
         /// <summary>
+        /// Write the script in the given FileStream using UTF8 encoding.
+        /// </summary>
+        public void Write(System.IO.FileStream stream)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(stream != null);
+            System.Diagnostics.Contracts.Contract.Requires(stream.CanWrite);            
+            JObject jobject = JObject.FromObject(this);
+            string text = jobject.ToString();
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
+        /// <summary>
         /// Empty constructor
         /// </summary>
         public Script() : this(null)
@@ -198,6 +211,5 @@ namespace LanguageServerRobot.Model
             date = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss fff");
             messages = new List<Message>();
         }
-
     }
 }
