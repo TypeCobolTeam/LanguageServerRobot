@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="4e3b8bec-ed22-4c57-ab6f-9534252b6ee9" name="A02LSRRecordModeInitSession" linkedPackageId="ae031f62-4aa0-4501-a7e3-23c700fbc04e" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="d8a6f080-8dd6-4ae0-b3f7-e597b539c170">
+      <profileInstance Id="4495d5bc-8149-4d15-8ccb-5f7bd8eb50f6" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="0609fbdb-9fbb-47d0-9a55-f7c909b263d6">
+      <profileInstance Id="1b4a512d-fabf-4b9d-8e66-bd6d9af18690" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="df113e56-e154-4456-bd93-d17e4d8e4add" name="TypeCobol.LanguageClientRDz" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="9efa5ac9-6ca2-4b8c-b86f-3b17c0715b7b" />
+        <targetEnds>
+          <association Id="9b9d8564-cd39-4265-95f9-8b0847f92a88" isDerived="false" sourceEndRoleName="TypeCobol.LanguageClientRDz" targetEndRoleName="Envoyer requête:Initialize: InitializeParams" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="ed3cb846-727c-4893-b797-05aa8cc1c280" LastKnownName="Envoyer requête:Initialize: InitializeParams" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="339451dd-f01c-4418-bba7-9e36cb9c4554" name="TypeCobol.LanguageClientRDz" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="79df9202-7099-41a8-b4aa-b18abd3e7892" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="dd5d449a-a87d-4085-ba72-3fb1950a0998" name="Envoyer requête:Initialize: InitializeParams" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="ecfe0817-0e35-4b65-a174-06cc5b012c01" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="f1fe782c-98c9-4f1d-ae30-c46a3ebef608" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="fea572d6-0661-4a95-86ba-7589a29aab2b" name="LanguageServerRobot" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="7299b604-b82b-49ae-bbbe-7587753566a6" />
+        <targetEnds>
+          <association Id="10ca7b79-138b-49a7-95f9-5a3ad38b0568" isDerived="false" sourceEndRoleName="LanguageServerRobot" targetEndRoleName="Transférer la requête: &quot;initialize&quot;" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="38b4ce6f-9a62-445c-9cce-2365e93940d0" LastKnownName="Transférer la requête: &quot;initialize&quot;" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="4e849372-16ec-488f-9d9d-3e7457a6a6d9" name="LanguageServerRobot" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="e8475995-c834-47e4-924d-380f988ae32f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="7d81cdb2-7cba-4876-b9fc-e1e1be750245" name="Transférer la requête: &quot;initialize&quot;" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="f0bf3986-80c5-4d1f-a951-3a961ea54def" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="ad617ffa-87df-4c15-8a4d-a13e7a14ceb7" />
+          </association>
+          <association Id="bd6bd02b-b90c-44fa-bf87-8cc7a659f00a" isDerived="false" sourceEndRoleName="LanguageServerRobot" targetEndRoleName="Trsnférer la réponse: InitializeResult" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="cde1d860-1da0-4418-8b4e-85408f0fabfe" LastKnownName="Transférer la réponse: InitializeResult" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d2045765-7742-44e8-be82-120d57a1eeea" name="LanguageServerRobot" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="6fed9b6b-0242-46a5-a73a-175d7406c174" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="826de5ea-56f0-4681-b15c-86850f0bb31e" name="Trsnférer la réponse: InitializeResult" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="7a359843-01c3-42b9-a032-765b0a0293e6" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="11699f1f-ab0d-482d-ad49-dc394b709027" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="614e495f-f1e3-4377-874a-0236a8b1c9bd" name="TypeCobol.LanguageServer" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="91211b92-01cb-41ac-841a-7e92269333e3" />
+        <targetEnds>
+          <association Id="1a770a3b-0eae-499b-ae77-61fe8cfcbfc8" isDerived="false" sourceEndRoleName="TypeCobol.LanguageServer" targetEndRoleName="Envoyer réponse: InitializeResult" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="66fab9c1-254a-42b3-8486-c7173ed0adfe" LastKnownName="Envoyer réponse: InitializeResult" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="ce2ca03e-4d8e-416e-8b0d-03bd9172026f" name="TypeCobol.LanguageServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="f392926f-e8f6-49d6-b396-911a9174bae4" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="7867b769-5161-4640-869f-455ae17923c2" name="Envoyer réponse: InitializeResult" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="1b897dbd-dba8-4d0d-816f-51debbf9fc5b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="be85e986-46a3-4244-a91d-193f344a6a5c" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="ed3cb846-727c-4893-b797-05aa8cc1c280" name="Envoyer requête:Initialize: InitializeParams" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="ccd016dc-80a3-466d-a12e-6628cb7fea3a" />
+        <targetEnds>
+          <association Id="307dbe2c-5802-4771-8723-5c94b7c4d30a" isDerived="false" sourceEndRoleName="Envoyer requête:Initialize: InitializeParams" targetEndRoleName="LanguageServerRobot" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="fea572d6-0661-4a95-86ba-7589a29aab2b" LastKnownName="LanguageServerRobot" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="19114c1f-c284-4e33-ac01-3c7eb7c5fa59" name="Envoyer requête:Initialize: InitializeParams" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="efe5f540-823e-4566-9720-2ab68281218c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d7963eb3-a222-40b6-9b7f-fa778a0218e2" name="LanguageServerRobot" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="a71911cc-699c-41a3-9f71-2e13b8d7a4d6" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="969b936c-0136-4ef0-b575-b0e0b9e17597" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="38b4ce6f-9a62-445c-9cce-2365e93940d0" name="Transférer la requête: &quot;initialize&quot;" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="6b91f58e-6f53-4360-a245-05e777aecbb3" />
+        <targetEnds>
+          <association Id="9abe8d17-749e-4c01-be8c-282e52e2cd1b" isDerived="false" sourceEndRoleName="Transférer la requête: &quot;initialize&quot;" targetEndRoleName="TypeCobol.LanguageServer" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="614e495f-f1e3-4377-874a-0236a8b1c9bd" LastKnownName="TypeCobol.LanguageServer" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="bf5d773e-4a79-491d-818e-dab0b83b2442" name="Transférer la requête: &quot;initialize&quot;" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="5e29d5d0-d831-49e0-a048-f65255bf551b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="f3b2c504-c81b-4fa3-944c-2bf4ac170d36" name="TypeCobol.LanguageServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="502cfcbb-2609-47b9-924c-62f6d4abf5b9" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="30a37958-9910-447d-88ad-a2aa44df8cd7" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="2f3c2673-bd3c-427e-aa07-df6ea887a05a" name="Initialiser le serveur en fonction des capacités du client" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="29dbd54e-b551-4f9f-bed0-917ba42b02a3" />
+        <targetEnds>
+          <association Id="717ddd7c-b29c-4de2-80aa-a3f659a2499d" isDerived="false" sourceEndRoleName="Initialiser le serveur en fonction des capacités du client" targetEndRoleName="TypeCobol.LanguageServer" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="614e495f-f1e3-4377-874a-0236a8b1c9bd" LastKnownName="TypeCobol.LanguageServer" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a90c74e3-10b3-4983-a286-9f6c1e53b391" name="Initialiser le serveur en fonction des capacités du client" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="f78af61c-900d-4037-8a57-7221cc931972" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="e8712b02-4601-4ac3-8264-f3d5fc805f07" name="TypeCobol.LanguageServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="4a902ef0-4200-41f8-89b3-513ea05db74f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="85bc3277-ca75-4d99-a752-aad2a54cb524" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="66fab9c1-254a-42b3-8486-c7173ed0adfe" name="Envoyer réponse: InitializeResult" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="44f72b22-8568-4d4e-9166-41d7cf33b271" />
+        <targetEnds>
+          <association Id="7617085a-2ed8-47a1-b5ef-514cdf0c625e" isDerived="false" sourceEndRoleName="Envoyer réponse: InitializeResult" targetEndRoleName="LanguageServerRobot" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="fea572d6-0661-4a95-86ba-7589a29aab2b" LastKnownName="LanguageServerRobot" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="60e44f39-2c3f-48bb-8371-6f39ae57bcf3" name="Envoyer réponse: InitializeResult" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="dd398a10-08be-47f0-a721-693ef68058e1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="20b0899d-eace-4593-99b4-29f491f8fbd9" name="LanguageServerRobot" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="469158a5-0adf-49f6-892d-fb40a637d3c0" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="fb024312-38e1-4a21-be89-5430900fd303" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="cde1d860-1da0-4418-8b4e-85408f0fabfe" name="Transférer la réponse: InitializeResult" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="f9abb68b-f071-4247-aff8-fa51d2b547a8" />
+        <targetEnds>
+          <association Id="2f9c7910-31c5-4efe-872b-25fb2e4bc111" isDerived="false" sourceEndRoleName="Trsnférer la réponse: InitializeResult" targetEndRoleName="TypeCobol.LanguageClientRDz" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="df113e56-e154-4456-bd93-d17e4d8e4add" LastKnownName="TypeCobol.LanguageClientRDz" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d8b9d3d7-d4ec-494b-a545-92852f4e4802" name="Trsnférer la réponse: InitializeResult" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="5dad923e-fc55-4dd6-8a78-406ff2b763db" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8d578e31-c57f-4cdd-a00f-9126a576fe32" name="TypeCobol.LanguageClientRDz" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="1a6c6c0f-5240-4445-8778-8a12aed4dbf8" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="fc333477-c735-469f-b023-4d10c68ce88e" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="fc4feaa3-37ad-4611-94e0-141c7ba83288" name="Intialiser la session de tests" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="5a95b291-d9b5-4a0d-88b3-c3543dcf79c2" />
+        <targetEnds>
+          <association Id="4e6f83cf-94c2-4cb9-af38-36229b9c12f9" isDerived="false" sourceEndRoleName="Intialiser la session de tests" targetEndRoleName="LanguageServerRobot" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="fea572d6-0661-4a95-86ba-7589a29aab2b" LastKnownName="LanguageServerRobot" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="026c564a-a24d-4531-9dff-bd79691678e7" name="Intialiser la session de tests" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="ff5002e4-f13d-4250-8e0e-074009d13ad7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="4d13e583-5be3-44f5-972a-69d0d1dba0ce" name="LanguageServerRobot" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="caba484b-9a38-4224-b673-e312f2f033cf" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5a63e90c-4fb7-41e4-93ba-3414ccccf0eb" />
+          </association>
+        </targetEnds>
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="ae031f62-4aa0-4501-a7e3-23c700fbc04e" name="LanguageServerRobot">
+    <elementDefinition Id="87eac8a8-8edd-4f12-bef6-349f2c0052f8" />
+  </package>
+</useCaseModelRoot>
