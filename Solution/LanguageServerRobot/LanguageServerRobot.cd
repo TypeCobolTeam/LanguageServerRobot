@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="LanguageServerRobot.Controller.ClientRobotConnectionController">
-    <Position X="10.25" Y="1.25" Width="3.25" />
+    <Position X="10.25" Y="0.5" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAgAAEAAAEAAAAAAAAAAQAAAAAAAAQAAIAAAAAAAAA=</HashCode>
       <FileName>Controller\ClientRobotConnectionController.cs</FileName>
@@ -9,7 +9,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServerRobot.Controller.LanguageServerRobotController">
-    <Position X="15.5" Y="2.5" Width="3.25" />
+    <Position X="15.5" Y="1.75" Width="3.25" />
     <NestedTypes>
       <Enum Name="LanguageServerRobot.Controller.LanguageServerRobotController.ConnectionMode" Collapsed="true">
         <TypeIdentifier>
@@ -18,7 +18,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAkgCAEBAKEAAAAgCAAAQSBEAAQAEAwABoABQAAAAAQ=</HashCode>
+      <HashCode>AAkgCAEBAKEAAAAgCAAAQSBEAAQAAAwABoABQAAAAAQ=</HashCode>
       <FileName>Controller\LanguageServerRobotController.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -29,7 +29,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServerRobot.Controller.ServerRobotConnectionController">
-    <Position X="10.25" Y="4.25" Width="3.75" />
+    <Position X="10.25" Y="3.5" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAgAAEAAAEAAAAAAAAAAQAAAAAAAAQAAIAAAAAAEAA=</HashCode>
       <FileName>Controller\ServerRobotConnectionController.cs</FileName>
@@ -37,28 +37,28 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServerRobot.LanguageServerRobot">
-    <Position X="9.75" Y="7.5" Width="2.75" />
+    <Position X="9.75" Y="6.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>IAAAAAAQEIAAAAAAAAAEAAAAAACAACIAAAAABCBAAAA=</HashCode>
       <FileName>LanguageServerRobot.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LanguageServerRobot.Utilities.DebugTextWriter" Collapsed="true">
-    <Position X="18.75" Y="9.25" Width="1.5" />
+    <Position X="18.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAMAAAAAAAAAAAAIAAAAAAAAgCAQIAAAAAACAAEIAAA=</HashCode>
       <FileName>Utilities\DebugTextWriter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mono.Options.StringCoda">
-    <Position X="14.75" Y="9.5" Width="1.5" />
+    <Position X="14.75" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEgAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAABAAAQ=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mono.Options.OptionValueCollection" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="18.75" Y="10.25" Width="2" />
+    <Position X="18.75" Y="9.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AkIAAEAACIAEABAVCAAABCQQAAUAACCECAgAAABQIAI=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
@@ -66,49 +66,49 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Mono.Options.OptionContext" Collapsed="true">
-    <Position X="12.75" Y="9.5" Width="1.5" />
+    <Position X="12.75" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAAIAAAAAAIAAQACAAAAAAEAACAAAACAAABAAA=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mono.Options.Option" Collapsed="true">
-    <Position X="16.75" Y="10.25" Width="1.5" />
+    <Position X="16.75" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EEAgoQAAAAAoAAAENAAAAAAAAIABAAAECQQAgAAEAII=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mono.Options.ArgumentSource" Collapsed="true">
-    <Position X="4" Y="3.25" Width="1.5" />
+    <Position X="4" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAgACAAAACAAAAAAAAAA=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mono.Options.ResponseFileSource">
-    <Position X="3.75" Y="4.5" Width="2" />
+    <Position X="3.75" Y="3.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAgAAAAAACAAAAAAAAAA=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mono.Options.OptionException" Collapsed="true">
-    <Position X="12.75" Y="8.5" Width="1.5" />
+    <Position X="12.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAACAAAAAAA=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mono.Options.OptionSet" Collapsed="true">
-    <Position X="16.75" Y="9.25" Width="1.5" />
+    <Position X="16.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AYIiQEBAAEAIBACRKgAAABgAAQAAIAAEBgKAIAUQAQI=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LanguageServer.JsonRPC.JsonRPCConnection">
-    <Position X="6.5" Y="3.25" Width="2.75" />
+    <Position X="6.5" Y="2.5" Width="2.75" />
     <NestedTypes>
       <Class Name="LanguageServer.JsonRPC.JsonRPCConnection.NotificationMethod" Collapsed="true">
         <TypeIdentifier />
@@ -121,15 +121,15 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServerRobot.Controller.AbstractModeController">
-    <Position X="21" Y="3.75" Width="2.25" />
+    <Position X="20.25" Y="3.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAQCEAAAEAAAAAAAAAAQABAAAAAAQAAIAAAAAAAIA=</HashCode>
+      <HashCode>AAAAQCEAAAEAAAAAAAAEAQABAAAEAAQAAIAAAAAAAIA=</HashCode>
       <FileName>Controller\AbstractModeController.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServerRobot.Controller.RecordingModeController">
-    <Position X="21" Y="7" Width="2.25" />
+    <Position X="21" Y="7.25" Width="2.25" />
     <NestedTypes>
       <Enum Name="LanguageServerRobot.Controller.RecordingModeController.RecordingState" Collapsed="true">
         <TypeIdentifier>
@@ -138,26 +138,26 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAEAAAAAAAAAAcAAAAAAECQAAIAABAAgAAA=</HashCode>
+      <HashCode>AAAAAAEAAAkAAAAACAAEAcAAIAAAECQAAICABEBgIIA=</HashCode>
       <FileName>Controller\RecordingModeController.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="LanguageServerRobot.Controller.IRobotModeController" Collapsed="true">
-    <Position X="20.75" Y="2.5" Width="1.5" />
+  <Interface Name="LanguageServerRobot.Controller.IRobotModeController">
+    <Position X="20.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAAEAAAAAAAAAAQAAAAAAAAQAAIAAAAAAAAA=</HashCode>
       <FileName>Controller\IRobotModeController.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="Mono.Options.OptionValueType" Collapsed="true">
-    <Position X="16.75" Y="11" Width="1.5" />
+    <Position X="16.75" Y="10.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Utilities\Options.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Delegate Name="Mono.Options.OptionAction&lt;TKey, TValue&gt;" Collapsed="true">
-    <Position X="18.5" Y="11" Width="1.5" />
+    <Position X="18.5" Y="10.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Utilities\Options.cs</FileName>

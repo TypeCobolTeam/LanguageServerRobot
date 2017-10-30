@@ -338,6 +338,18 @@ namespace LanguageServerRobot.Controller
                                     consumed = true;
                                 }
                             }
+                            if (!consumed)
+                            {
+                                if (RequestIdUriMap.ContainsKey(id))
+                                {//So this is another response for a request ==> just record it
+                                    uri = RequestIdUriMap[id];
+                                    consumed = RecordScriptMessage(Script.MessageCategory.Server, Protocol.Message_Kind.Response, message, uri, jsonObject);
+                                }
+                                else
+                                {//Hum...There is a response from the server without a registered request
+                                    LogUnexpectedMessage(Resource.UnexpectedResponseFromServer, message);
+                                }
+                            }
                         }
                         else if (Protocol.IsErrorResponse(jsonObject))
                         {
@@ -348,7 +360,7 @@ namespace LanguageServerRobot.Controller
                                 consumed = RecordScriptMessage(Script.MessageCategory.Result, Protocol.Message_Kind.Response, message, uri, jsonObject);
                             }
                             else
-                            {//Hum...There is a response from the server with a registered request
+                            {//Hum...There is a response from the server without a registered request
                                 LogUnexpectedMessage(Resource.UnexpectedResponseFromServer, message);
                             }
                         }
@@ -521,6 +533,8 @@ namespace LanguageServerRobot.Controller
             scriptFile = System.IO.Path.Combine(SessionModel.directory, scriptFile);
             bool bResult = false;
             script.session = SessionModel.GetSessionFileName();
+            script.initialize = SessionModel.initialize;
+            script.initialize_result = SessionModel.initialize_result;
             SessionModel.scripts.Add(scriptFile);
             try
             {
