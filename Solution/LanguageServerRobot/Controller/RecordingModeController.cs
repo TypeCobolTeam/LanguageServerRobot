@@ -35,24 +35,47 @@ namespace LanguageServerRobot.Controller
             Start = 0x01 << 2,
 
             /// <summary>
+            /// If we are ShutingDown or Exiting down
+            /// </summary>
+            ShutingDownOrExiting = 0x01 << 3,
+
+            /// <summary>
             /// The recording is stopped
             /// </summary>
-            Stop = 0x01 << 3,
+            Stop = 0x01 << 4,
 
             /// <summary>
             /// Initialization request error
             /// </summary>
-            InitializationError = 0x01 << 4
+            InitializationError = 0x01 << 5
 
         };
+
+        private int myState;
+        /// <summary>
+        /// State change event handler.
+        /// </summary>
+        event EventHandler StageChangedEvent;
 
         /// <summary>
         /// The Current State.
         /// </summary>
         public RecordingState State
         {
-            get;
-            protected set;
+            get
+            {
+                return (RecordingState)System.Threading.Interlocked.Exchange(ref myState, myState);
+            }
+            protected set
+            {
+                if (System.Threading.Interlocked.Exchange(ref myState, (int)value) != (int)value)
+                {
+                    if (StageChangedEvent != null)
+                    {
+                        StageChangedEvent(this, null);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -128,6 +151,14 @@ namespace LanguageServerRobot.Controller
             get
             {
                 return ((int)State & (int)RecordingState.InitializationError) != 0;
+            }
+        }
+
+        private bool IsShutingDownOrExiting
+        {
+            get
+            {
+                return ((int)State & (int)RecordingState.ShutingDownOrExiting) != 0;
             }
         }
 
@@ -234,7 +265,16 @@ namespace LanguageServerRobot.Controller
                         string uri = null;                        
                         if (Protocol.IsNotification(message, out jsonObject))
                         {//1)Detect any new script for a document ==> detect didOpen notification
-                            if (Protocol.IsDidOpenTextDocumentNotification(jsonObject))
+                            //Detect the exit Notification()
+                            if (Protocol.IsExitNotification(jsonObject))
+                            {//So forces the End of the session
+                                if (JShutdownObject != null)
+                                {//We have already received a shutdown request.
+                                    StopSession(message, jsonObject, true);
+                                    consumed = true;
+                                }
+                            }
+                            else if (Protocol.IsDidOpenTextDocumentNotification(jsonObject))
                             {
                                 StartScript(message, jsonObject);
                                 consumed = true;
@@ -334,7 +374,7 @@ namespace LanguageServerRobot.Controller
                                 string id_shutdown = Protocol.GetRequestId(JShutdownObject);
                                 if (id.Equals(id_shutdown))
                                 {//Shutdown response
-                                    StopSession(message, jsonObject);
+                                    StopSession(message, jsonObject, false);
                                     consumed = true;
                                 }
                             }
@@ -591,15 +631,27 @@ namespace LanguageServerRobot.Controller
         /// </summary>
         /// <param name="message">The "shutdown" message</param>
         /// <param name="jsonObject">The JSON object corresponding to the shutdown message.</param>
-        private void StopSession(string message, JObject jsonObject)
+        /// <param name="bExit">True if it comes from the exit message, false it it comes from the shutdown message.</param>
+        private void StopSession(string message, JObject jsonObject, bool bExit)
         {
+            this.State = this.State | RecordingState.ShutingDownOrExiting;
             System.Diagnostics.Contracts.Contract.Assert(SessionModel != null);
-            SessionModel.shutdown = ShutdownRequest;
+            if (!bExit)
+            {// In this case message is the response to the shutdown request 
+                SessionModel.shutdown_result = message;
+                SessionModel.shutdown = ShutdownRequest;
+            }
+            else
+            {
+                SessionModel.exit = message;
+                SessionModel.shutdown = ShutdownRequest;
+            }
             SaveSession();
 #if DEBUG
             SessionModel.DebugDump();
 #endif
             //No session anymore
+            this.State = RecordingState.Stop;
             SessionModel = null;
         }
 

@@ -204,7 +204,7 @@ namespace LanguageServerRobot
                             //Create and start Language Server Robot controller.
                             var client = new ClientRobotConnectionController();
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-                            var robot = new LanguageServerRobotController(client, server);
+                            var robot = new LanguageServerRobotController(client, server, ScriptRepositoryPath);
                             robot.PropagateConnectionLogs();
                             if (!robot.Start())
                             {
@@ -220,7 +220,7 @@ namespace LanguageServerRobot
                     case LanguageServerRobotController.ConnectionMode.Client:
                         {
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-                            var robot = new LanguageServerRobotController(server);
+                            var robot = new LanguageServerRobotController(server, ScriptRepositoryPath);
                             robot.PropagateConnectionLogs();
                             if (!robot.Start())
                             {

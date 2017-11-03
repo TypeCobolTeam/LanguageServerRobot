@@ -69,9 +69,20 @@ namespace LanguageServerRobot.Model
         /// </summary>
         public List<string> scripts { get; set; }
         /// <summary>
-        /// The shutdown message
+        /// The shutdown message if any
         /// </summary>
         public string shutdown { get; set; }
+
+        /// <summary>
+        /// The result of the shutdown request if any. This value can be null
+        /// if the client has exited before the shtutdown result as been received.
+        /// </summary>
+        public string shutdown_result { get; set; }
+
+        /// <summary>
+        /// The exit message if any
+        /// </summary>
+        public string exit { get; set; }
 
         /// <summary>
         /// Dump to the Debug Output Stream

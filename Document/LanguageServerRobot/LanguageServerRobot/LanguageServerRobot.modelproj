@@ -29,6 +29,13 @@
       <SubType>Content</SubType>
       <DependentUpon>A02LSRRecordModeInitSession.usecasediagram</DependentUpon>
     </Content>
+    <Content Include="A02LSRRecordModeInitSesssion.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="A02LSRRecordModeInitSesssion.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>A02LSRRecordModeInitSesssion.activitydiagram</DependentUpon>
+    </Content>
     <Content Include="CloseScript.sequencediagram">
       <SubType>Content</SubType>
     </Content>
