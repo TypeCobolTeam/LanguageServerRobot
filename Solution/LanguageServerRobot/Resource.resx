@@ -157,6 +157,6 @@
     <value>Fail to read the script in file: {0} \n{1}</value>
   </data>
   <data name="NoSessionOrScriptFile" xml:space="preserve">
-    <value>There is no session or script for to replay.</value>
+    <value>There is no session or script to be replayed.</value>
   </data>
 </root>

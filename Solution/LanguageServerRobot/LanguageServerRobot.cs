@@ -147,7 +147,9 @@ namespace LanguageServerRobot
                         ? LanguageServerRobotController.ConnectionMode.ClientServer
                         : LanguageServerRobotController.ConnectionMode.Client
                 },
-                { "c|client=",  "Robot Client/Replay mode with {PATH} the session or script file.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
+                { "c|client",  "Robot Client/Replay mode.", v => Mode = LanguageServerRobotController.ConnectionMode.Client
+                },
+                { "script=",  "{PATH} the script file to be replayed.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
                     if (version != null)Files.Add(v); }
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
@@ -242,6 +244,7 @@ namespace LanguageServerRobot
                             {//No file to test
                                 System.Console.Out.WriteLine(Resource.NoSessionOrScriptFile);
                                 p.WriteOptionDescriptions(System.Console.Out);
+
                                 return 0;
                             }
                             ClientRobotConnectionController client = null;

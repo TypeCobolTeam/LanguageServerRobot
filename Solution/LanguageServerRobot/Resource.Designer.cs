@@ -133,7 +133,7 @@ namespace LanguageServerRobot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is no session or script for to replay..
+        ///   Looks up a localized string similar to There is no session or script to be replayed..
         /// </summary>
         internal static string NoSessionOrScriptFile {
             get {
