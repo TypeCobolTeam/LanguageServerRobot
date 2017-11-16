@@ -146,5 +146,50 @@ namespace LanguageServerRobot.Utilities
             }
             return false;       
         }
+
+        /// <summary>
+        /// Determines if the given filepath has a Session File Extension
+        /// </summary>
+        /// <param name="filepath">The file path to check.</param>
+        /// <returns>true if the file path as session file path extension, false otherwise</returns>
+        public static bool HasSessionFileExtension(string filepath)
+        {
+            System.Diagnostics.Debug.Assert(filepath != null);
+            return filepath.EndsWith(SESSION_FILE_EXTENSION);
+        }
+        /// <summary>
+        /// Read a session file.
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="session">[out] the Session model if the file path corresponds to a Session file</param>
+        /// <param name="exc">[out] Any exception that might have be thrown if the read failed.</param>
+        /// <returns>true if a session file has been read, false otherwise</returns>
+        public static bool ReadSessionFile(string filepath, out Session session, out Exception exc)
+        {
+            System.Diagnostics.Debug.Assert(filepath != null);
+            exc = null;
+            session = null;
+            if (HasSessionFileExtension(filepath))
+            {//Read the file using UTF8.
+                try
+                {
+                    using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                        {
+                            string data = sr.ReadToEnd();
+                            JObject jobject = JObject.Parse(data);
+                            session = (Session)jobject.ToObject(typeof(Session));
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    exc = e;
+                }
+            }
+            return false;
+        }
     }
 }

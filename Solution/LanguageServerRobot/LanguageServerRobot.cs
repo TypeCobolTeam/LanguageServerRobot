@@ -82,9 +82,18 @@ namespace LanguageServerRobot
         }
 
         /// <summary>
+        /// The file type
+        /// </summary>
+        public enum FileType
+        {
+            ScriptFile,
+            SessionFile
+        };
+
+        /// <summary>
         /// The list of Files
         /// </summary>
-        public static List<string> Files
+        public static List<Tuple<string,FileType>> Files
         {
             get;
             internal set;
@@ -95,7 +104,7 @@ namespace LanguageServerRobot
         /// </summary>
         static LanguageServerRobot()
         {
-            Files = new List<string>();
+            Files = new List<Tuple<string, FileType>>();
         }
         const string DefaultTypeCobolLanguageServerPath = "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
 
@@ -150,7 +159,10 @@ namespace LanguageServerRobot
                 { "c|client",  "Robot Client/Replay mode.", v => Mode = LanguageServerRobotController.ConnectionMode.Client
                 },
                 { "script=",  "{PATH} the script file to be replayed.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
-                    if (version != null)Files.Add(v); }
+                    if (version != null)Files.Add(new Tuple<string,FileType>(v,FileType.ScriptFile)); }
+                },
+                { "suite=",  "{PATH} the session file to be replayed.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
+                    if (version != null)Files.Add(new Tuple<string,FileType>(v,FileType.SessionFile)); }
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
                 { "d|Scripts repository directory=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
@@ -249,18 +261,41 @@ namespace LanguageServerRobot
                             }
                             ClientRobotConnectionController client = null;
                             Model.Script script = null;
-                            if (Util.HasScriptFileExtension(Files[0]))
-                            {                                
-                                Exception exc = null;
-                                if (!Util.ReadScriptFile(Files[0], out script, out exc))
-                                {//Invalid Script File.
-                                    System.Console.Out.WriteLine(string.Format(Resource.FailReadScriptFile, Files[0], exc != null ? exc.Message : ""));
-                                    logger.LogWriter?.WriteLine(string.Format(Resource.FailReadScriptFile, Files[0], exc != null ? exc.Message : ""));
-                                    return -1;
-                                }
-                            }                                                    
+                            Model.Session session = null;
+                            switch (Files[0].Item2)
+                            {
+                                case FileType.ScriptFile:
+                                    {
+                                        if (Util.HasScriptFileExtension(Files[0].Item1))
+                                        {
+                                            Exception exc = null;
+                                            if (!Util.ReadScriptFile(Files[0].Item1, out script, out exc))
+                                            {//Invalid Script File.
+                                                System.Console.Out.WriteLine(string.Format(Resource.FailReadScriptFile, Files[0], exc != null ? exc.Message : ""));
+                                                logger.LogWriter?.WriteLine(string.Format(Resource.FailReadScriptFile, Files[0], exc != null ? exc.Message : ""));
+                                                return -1;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case FileType.SessionFile:
+                                    {
+                                        if (Util.HasSessionFileExtension(Files[0].Item1))
+                                        {
+                                            Exception exc = null;
+                                            if (!Util.ReadSessionFile(Files[0].Item1, out session, out exc))
+                                            {//Invalid Script File.
+                                                System.Console.Out.WriteLine(string.Format(Resource.FailReadSessionFile, Files[0], exc != null ? exc.Message : ""));
+                                                logger.LogWriter?.WriteLine(string.Format(Resource.FailReadSessionFile, Files[0], exc != null ? exc.Message : ""));
+                                                return -1;
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-                            var robot = new LanguageServerRobotController(script, server, ScriptRepositoryPath);
+                            var robot = script != null ? new LanguageServerRobotController(script, server, ScriptRepositoryPath)
+                                                       : new LanguageServerRobotController(session, server, ScriptRepositoryPath);
                             robot.PropagateConnectionLogs();
                             if (!robot.Start())
                             {

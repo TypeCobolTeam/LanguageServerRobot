@@ -88,6 +88,15 @@ namespace LanguageServerRobot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to read the session in file: {0} \n{1}.
+        /// </summary>
+        internal static string FailReadSessionFile {
+            get {
+                return ResourceManager.GetString("FailReadSessionFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fail to create the session directory : {0}.
         /// </summary>
         internal static string FailtoCreateSessionDirectory {

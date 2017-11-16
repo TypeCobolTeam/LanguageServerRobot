@@ -159,4 +159,7 @@
   <data name="NoSessionOrScriptFile" xml:space="preserve">
     <value>There is no session or script to be replayed.</value>
   </data>
+  <data name="FailReadSessionFile" xml:space="preserve">
+    <value>Fail to read the session in file: {0} \n{1}</value>
+  </data>
 </root>

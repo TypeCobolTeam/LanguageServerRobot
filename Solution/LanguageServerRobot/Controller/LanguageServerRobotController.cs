@@ -55,12 +55,31 @@ namespace LanguageServerRobot.Controller
         /// <summary>
         /// Constructor for the LanguageServerRobot running as Client for the Script Test replay mode.
         /// </summary>
+        /// <param name="script">The script to be replayed</param>
         /// <param name="serverConnection">The target server</param>
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
         public LanguageServerRobotController(Script script, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ClientConnection = new ScriptRobotConnectionController(script);
+            this.ServerConnection = serverConnection;
+            Mode = ConnectionMode.Client;
+            //Transfert the roboting mode controller instance to the client and server controller
+            RobotModeController = new ReplayModeController(scriptRepositoryPath);
+            this.ClientConnection.RobotModeController = RobotModeController;
+            this.ServerConnection.RobotModeController = RobotModeController;
+        }
+
+        /// <summary>
+        /// Constructor for the LanguageServerRobot running as Client for the Session Test replay mode.
+        /// </summary>
+        /// <param name="session">The session to be replayed</param>
+        /// <param name="serverConnection">The target server</param>
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
+        public LanguageServerRobotController(Session session, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
+            this.ClientConnection = new SessionRobotConnectionController(session);
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
             //Transfert the roboting mode controller instance to the client and server controller
