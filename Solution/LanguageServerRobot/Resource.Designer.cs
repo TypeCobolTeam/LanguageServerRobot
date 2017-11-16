@@ -79,6 +79,15 @@ namespace LanguageServerRobot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to read the script in file: {0} \n{1}.
+        /// </summary>
+        internal static string FailReadScriptFile {
+            get {
+                return ResourceManager.GetString("FailReadScriptFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fail to create the session directory : {0}.
         /// </summary>
         internal static string FailtoCreateSessionDirectory {

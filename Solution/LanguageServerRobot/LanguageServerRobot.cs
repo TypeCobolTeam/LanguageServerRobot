@@ -244,8 +244,20 @@ namespace LanguageServerRobot
                                 p.WriteOptionDescriptions(System.Console.Out);
                                 return 0;
                             }
+                            ClientRobotConnectionController client = null;
+                            Model.Script script = null;
+                            if (Util.HasScriptFileExtension(Files[0]))
+                            {                                
+                                Exception exc = null;
+                                if (!Util.ReadScriptFile(Files[0], out script, out exc))
+                                {//Invalid Script File.
+                                    System.Console.Out.WriteLine(string.Format(Resource.FailReadScriptFile, Files[0], exc != null ? exc.Message : ""));
+                                    logger.LogWriter?.WriteLine(string.Format(Resource.FailReadScriptFile, Files[0], exc != null ? exc.Message : ""));
+                                    return -1;
+                                }
+                            }                                                    
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-                            var robot = new LanguageServerRobotController(server, ScriptRepositoryPath);
+                            var robot = new LanguageServerRobotController(script, server, ScriptRepositoryPath);
                             robot.PropagateConnectionLogs();
                             if (!robot.Start())
                             {

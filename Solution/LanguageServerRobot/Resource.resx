@@ -153,6 +153,9 @@
   <data name="UriNotAssociatedToAScript" xml:space="preserve">
     <value>The given uri is not associated to a script: {0}</value>
   </data>
+  <data name="FailReadScriptFile" xml:space="preserve">
+    <value>Fail to read the script in file: {0} \n{1}</value>
+  </data>
   <data name="NoSessionOrScriptFile" xml:space="preserve">
     <value>There is no session or script for to replay.</value>
   </data>

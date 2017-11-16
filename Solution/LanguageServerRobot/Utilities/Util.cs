@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LanguageServerRobot.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServerRobot.Utilities
 {
@@ -95,6 +99,52 @@ namespace LanguageServerRobot.Utilities
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Determines if the given filepath has a Script File Extension
+        /// </summary>
+        /// <param name="filepath">The file path to check.</param>
+        /// <returns>true if the file path as script file path extension, false otherwise</returns>
+        public static bool HasScriptFileExtension(string filepath)
+        {
+            System.Diagnostics.Debug.Assert(filepath != null);
+            return filepath.EndsWith(SCRIPT_FILE_EXTENSION);
+        }
+
+        /// <summary>
+        /// Read a script file.
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="script">[out] the Script model if the file path corresponds to a Script file</param>
+        /// <param name="exc">[out] Any exception that might have be thrown if the read failed.</param>
+        /// <returns>true if a script file has been read, false otherwise</returns>
+        public static bool ReadScriptFile(string filepath, out Script script, out Exception exc)
+        {
+            System.Diagnostics.Debug.Assert(filepath != null);
+            exc = null;
+            script = null;
+            if (HasScriptFileExtension(filepath))
+            {//Read the file using UTF8.
+                try
+                {
+                    using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                        {                            
+                            string data = sr.ReadToEnd();
+                            JObject jobject = JObject.Parse(data);
+                            script = (Script)jobject.ToObject(typeof(Script));
+                            return true;
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    exc = e;
+                }
+            }
+            return false;       
         }
     }
 }

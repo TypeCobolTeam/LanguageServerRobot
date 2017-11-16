@@ -65,6 +65,7 @@
     <Compile Include="Controller\LanguageServerRobotController.cs" />
     <Compile Include="Controller\RecordingModeController.cs" />
     <Compile Include="Controller\ReplayModeController.cs" />
+    <Compile Include="Controller\ScriptRobotConnectionController.cs" />
     <Compile Include="Controller\ServerRobotConnectionController.cs" />
     <Compile Include="LanguageServerRobot.cs" />
     <Compile Include="Model\Script.cs" />
