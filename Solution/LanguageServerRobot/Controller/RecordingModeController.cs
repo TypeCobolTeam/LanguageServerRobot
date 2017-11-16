@@ -17,152 +17,6 @@ namespace LanguageServerRobot.Controller
     public class RecordingModeController : AbstractModeController
     {
         /// <summary>
-        /// The recording State
-        /// </summary>
-        public enum RecordingState
-        {
-            /// <summary>
-            /// Waiting for initialization.
-            /// </summary>
-            NotInitialized = 0x01 << 0,
-            /// <summary>
-            /// Initialized
-            /// </summary>
-            Initialized = 0x01 << 1,
-            /// <summary>
-            /// The Recording is started.
-            /// </summary>
-            Start = 0x01 << 2,
-
-            /// <summary>
-            /// If we are ShutingDown or Exiting down
-            /// </summary>
-            ShutingDownOrExiting = 0x01 << 3,
-
-            /// <summary>
-            /// The recording is stopped
-            /// </summary>
-            Stop = 0x01 << 4,
-
-            /// <summary>
-            /// Initialization request error
-            /// </summary>
-            InitializationError = 0x01 << 5
-
-        };
-
-        private int myState;
-        /// <summary>
-        /// State change event handler.
-        /// </summary>
-        event EventHandler StageChangedEvent;
-
-        /// <summary>
-        /// The Current State.
-        /// </summary>
-        public RecordingState State
-        {
-            get
-            {
-                return (RecordingState)System.Threading.Interlocked.Exchange(ref myState, myState);
-            }
-            protected set
-            {
-                if (System.Threading.Interlocked.Exchange(ref myState, (int)value) != (int)value)
-                {
-                    if (StageChangedEvent != null)
-                    {
-                        StageChangedEvent(this, null);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// The Model of the current session.
-        /// </summary>
-        public Session SessionModel
-        {
-            get; protected set;
-        }
-
-        /// <summary>
-        /// The JSON Object of the "initialize" request;
-        /// </summary>
-        public JObject JInitializeObject
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// The original "initialize" request
-        /// </summary>
-        protected string InitializeRequest
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// The original "shutdown" request
-        /// </summary>
-        protected string ShutdownRequest
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// The original JSON Object of "shutdown" request
-        /// </summary>
-        protected JObject JShutdownObject
-        {
-            get;
-            set;
-        }
-
-        public override bool IsModeInitialized
-        {
-            get
-            {
-                return ((int)State & (int)RecordingState.Initialized) != 0 && !IsInitializationError;
-            }
-        }
-
-        public override bool IsModeStarted
-        {
-            get
-            {
-                return ((int)State & (int)RecordingState.Start) != 0 && !IsModeStopped;
-            }
-        }
-
-        public override bool IsModeStopped
-        {
-            get
-            {
-                return ((int)State & (int)RecordingState.Stop) != 0;
-            }
-        }
-
-        private bool IsInitializationError
-        {
-            get
-            {
-                return ((int)State & (int)RecordingState.InitializationError) != 0;
-            }
-        }
-
-        private bool IsShutingDownOrExiting
-        {
-            get
-            {
-                return ((int)State & (int)RecordingState.ShutingDownOrExiting) != 0;
-            }
-        }
-
-        /// <summary>
         /// The Dictionary that give for an uri, the associated script.
         /// </summary>
         Dictionary<string, Script> ScriptMap
@@ -184,7 +38,7 @@ namespace LanguageServerRobot.Controller
         /// </summary>
         public RecordingModeController(string scriptRepositoryPath = null) : base(scriptRepositoryPath)
         {            
-            State = RecordingState.NotInitialized;
+            State = ModeState.NotInitialized;
             RequestIdUriMap = new Dictionary<string, string> ();
         }
 
@@ -224,7 +78,7 @@ namespace LanguageServerRobot.Controller
             bool consumed = false;
             switch(State)
             {
-                case RecordingState.NotInitialized:
+                case ModeState.NotInitialized:
                     {
                         System.Diagnostics.Contracts.Contract.Ensures(SessionModel == null && JInitializeObject == null);
                         if (SessionModel == null && JInitializeObject == null)
@@ -242,14 +96,14 @@ namespace LanguageServerRobot.Controller
                         }
                     }
                     break;
-                case RecordingState.Initialized:
+                case ModeState.Initialized:
                     {
                         if (Protocol.IsNotification(message, out jsonObject))
                         {
                             if (Protocol.IsInitializedNotification(message, out jsonObject))
                             {   //Notification from the Client that it has take in account the "initialize" result from the server.
                                 //==> We can start both Client and Server are OK.
-                                State |= RecordingState.Start;
+                                State |= ModeState.Start;
                                 SessionModel.initialized_notification = message;
                                 consumed = true;
                             }
@@ -260,7 +114,7 @@ namespace LanguageServerRobot.Controller
                         }
                     }
                     break;
-                case RecordingState.Initialized | RecordingState.Start:
+                case ModeState.Initialized | ModeState.Start:
                     {
                         string uri = null;                        
                         if (Protocol.IsNotification(message, out jsonObject))
@@ -328,7 +182,7 @@ namespace LanguageServerRobot.Controller
             bool consumed = false;
             switch (State)
             {
-                case RecordingState.NotInitialized:
+                case ModeState.NotInitialized:
                     {
                         System.Diagnostics.Contracts.Contract.Ensures(SessionModel == null && JInitializeObject != null);
                         if (SessionModel == null && JInitializeObject != null)
@@ -350,13 +204,13 @@ namespace LanguageServerRobot.Controller
                         }
                     }
                     break;
-                case RecordingState.Initialized:
+                case ModeState.Initialized:
                     if (!consumed)
                     {
                         SessionModel.server_in_initialize_messages.Add(message);
                     }
                     break;
-                case RecordingState.Initialized | RecordingState.Start:
+                case ModeState.Initialized | ModeState.Start:
                     {
                         string uri = null;
                         if (Protocol.IsNotification(message, out jsonObject))
@@ -430,12 +284,12 @@ namespace LanguageServerRobot.Controller
             //Maybe initailization failed            
             if (Protocol.IsErrorResponse(jsonObject))
             {
-                State |= RecordingState.InitializationError;
+                State |= ModeState.InitializationError;
             }
             else
             {
-                State &= ~RecordingState.NotInitialized;
-                State |= RecordingState.Initialized;                                
+                State &= ~ModeState.NotInitialized;
+                State |= ModeState.Initialized;                                
                 SessionModel = new Session();
                 string sessionDirectoryPath = null;
                 if (!Util.CreateSessionDirectory(out sessionDirectoryPath, this.ScriptRepositoryPath))                
@@ -634,7 +488,7 @@ namespace LanguageServerRobot.Controller
         /// <param name="bExit">True if it comes from the exit message, false it it comes from the shutdown message.</param>
         private void StopSession(string message, JObject jsonObject, bool bExit)
         {
-            this.State = this.State | RecordingState.ShutingDownOrExiting;
+            this.State = this.State | ModeState.ShutingDownOrExiting;
             System.Diagnostics.Contracts.Contract.Assert(SessionModel != null);
             if (!bExit)
             {// In this case message is the response to the shutdown request 
@@ -651,7 +505,7 @@ namespace LanguageServerRobot.Controller
             SessionModel.DebugDump();
 #endif
             //No session anymore
-            this.State = RecordingState.Stop;
+            this.State = ModeState.Stop;
             SessionModel = null;
         }
 

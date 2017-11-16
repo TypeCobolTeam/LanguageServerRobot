@@ -61,7 +61,10 @@ namespace LanguageServerRobot.Controller
         {
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ServerConnection = serverConnection;
-            Mode = ConnectionMode.Client;            
+            Mode = ConnectionMode.Client;
+            //Transfert the roboting mode controller instance to the client and server controller
+            RobotModeController = new ReplayModeController(scriptRepositoryPath);
+            serverConnection.RobotModeController = RobotModeController;
         }
 
         /// <summary>
@@ -300,11 +303,26 @@ namespace LanguageServerRobot.Controller
                 clientState = ClientTaskConnectionState.Task.Result;
             }
             ConnectionState serverState = ConnectionState.Disposed;
-            if (ClientTaskConnectionState != null)
+            if (ServerTaskConnectionState != null)
             {
-                serverState = ClientTaskConnectionState.Task.Result;
+                serverState = ServerTaskConnectionState.Task.Result;
             }
             return clientState == ConnectionState.Listening && serverState == ConnectionState.Listening;
+        }
+
+        /// <summary>
+        /// Wait that the Server Terminate
+        /// </summary>
+        /// <returns></returns>
+        private bool WaitServerTermination()
+        {
+            //Wait till the server are listening.
+            ConnectionState serverState = ConnectionState.Disposed;
+            if (ServerTaskConnectionState != null)
+            {
+                serverState = ServerTaskConnectionState.Task.Result;
+            }
+            return serverState == ConnectionState.Listening;
         }
 
         private void ServerStateChanged(object sender, EventArgs e)
@@ -325,14 +343,8 @@ namespace LanguageServerRobot.Controller
         /// </summary>
         protected bool StartReplaying()
         {
-            ServerTask.Start();
-            //Wait till the server is listening.
-            ConnectionState serverState = ConnectionState.Disposed;
-            if (ClientTaskConnectionState != null)
-            {
-                serverState = ClientTaskConnectionState.Task.Result;
-            }
-            return serverState == ConnectionState.Listening;
+            StartServer();
+            return WaitServerTermination();
         }
 
         /// <summary>

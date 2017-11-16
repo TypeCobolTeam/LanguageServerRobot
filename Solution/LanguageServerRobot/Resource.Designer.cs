@@ -124,6 +124,15 @@ namespace LanguageServerRobot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no session or script for to replay..
+        /// </summary>
+        internal static string NoSessionOrScriptFile {
+            get {
+                return ResourceManager.GetString("NoSessionOrScriptFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An Unexpected Request has been sent from the server: {0}.
         /// </summary>
         internal static string UnexpectedRequestFromServer {

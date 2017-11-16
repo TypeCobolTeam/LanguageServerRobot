@@ -81,7 +81,7 @@ namespace LanguageServerRobot.Utilities
         public static bool CreateSessionDirectory(out string sessionDirectoryPath, string root = null)
         {
             string path = root == null ? DefaultScriptRepositorPath : root;
-            String date = System.DateTime.Now.ToString();
+            String date = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss fff");
             date = date.Replace(':', '_').Replace('.', '_').Replace(' ', '_').Replace('/', '_').Replace('\\', '_');
             path = System.IO.Path.Combine(path, "Session" + date);
             sessionDirectoryPath = path;

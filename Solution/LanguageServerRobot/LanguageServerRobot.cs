@@ -81,6 +81,22 @@ namespace LanguageServerRobot
             internal set;
         }
 
+        /// <summary>
+        /// The list of Files
+        /// </summary>
+        public static List<string> Files
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Static constructor
+        /// </summary>
+        static LanguageServerRobot()
+        {
+            Files = new List<string>();
+        }
         const string DefaultTypeCobolLanguageServerPath = "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
 
         /// <summary>
@@ -127,9 +143,12 @@ namespace LanguageServerRobot
                     }
                 },
                 { "lf|logfile=","{PATH} the target log file", (string v) => LogFile = v },
-                { "r|robot",  "Robot Client/Server mode.", v => Mode = (v!=null) 
-                        ? LanguageServerRobotController.ConnectionMode.ClientServer 
+                { "r|robot",  "Robot Client/Server mode.", v => Mode = (v!=null)
+                        ? LanguageServerRobotController.ConnectionMode.ClientServer
                         : LanguageServerRobotController.ConnectionMode.Client
+                },
+                { "c|client=",  "Robot Client/Replay mode with {PATH} the session or script file.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
+                    if (version != null)Files.Add(v); }
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
                 { "d|Scripts repository directory=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
@@ -219,6 +238,12 @@ namespace LanguageServerRobot
                         break;
                     case LanguageServerRobotController.ConnectionMode.Client:
                         {
+                            if (Files.Count == 0)
+                            {//No file to test
+                                System.Console.Out.WriteLine(Resource.NoSessionOrScriptFile);
+                                p.WriteOptionDescriptions(System.Console.Out);
+                                return 0;
+                            }
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
                             var robot = new LanguageServerRobotController(server, ScriptRepositoryPath);
                             robot.PropagateConnectionLogs();

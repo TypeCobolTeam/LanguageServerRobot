@@ -122,23 +122,23 @@
   </Class>
   <Class Name="LanguageServerRobot.Controller.AbstractModeController">
     <Position X="20.25" Y="3.25" Width="2.25" />
+    <NestedTypes>
+      <Enum Name="LanguageServerRobot.Controller.AbstractModeController.ModeState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Controller\AbstractModeController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAQCEAAAEAAAAAAAAEAQABAAAEAAQAAIAAAAAAAIA=</HashCode>
+      <HashCode>AAAAQCEAAAEAAAAACAAGAYABQAAEECQAAIAAJABgAIA=</HashCode>
       <FileName>Controller\AbstractModeController.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="LanguageServerRobot.Controller.RecordingModeController">
     <Position X="21" Y="7.25" Width="2.25" />
-    <NestedTypes>
-      <Enum Name="LanguageServerRobot.Controller.RecordingModeController.RecordingState" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Controller\RecordingModeController.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAkAAAAACAAEAcAAIAAAECQAAICABEBgIIA=</HashCode>
+      <HashCode>AAAAAAAAAAkAAAAACAAEAUAAIAAAAAAAAACABEAAIIA=</HashCode>
       <FileName>Controller\RecordingModeController.cs</FileName>
     </TypeIdentifier>
   </Class>
