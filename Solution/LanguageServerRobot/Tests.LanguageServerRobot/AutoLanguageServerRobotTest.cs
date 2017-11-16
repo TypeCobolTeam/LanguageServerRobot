@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Tests.LanguageServer.JsonRPC;
 
-namespace Tests.LanguageServerRobot
+namespace Tests.LanguageServer.Robot
 {
     [TestClass]
     /// <summary>

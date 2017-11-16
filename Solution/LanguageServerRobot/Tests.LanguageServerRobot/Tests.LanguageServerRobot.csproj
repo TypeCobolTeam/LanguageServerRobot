@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="AutoLanguageServerRobotTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LanguageServer.JsonRPC\LanguageServer.JsonRPC.csproj">
@@ -80,10 +81,21 @@
       <Project>{2950dac0-494d-46b6-a836-7eab4810952a}</Project>
       <Name>LanguageServer.Protocol</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LanguageServerRobot.csproj">
+      <Project>{adc9412f-26e7-4c05-8352-2573fbeb9e88}</Project>
+      <Name>LanguageServerRobot</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="TestFiles\Session0\Script01.tlsp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\Session0\TestSuite01.slsp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

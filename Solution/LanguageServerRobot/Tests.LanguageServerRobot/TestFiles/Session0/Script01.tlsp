@@ -1,0 +1,21 @@
+{
+  "session": "C:\\Users\\MAYANJE\\Source\\LSRSessions\\Session2017_11_16_11_03_45_034\\TestSuite_2017_11_16_11_03_45_028.slsp",
+  "user": "MAYANJE",
+  "date": "2017/11/16 11:03:45 382",
+  "uri": "file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee",
+  "initialize": "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"initialize\",\"params\":{\"processId\":-1,\"rootPath\":\"C:\\\\Program Files (x86)\\\\IBM\\\\SDP_IDZ14\",\"rootUri\":\"file:/C:/Program%20Files%20(x86)/IBM/SDP_IDZ14/\",\"capabilities\":{\"workspace\":{\"applyEdit\":true,\"didChangeConfiguration\":{\"dynamicRegistration\":true},\"didChangeWatchedFiles\":{\"dynamicRegistration\":false},\"symbol\":{\"dynamicRegistration\":true},\"executeCommand\":{\"dynamicRegistration\":true}},\"textDocument\":{\"synchronization\":{\"willSave\":true,\"willSaveWaitUntil\":true,\"dynamicRegistration\":true},\"completion\":{\"completionItem\":{\"snippetSupport\":true},\"dynamicRegistration\":true},\"hover\":{\"dynamicRegistration\":true},\"signatureHelp\":{\"dynamicRegistration\":true},\"references\":{\"dynamicRegistration\":true},\"documentHighlight\":{\"dynamicRegistration\":true},\"documentSymbol\":{\"dynamicRegistration\":true},\"formatting\":{\"dynamicRegistration\":true},\"rangeFormatting\":{\"dynamicRegistration\":true},\"onTypeFormatting\":{\"dynamicRegistration\":true},\"definition\":{\"dynamicRegistration\":true},\"codeAction\":{\"dynamicRegistration\":true},\"codeLens\":{\"dynamicRegistration\":true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{\"dynamicRegistration\":true}}},\"trace\":\"off\"}}",
+  "initialize_result": "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"result\":{\"capabilities\":{\"textDocumentSync\":2,\"hoverProvider\":true,\"completionProvider\":{\"resolveProvider\":false,\"triggerCharacters\":[\"::\"]},\"definitionProvider\":true,\"referencesProvider\":false,\"documentHighlightProvider\":false,\"documentSymbolProvider\":false,\"workspaceSymbolProvider\":false,\"codeActionProvider\":false,\"documentFormattingProvider\":false,\"documentRangeFormattingProvider\":false,\"renameProvider\":false}}}",
+  "didOpen": "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\",\"params\":{\"textDocument\":{\"uri\":\"file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee\",\"languageId\":\"__lsp4j_TypeCobol\",\"version\":0,\"text\":\"       IDENTIFICATION DIVISION.\\r\\n       PROGRAM-ID. HELLO.\\r\\n\\r\\n       PROCEDURE DIVISION.\\r\\n\\r\\n       A-PARA.\\r\\n           PERFORM  DISPLAY \\u0027IN A-PARA\\u0027\\r\\n           END-PERFORM.\\r\\n           PERFORM C-PARA THRU E-PARA.\\r\\n\\r\\n       B-PARA.\\r\\n           DISPLAY \\u0027IN B-PARA\\u0027.\\r\\n           STOP RUN.\\r\\n\\r\\n       C-PARA.\\r\\n           DISPLAY \\u0027IN C-PARA\\u0027.\\r\\n\\r\\n       D-PARA.\\r\\n           DISPLAY \\u0027IN D-PARA\\u0027.\\r\\n\\r\\n       E-PARA.\\r\\n           DISPLAY \\u0027IN E-PARA\\u0027.\\r\\n       END PROGRAM HELLO.\"}}}",
+  "messages": [
+    {
+      "category": 0,
+      "message": "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"textDocument/completion\",\"params\":{\"textDocument\":{\"uri\":\"file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee\"},\"uri\":\"file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee\",\"position\":{\"line\":6,\"character\":19}}}"
+    },
+    {
+      "category": 1,
+      "message": "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":[{\"label\":\"A-PARA\",\"kind\":18},{\"label\":\"B-PARA\",\"kind\":18},{\"label\":\"C-PARA\",\"kind\":18},{\"label\":\"D-PARA\",\"kind\":18},{\"label\":\"E-PARA\",\"kind\":18}]}"
+    }
+  ],
+  "didClose": "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didClose\",\"params\":{\"textDocument\":{\"uri\":\"file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee\"}}}",
+  "IsValid": true
+}
