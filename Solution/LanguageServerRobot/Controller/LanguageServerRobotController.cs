@@ -65,7 +65,7 @@ namespace LanguageServerRobot.Controller
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
             //Transfert the roboting mode controller instance to the client and server controller
-            RobotModeController = new ReplayModeController(scriptRepositoryPath);
+            RobotModeController = new ReplayModeController(script, scriptRepositoryPath);
             this.ClientConnection.RobotModeController = RobotModeController;
             this.ServerConnection.RobotModeController = RobotModeController;
         }
@@ -78,12 +78,13 @@ namespace LanguageServerRobot.Controller
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
         public LanguageServerRobotController(Session session, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
-            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
+            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);            
             this.ClientConnection = new SessionRobotConnectionController(session);
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
             //Transfert the roboting mode controller instance to the client and server controller
-            RobotModeController = new ReplayModeController(scriptRepositoryPath);
+            //TODO ==> This shall be done for each script in the session
+            //RobotModeController = new ReplayModeController(scriptRepositoryPath);
             this.ClientConnection.RobotModeController = RobotModeController;
             this.ServerConnection.RobotModeController = RobotModeController;
         }

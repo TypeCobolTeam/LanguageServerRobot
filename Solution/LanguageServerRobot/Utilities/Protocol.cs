@@ -44,6 +44,19 @@ namespace LanguageServerRobot.Utilities
         private static Dictionary<string, Tuple<RequestType, UriExtractor<RequestType>>> RequestsWithUriMap;
 
         /// <summary>
+        /// A Default Initialization message.
+        /// </summary>
+        public static readonly string DEFAULT_INITIALIZE = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"initialize\",\"params\":{\"processId\":-1,\"rootPath\":\"C:\\\\Program Files (x86)\\\\IBM\\\\SDP_IDZ14\",\"rootUri\":\"file:/C:/Program%20Files%20(x86)/IBM/SDP_IDZ14/\",\"capabilities\":{\"workspace\":{\"applyEdit\":true,\"didChangeConfiguration\":{\"dynamicRegistration\":true},\"didChangeWatchedFiles\":{\"dynamicRegistration\":false},\"symbol\":{\"dynamicRegistration\":true},\"executeCommand\":{\"dynamicRegistration\":true}},\"textDocument\":{\"synchronization\":{\"willSave\":true,\"willSaveWaitUntil\":true,\"dynamicRegistration\":true},\"completion\":{\"completionItem\":{\"snippetSupport\":true},\"dynamicRegistration\":true},\"hover\":{\"dynamicRegistration\":true},\"signatureHelp\":{\"dynamicRegistration\":true},\"references\":{\"dynamicRegistration\":true},\"documentHighlight\":{\"dynamicRegistration\":true},\"documentSymbol\":{\"dynamicRegistration\":true},\"formatting\":{\"dynamicRegistration\":true},\"rangeFormatting\":{\"dynamicRegistration\":true},\"onTypeFormatting\":{\"dynamicRegistration\":true},\"definition\":{\"dynamicRegistration\":true},\"codeAction\":{\"dynamicRegistration\":true},\"codeLens\":{\"dynamicRegistration\":true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{\"dynamicRegistration\":true}}},\"trace\":\"off\"}}";
+        /// <summary>
+        /// Default shutdown message
+        /// </summary>
+        public static readonly string DEFAULT_SHUTDOWN = "{\"jsonrpc\":\"2.0\",\"id\":\"2\",\"method\":\"shutdown\"}";
+        /// <summary>
+        /// Default exit message
+        /// </summary>
+        public static readonly string DEFAULT_EXIT = "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}";
+
+        /// <summary>
         /// Static constructor
         /// </summary>
         static Protocol()
