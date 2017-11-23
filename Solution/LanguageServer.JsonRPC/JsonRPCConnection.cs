@@ -37,7 +37,7 @@ namespace LanguageServer.JsonRPC
         /// <summary>
         /// The Message Connection state
         /// </summary>
-        public ConnectionState State
+        public virtual ConnectionState State
         {
             get
             {
@@ -48,7 +48,7 @@ namespace LanguageServer.JsonRPC
         /// <summary>
         /// Add a State Change Event handler.
         /// </summary>
-        public void AddStageChangedEventHandler(EventHandler handler)
+        public virtual void AddStageChangedEventHandler(EventHandler handler)
         {
             MessageConnection?.AddStageChangedEventHandler(handler);
         }
@@ -57,7 +57,7 @@ namespace LanguageServer.JsonRPC
         /// Remove a State Change Event Handler. 
         /// </summary>
         /// <param name="handler"></param>
-        public void RemoveStageChangedEventHandler(EventHandler handler)
+        public virtual void RemoveStageChangedEventHandler(EventHandler handler)
         {
             MessageConnection?.RemoveStageChangedEventHandler(handler);
         }
@@ -287,6 +287,8 @@ namespace LanguageServer.JsonRPC
             }
             else
             {
+                //So remove It
+                responsesExpected.Remove(requestId);
                 RequestType requestType = responseWaitState.RequestType;
                 object objResult = null;
                 if (result != null && requestType.ResultType != null)
@@ -355,7 +357,7 @@ namespace LanguageServer.JsonRPC
         /// Starts the connection
         /// </summary>
         /// <returns>The connection's listener task if any, null otherwise</returns>
-        public Task<bool> Start()
+        public virtual Task<bool> Start()
         {
             return Start(this);
         }
@@ -365,7 +367,7 @@ namespace LanguageServer.JsonRPC
         /// </summary>
         /// <param name="messageConsumer">The message consumer instance</param>
         /// <returns>The connection's listener task if any, null otherwise</returns>
-        public Task<bool> Start(IMessageConsumer messageConsumer)
+        public virtual Task<bool> Start(IMessageConsumer messageConsumer)
         {
             System.Diagnostics.Contracts.Contract.Assert(messageConsumer != null);
             System.Diagnostics.Contracts.Contract.Assert(this.MessageConnection != null);

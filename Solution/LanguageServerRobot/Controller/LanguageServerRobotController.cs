@@ -302,49 +302,48 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// Start Roboting :-)
-        /// <returns>true if both Client and Server have been launched, false otherwise.</returns>
-        /// </summary>
-        protected bool StartRoboting()
-        {
-            StartClient();
-            StartServer();
-            return WaitClientServerTermination();
-        }
-
-        /// <summary>
-        /// Wait that the Client and the Server Terminate
+        /// Wait that the client Terminate
         /// </summary>
         /// <returns></returns>
-        private bool WaitClientServerTermination()
+        private async Task<bool> WaitClientTermination()
         {
             //Wait till the client and the server are listening.
-            ConnectionState clientState = ConnectionState.Disposed;
-            if (ClientTaskConnectionState != null)
-            {
-                clientState = ClientTaskConnectionState.Task.Result;
-            }
-            ConnectionState serverState = ConnectionState.Disposed;
-            if (ServerTaskConnectionState != null)
-            {
-                serverState = ServerTaskConnectionState.Task.Result;
-            }
-            return clientState == ConnectionState.Listening && serverState == ConnectionState.Listening;
+            //ConnectionState clientState = ConnectionState.Disposed;
+            //if (ClientTaskConnectionState != null)
+            //{
+            //    clientState = ClientTaskConnectionState.Task.Result;
+            //}
+            //return clientState == ConnectionState.Listening;
+            await ClientTask;
+            return ClientTask.Result;
         }
 
         /// <summary>
         /// Wait that the Server Terminate
         /// </summary>
         /// <returns></returns>
-        private bool WaitServerTermination()
+        private async Task<bool> WaitServerTermination()
         {
             //Wait till the server are listening.
-            ConnectionState serverState = ConnectionState.Disposed;
-            if (ServerTaskConnectionState != null)
-            {
-                serverState = ServerTaskConnectionState.Task.Result;
-            }
-            return serverState == ConnectionState.Listening;
+            //ConnectionState serverState = ConnectionState.Disposed;
+            //if (ServerTaskConnectionState != null)
+            //{
+            //    serverState = ServerTaskConnectionState.Task.Result;
+            //}
+            //return serverState == ConnectionState.Listening;
+            await ServerTask;
+            return ServerTask.Result;
+        }
+
+        /// <summary>
+        /// Wait that the Client and the Server Terminate
+        /// </summary>
+        /// <returns></returns>
+        private async Task<bool> WaitClientServerTermination()
+        {
+            bool bResultClient = await WaitClientTermination();
+            bool bResultServer = await WaitServerTermination();
+            return bResultClient && bResultServer;
         }
 
         private void ServerStateChanged(object sender, EventArgs e)
@@ -360,13 +359,32 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
+        /// Start Roboting :-)
+        /// <returns>true if both Client and Server have been launched, false otherwise.</returns>
+        /// </summary>
+        protected bool StartRoboting()
+        {
+            StartClient();
+            StartServer();
+            Task<bool> task = WaitClientServerTermination();
+            return task.Result;
+        }
+
+        /// <summary>
         /// Start Replaying
         /// <returns>true if the server has been launched, false otherwise.</returns>
         /// </summary>
         protected bool StartReplaying()
         {
             StartServer();
-            return WaitServerTermination();
+            //Ensure that the server has succcesfuly strated
+            var serverConnectionSate = ServerTaskConnectionState.Task.Result; ;
+            {
+                StartClient();
+                Task<bool> task = WaitClientServerTermination();
+                return task.Result;
+            }
+            return false;
         }
 
         /// <summary>

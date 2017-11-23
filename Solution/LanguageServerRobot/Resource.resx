@@ -162,4 +162,13 @@
   <data name="FailReadSessionFile" xml:space="preserve">
     <value>Fail to read the session in file: {0} \n{1}</value>
   </data>
+  <data name="FailClientInitializeMessage" xml:space="preserve">
+    <value>Initialize request failure with message : {0}</value>
+  </data>
+  <data name="ServerInitializeError" xml:space="preserve">
+    <value>Server Initialization Error : Code = {0}; Message = '{1}'</value>
+  </data>
+  <data name="UnexpectedMessageFromClient" xml:space="preserve">
+    <value>An Unexpected message has been received from the client: {0}.</value>
+  </data>
 </root>

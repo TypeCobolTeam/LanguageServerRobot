@@ -47,6 +47,11 @@ namespace LanguageServerRobot.Utilities
         /// A Default Initialization message.
         /// </summary>
         public static readonly string DEFAULT_INITIALIZE = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"initialize\",\"params\":{\"processId\":-1,\"rootPath\":\"C:\\\\Program Files (x86)\\\\IBM\\\\SDP_IDZ14\",\"rootUri\":\"file:/C:/Program%20Files%20(x86)/IBM/SDP_IDZ14/\",\"capabilities\":{\"workspace\":{\"applyEdit\":true,\"didChangeConfiguration\":{\"dynamicRegistration\":true},\"didChangeWatchedFiles\":{\"dynamicRegistration\":false},\"symbol\":{\"dynamicRegistration\":true},\"executeCommand\":{\"dynamicRegistration\":true}},\"textDocument\":{\"synchronization\":{\"willSave\":true,\"willSaveWaitUntil\":true,\"dynamicRegistration\":true},\"completion\":{\"completionItem\":{\"snippetSupport\":true},\"dynamicRegistration\":true},\"hover\":{\"dynamicRegistration\":true},\"signatureHelp\":{\"dynamicRegistration\":true},\"references\":{\"dynamicRegistration\":true},\"documentHighlight\":{\"dynamicRegistration\":true},\"documentSymbol\":{\"dynamicRegistration\":true},\"formatting\":{\"dynamicRegistration\":true},\"rangeFormatting\":{\"dynamicRegistration\":true},\"onTypeFormatting\":{\"dynamicRegistration\":true},\"definition\":{\"dynamicRegistration\":true},\"codeAction\":{\"dynamicRegistration\":true},\"codeLens\":{\"dynamicRegistration\":true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{\"dynamicRegistration\":true}}},\"trace\":\"off\"}}";
+
+        /// <summary>
+        /// Default initialized notification
+        /// </summary>
+        public static readonly string DEFAULT_INITIALIZED = "{\"jsonrpc\":\"2.0\",\"method\":\"initialized\"}";
         /// <summary>
         /// Default shutdown message
         /// </summary>
@@ -736,6 +741,27 @@ namespace LanguageServerRobot.Utilities
                 return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.ShowMessageNotification.Type.Method);
             }
             return false;
+        }
+
+        /// <summary>
+        /// Normalize an uri to match the C# string representation of a File
+        /// </summary>
+        /// <param name="uri">The file uri to normalize.</param>
+        /// <returns>the normalized uri if succesfull, the original uri otherwise.</returns>
+        public static String NormalizeFileURI(String uri)
+        {
+            try
+            {// Normalize the uri to match the Java representation of an URI
+                System.Uri new_uri = null;
+                new_uri = new System.Uri(uri);
+                string path = new_uri.AbsolutePath;
+                System.Uri file_uri = (new System.UriBuilder(new_uri)).Uri;
+                return file_uri.ToString();
+            }
+            catch (Exception e)
+            {
+            }
+            return uri;
         }
 
     }

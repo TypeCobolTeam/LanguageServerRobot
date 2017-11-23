@@ -52,6 +52,7 @@ namespace LanguageServerRobot.Controller
             get
             {
                 System.Diagnostics.Contracts.Contract.Assert(uri != null);
+                uri = Protocol.NormalizeFileURI(uri);
                 if (ScriptMap == null)
                     return null;
                 return ScriptMap.ContainsKey(uri) ? ScriptMap[uri] : null;
@@ -64,9 +65,11 @@ namespace LanguageServerRobot.Controller
                 System.Diagnostics.Contracts.Contract.Assume(script == null || script == value);
                 if (ScriptMap == null)
                     ScriptMap = new Dictionary<string, Script>();
+                uri = Protocol.NormalizeFileURI(uri);
                 ScriptMap[uri] = value;
             }
         }
+
         /// <summary>
         /// Handle message incoming from the client side.
         /// </summary>

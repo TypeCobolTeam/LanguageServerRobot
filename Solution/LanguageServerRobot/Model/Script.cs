@@ -11,7 +11,7 @@ namespace LanguageServerRobot.Model
     /// <summary>
     /// The Model that describe a Script associated toa document.
     /// </summary>
-    public class Script
+    public class Script : IEquatable<Script>
     {
         /// <summary>
         /// Enumeration of the categories to which can belong a message.
@@ -191,6 +191,28 @@ namespace LanguageServerRobot.Model
             string text = jobject.ToString();
             byte[] bytes = Encoding.UTF8.GetBytes(text);
             stream.Write(bytes, 0, bytes.Length);
+        }
+
+        /// <summary>
+        /// Check if messages contained in this scripts are equals to messages of the other script.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Script other)
+        {
+            if (other == null)
+                return false;
+            if ((didOpen != other.didOpen) || (didClose != other.didClose))
+                return false;
+            if (messages.Count != other.messages.Count)
+                return false;
+            for (int i = 0; i < messages.Count; i++)
+            {
+                if ((messages[i].category != other.messages[i].category) ||
+                    (messages[i].message != messages[i].message))
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
