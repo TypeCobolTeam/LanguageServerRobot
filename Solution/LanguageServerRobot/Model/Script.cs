@@ -209,7 +209,7 @@ namespace LanguageServerRobot.Model
             for (int i = 0; i < messages.Count; i++)
             {
                 if ((messages[i].category != other.messages[i].category) ||
-                    (messages[i].message != messages[i].message))
+                    (messages[i].message != other.messages[i].message))
                     return false;
             }
             return true;

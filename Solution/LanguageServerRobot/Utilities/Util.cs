@@ -23,6 +23,15 @@ namespace LanguageServerRobot.Utilities
         /// Session file extension
         /// </summary>
         public static readonly String SESSION_FILE_EXTENSION = ".slsp";
+        /// <summary>
+        /// Result file extension
+        /// </summary>
+        public static readonly String RESULT_FILE_EXTENSION = ".rlsp";
+        /// <summary>
+        /// Result Sub directory
+        /// </summary>
+        public static readonly String RESULT_SUB_DIRECTORY = "Results";
+
 
         /// <summary>
         /// Get the identifier name corresponding to an URI. This by replace characters like: \, /, ", . by an underscore.
@@ -99,6 +108,42 @@ namespace LanguageServerRobot.Utilities
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Ensure that the result output directory for a script uri exists.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static bool EnsureResultDirectoryExists(string uri, out string result_dir)
+        {
+            result_dir = null;
+            FileInfo fi = new FileInfo(uri);
+            DirectoryInfo di = fi.Directory;
+            string result_path = System.IO.Path.Combine(di.FullName, RESULT_SUB_DIRECTORY);
+            try
+            {
+                System.IO.DirectoryInfo rdi = System.IO.Directory.CreateDirectory(result_path);//Create the directory
+                result_dir = rdi.FullName;
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the result file name corresponding to an uri.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static string GetResultFileName(string uri)
+        {
+            FileInfo fi = new FileInfo(uri);
+            string extension = fi.Extension;
+            string resultName = (extension != null && extension.Length > 0) ? fi.Name.Substring(0, fi.Name.Length - extension.Length) : fi.Name + '.';
+            return resultName + RESULT_FILE_EXTENSION;
         }
 
         /// <summary>

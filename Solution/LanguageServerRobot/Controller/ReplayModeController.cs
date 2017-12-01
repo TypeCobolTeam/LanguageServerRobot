@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace LanguageServerRobot.Controller
 {
@@ -312,6 +313,72 @@ namespace LanguageServerRobot.Controller
             {//Notify all listener
                 NotificationEvent(this, new Tuple<string, JObject>(message, jsonObject));
             }
+        }
+
+        /// <summary>
+        /// Save the result of the comparison of this script in a file using UTF-8 encoding.
+        /// <returns>true if ok , false otherwise</returns>
+        /// </summary>
+        private bool SaveResult()
+        {
+            System.Diagnostics.Contracts.Contract.Requires(SourceScript.uri != null);
+            string result_dir = null;
+            bool bExist = Util.EnsureResultDirectoryExists(SourceScript.uri, out result_dir);            
+            if (bExist)
+            {
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScriptNoSessionDirectory, Util.GetResultFileName(SourceScript.uri)));
+                return false;
+            }
+            string resultFile = System.IO.Path.Combine(result_dir, Util.GetResultFileName(SourceScript.uri));
+            try
+            {
+                using (FileStream stream = System.IO.File.Create(resultFile))
+                {
+                    Result result = new Result(this.SourceScript, this.ResultScript);
+                    result.Write(stream);
+                    return true;
+                }
+            }
+            catch (System.UnauthorizedAccessException uae)
+            {
+                //     The caller does not have the required permission.-or- path specified a file that
+                //     is read-only.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, resultFile, uae.Message));
+            }
+            catch (System.ArgumentNullException ane)
+            {
+                //     path is null.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, resultFile, ane.Message));
+            }
+            catch (System.ArgumentException ae)
+            {
+                //     path is a zero-length string, contains only white space, or contains one or more
+                //     invalid characters as defined by System.IO.Path.InvalidPathChars.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, resultFile, ae.Message));
+            }
+            catch (System.IO.PathTooLongException ptle)
+            {
+                //     The specified path, file name, or both exceed the system-defined maximum length.
+                //     For example, on Windows-based platforms, paths must be less than 248 characters,
+                //     and file names must be less than 260 characters.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, resultFile, ptle.Message));
+            }
+            catch (System.IO.DirectoryNotFoundException dnfe)
+            {
+                //     The specified path is invalid (for example, it is on an unmapped drive).
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, resultFile, dnfe.Message));
+            }
+            catch (System.IO.IOException ioe)
+            {
+                //     An I/O error occurred while creating the file.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, resultFile, ioe.Message));
+            }
+            catch (System.NotSupportedException nse)
+            {
+                //     path is in an invalid format.
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScript, resultFile, nse.Message));
+            }
+            return false;
         }
     }
 }
