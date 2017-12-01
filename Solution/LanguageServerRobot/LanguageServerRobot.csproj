@@ -69,6 +69,7 @@
     <Compile Include="Controller\ServerRobotConnectionController.cs" />
     <Compile Include="Controller\SessionRobotConnectionController.cs" />
     <Compile Include="LanguageServerRobot.cs" />
+    <Compile Include="Model\Result.cs" />
     <Compile Include="Model\Script.cs" />
     <Compile Include="Model\Session.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
