@@ -83,7 +83,7 @@ namespace LanguageServerRobot.Controller
             {
                 return System.Threading.Interlocked.Read(ref m_ErrorIndex);
             }           
-            private set
+            internal set
             {
                 if (ErrorIndex < 0)
                 {
@@ -92,6 +92,15 @@ namespace LanguageServerRobot.Controller
             }
         }
 
+        /// <summary>
+        /// Event handlers when a Response to a request is received from the server.
+        /// </summary>
+        public event EventHandler< Tuple<string,JObject> > ResponseEvent;
+
+        /// <summary>
+        /// Event handlers when a Notification is received from the server.
+        /// </summary>
+        public event EventHandler<Tuple<string, JObject> > NotificationEvent;
 
         public override void FromClient(string message)
         {
@@ -173,6 +182,7 @@ namespace LanguageServerRobot.Controller
                             else
                             {
                                 this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
+                                consumed = true;
                             }
                         }
                         else if (Protocol.IsErrorResponse(jsonObject))
@@ -180,6 +190,7 @@ namespace LanguageServerRobot.Controller
                             LogUnexpectedMessage(Resource.UnexpectedResponseFromClient, message);
                             //But we must register it has result
                             this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
+                            consumed = true;
                         }
                     }
                     if (!consumed)
@@ -215,6 +226,7 @@ namespace LanguageServerRobot.Controller
                                     State &= ~ModeState.NotInitialized;
                                     State |= ModeState.Initialized;
                                     consumed = true;
+                                    RaiseResponseEvent(message, jsonObject);
                                 }
                             }
                         }
@@ -230,15 +242,21 @@ namespace LanguageServerRobot.Controller
                     {
                         if (Protocol.IsNotification(message, out jsonObject))
                         {
-                            this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
-                            if (StopAtFirstError)
+                            //Ignore any notification which is not an uri notification                        
+                            string uri = null;
+                            if (Protocol.IsMessageWithUri(jsonObject, out uri))
                             {
-                                if ((ResultScript.messages.Count - 1) < this.SourceScript.messages.Count)
+                                this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
+                                RaiseNotificationEvent(message, jsonObject);
+                                if (StopAtFirstError)
                                 {
-                                    if (!(this.SourceScript.messages[ResultScript.messages.Count - 1].category == Script.MessageCategory.Server &&
-                                        this.SourceScript.messages[ResultScript.messages.Count - 1].message == message))
-                                    {//We have a mismatch notification
-                                        this.ErrorIndex = ResultScript.messages.Count - 1;
+                                    if ((ResultScript.messages.Count - 1) < this.SourceScript.messages.Count)
+                                    {
+                                        if (!(this.SourceScript.messages[ResultScript.messages.Count - 1].category == Script.MessageCategory.Server &&
+                                            this.SourceScript.messages[ResultScript.messages.Count - 1].message == message))
+                                        {//We have a mismatch notification
+                                            this.ErrorIndex = ResultScript.messages.Count - 1;
+                                        }
                                     }
                                 }
                             }
@@ -246,7 +264,8 @@ namespace LanguageServerRobot.Controller
                         }
                         else if (Protocol.IsResponse(jsonObject))
                         {
-                            this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
+                            this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
+                            RaiseResponseEvent(message, jsonObject);
                             if (StopAtFirstError)
                             {
                                 if ((ScriptMessageIndex + 1) < this.SourceScript.messages.Count)
@@ -266,6 +285,32 @@ namespace LanguageServerRobot.Controller
                         }
                     }
                     break;
+            }
+        }
+
+        /// <summary>
+        /// raise a response event
+        /// </summary>
+        /// <param name="message">The text message</param>
+        /// <param name="jsonObject">The Json object representing the message</param>
+        private void RaiseResponseEvent(string message, JObject jsonObject)
+        {
+            if (ResponseEvent != null)
+            {//Notify all listener
+                ResponseEvent(this, new Tuple<string, JObject>(message, jsonObject));
+            }
+        }
+
+        /// <summary>
+        /// raise a notification event
+        /// </summary>
+        /// <param name="message">The text message</param>
+        /// <param name="jsonObject">The Json object representing the message</param>
+        private void RaiseNotificationEvent(string message, JObject jsonObject)
+        {
+            if (NotificationEvent != null)
+            {//Notify all listener
+                NotificationEvent(this, new Tuple<string, JObject>(message, jsonObject));
             }
         }
     }
