@@ -12,7 +12,7 @@ namespace LanguageServer.JsonRPC
     public class ProcessMessageConnection : MessageConnection
     {
         /// <summary>
-        /// Constructor wiht Process full path and and Process Exit Evnet Handler.
+        /// Constructor with Process full path and and Process Exit Event Handler.
         /// </summary>
         /// <param name="fullPath">The Process full path</param>
         /// <param name="exithandler">Process Exit Evant Handle</param>
@@ -137,6 +137,7 @@ namespace LanguageServer.JsonRPC
             }
             return false;
         }
+
 
         /// <summary>
         /// The Underlying System Process.

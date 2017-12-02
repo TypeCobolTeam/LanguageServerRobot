@@ -63,6 +63,22 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
+        /// Stops the server, if it is related to a Process then kill the process.
+        /// </summary>
+        internal void Stop()
+        {
+            if (this.MessageConnection != null && this.MessageConnection is ProcessMessageConnection)
+            {
+                ProcessMessageConnection processConnection = this.MessageConnection as ProcessMessageConnection;
+                if (!processConnection.Process.HasExited)
+                {
+                    processConnection.Process.Kill();
+                    processConnection.Process.WaitForExit();
+                }
+            }
+        }
+
+        /// <summary>
         /// Handler for a message that commes from the Client
         /// </summary>
         /// <param name="message"></param>

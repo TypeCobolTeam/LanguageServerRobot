@@ -129,9 +129,22 @@ namespace LanguageServerRobot.Controller
             StageChangedEvent -= handler;
         }
 
-        //Forces the server to shutdown
-        private void ForceServerShutDown()
+        /// <summary>
+        /// Write the replay result
+        /// </summary>
+        /// <param name="message">any exception message to be reported</param>
+        private void WriteReplayResult(string message = null)
         {
+            this.ReplayController.SaveResult(message);
+        }
+
+        /// <summary>
+        /// Forces the server to shutdown
+        /// </summary>
+        /// <param name="message">any shutdown exception message to be reported</param>
+        private void ForceServerShutDown(string message = null)
+        {
+            WriteReplayResult(message);
             //This by sending Shutdown request and notificaion
             Task<ResponseResultOrError> initTaskResponse = AsyncReplayRequest(Utilities.Protocol.DEFAULT_SHUTDOWN, LanguageServer.Protocol.ShutdownRequest.Type);
             base.Consume(Utilities.Protocol.DEFAULT_EXIT);
@@ -301,56 +314,71 @@ namespace LanguageServerRobot.Controller
         /// <returns>The connection's listener task if any, null otherwise</returns>
         public override async Task<bool> Start()
         {
-            //We are replaying a script.
-            if (Script == null)
+            try
             {
-                ControllerState = ConnectionState.Disposed;
-                return false;
+                //We are replaying a script.
+                if (Script == null)
+                {
+                    ControllerState = ConnectionState.Disposed;
+                    return false;
+                }
+
+                //Register message handlers
+                ConnectMessageEventHandlers(true);
+
+                //Now we start listening
+                ControllerState = ConnectionState.Listening;
+
+                JObject jsonObject = null;
+                //1) If the script contains an initialize request use it, otherwise use the default one            
+                string init_message = Script.initialize ?? Utilities.Protocol.DEFAULT_INITIALIZE;
+                if (!Utilities.Protocol.IsInitializeRequest(init_message, out jsonObject))
+                {
+                    string message = string.Format(Resource.FailClientInitializeMessage, init_message);
+                    this.LogWriter?.WriteLine(message);
+                    System.Console.Out.WriteLine(message);
+                    WriteReplayResult(message);
+                    ControllerState = ConnectionState.Closed;//CLOSED
+                    ConnectMessageEventHandlers(false);
+                    return false;
+                }
+                ResponseResultOrError initTaskResponse = SyncReplayRequest(init_message, LanguageServer.Protocol.InitializeRequest.Type, jsonObject);
+                ResponseResultOrError response = initTaskResponse;
+                if (response.code.HasValue && response.code != 0)
+                {//Server initialization error
+                    string message = string.Format(Resource.ServerInitializeError, response.code, response.message);
+                    this.LogWriter?.WriteLine(message);
+                    System.Console.Out.WriteLine(message);
+                    ForceServerShutDown(message);
+                    ControllerState = ConnectionState.Closed;//CLOSED
+                    ConnectMessageEventHandlers(false);
+                    return false;
+                }
+                //Send an Initialized notification
+                base.Consume(Utilities.Protocol.DEFAULT_INITIALIZED);
+
+                //2) Replay all client messages
+                Task<bool> replayTask = new Task<bool>(() => { return ReplayMessages(); });
+                replayTask.Start();
+                bool bResult = await replayTask;
+
+                //3) Shutdown and exit
+                ForceServerShutDown();
+
+                ConnectMessageEventHandlers(false);
+                ControllerState = ConnectionState.Closed;//CLOSED            
+                return bResult;
             }
-
-            //Register message handlers
-            ConnectMessageEventHandlers(true);
-
-            //Now we start listening
-            ControllerState = ConnectionState.Listening;
-
-            JObject jsonObject = null;
-            //1) If the script contains an initialize request use it, otherwise use the default one            
-            string init_message = Script.initialize ?? Utilities.Protocol.DEFAULT_INITIALIZE;
-            if (!Utilities.Protocol.IsInitializeRequest(init_message, out jsonObject))
+            catch(Exception e)
             {
-                this.LogWriter?.WriteLine(string.Format(Resource.FailClientInitializeMessage, init_message));
-                System.Console.Out.WriteLine(string.Format(Resource.FailClientInitializeMessage, init_message));
-                ForceServerShutDown();
-                ControllerState = ConnectionState.Closed;//CLOSED
-                ConnectMessageEventHandlers(false);
+                if (ControllerState != ConnectionState.Closed)
+                {
+                    WriteReplayResult(e.Message);
+                    ConnectMessageEventHandlers(false);
+                    ControllerState = ConnectionState.Closed;//CLOSED            
+                }
                 return false;
             }
-            ResponseResultOrError initTaskResponse = SyncReplayRequest(init_message, LanguageServer.Protocol.InitializeRequest.Type, jsonObject);
-            ResponseResultOrError response = initTaskResponse;
-            if (response.code.HasValue && response.code != 0)
-            {//Server initialization error
-                this.LogWriter?.WriteLine(string.Format(Resource.ServerInitializeError, response.code, response.message));
-                System.Console.Out.WriteLine(string.Format(Resource.ServerInitializeError, response.code, response.message));
-                ForceServerShutDown();
-                ControllerState = ConnectionState.Closed;//CLOSED
-                ConnectMessageEventHandlers(false);
-                return false;
-            }
-            //Send an Initialized notification
-            base.Consume(Utilities.Protocol.DEFAULT_INITIALIZED);
-
-            //2) Replay all client messages
-            Task<bool> replayTask = new Task<bool>(() => { return ReplayMessages();  });
-            replayTask.Start();
-            bool bResult = await replayTask;
-
-            //3) Shutdown and exit
-            ForceServerShutDown();
-
-            ConnectMessageEventHandlers(false);
-            ControllerState = ConnectionState.Closed;//CLOSED            
-            return bResult;
         }
 
         /// <summary>

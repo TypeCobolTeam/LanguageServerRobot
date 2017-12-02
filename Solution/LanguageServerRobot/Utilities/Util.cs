@@ -113,12 +113,12 @@ namespace LanguageServerRobot.Utilities
         /// <summary>
         /// Ensure that the result output directory for a script uri exists.
         /// </summary>
-        /// <param name="uri"></param>
+        /// <param name="script_path">The file path of the source script</param>
         /// <returns></returns>
-        public static bool EnsureResultDirectoryExists(string uri, out string result_dir)
+        public static bool EnsureResultDirectoryExists(string script_path, out string result_dir)
         {
             result_dir = null;
-            FileInfo fi = new FileInfo(uri);
+            FileInfo fi = new FileInfo(script_path);
             DirectoryInfo di = fi.Directory;
             string result_path = System.IO.Path.Combine(di.FullName, RESULT_SUB_DIRECTORY);
             try
@@ -136,11 +136,11 @@ namespace LanguageServerRobot.Utilities
         /// <summary>
         /// Get the result file name corresponding to an uri.
         /// </summary>
-        /// <param name="uri"></param>
+        /// <param name="script_path">The file path of the source script</param>
         /// <returns></returns>
-        public static string GetResultFileName(string uri)
+        public static string GetResultFileName(string script_path)
         {
-            FileInfo fi = new FileInfo(uri);
+            FileInfo fi = new FileInfo(script_path);
             string extension = fi.Extension;
             string resultName = (extension != null && extension.Length > 0) ? fi.Name.Substring(0, fi.Name.Length - extension.Length) : fi.Name + '.';
             return resultName + RESULT_FILE_EXTENSION;

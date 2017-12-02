@@ -294,8 +294,8 @@ namespace LanguageServerRobot
                                     break;
                             }
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-                            var robot = script != null ? new LanguageServerRobotController(script, server, ScriptRepositoryPath)
-                                                       : new LanguageServerRobotController(session, server, ScriptRepositoryPath);
+                            var robot = script != null ? new LanguageServerRobotController(Files[0].Item1, script, server, ScriptRepositoryPath)
+                                                       : new LanguageServerRobotController(Files[0].Item1, session, server, ScriptRepositoryPath);
                             robot.PropagateConnectionLogs();
                             if (!robot.Start())
                             {

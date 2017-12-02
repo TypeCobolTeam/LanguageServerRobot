@@ -58,7 +58,7 @@ namespace LanguageServerRobot.Controller
         /// <param name="script">The script to be replayed</param>
         /// <param name="serverConnection">The target server</param>
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
-        public LanguageServerRobotController(Script script, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
+        public LanguageServerRobotController(string script_path, Script script, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ClientConnection = new ScriptRobotConnectionController(script);
@@ -66,6 +66,7 @@ namespace LanguageServerRobot.Controller
             Mode = ConnectionMode.Client;
             //Transfert the roboting mode controller instance to the client and server controller
             RobotModeController = new ReplayModeController(script, scriptRepositoryPath);
+            (RobotModeController as ReplayModeController).ScriptFilePath = script_path;
             this.ClientConnection.RobotModeController = RobotModeController;
             this.ServerConnection.RobotModeController = RobotModeController;
         }
@@ -76,7 +77,7 @@ namespace LanguageServerRobot.Controller
         /// <param name="session">The session to be replayed</param>
         /// <param name="serverConnection">The target server</param>
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
-        public LanguageServerRobotController(Session session, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
+        public LanguageServerRobotController(string session_path, Session session, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);            
             this.ClientConnection = new SessionRobotConnectionController(session);
@@ -355,7 +356,17 @@ namespace LanguageServerRobot.Controller
         private void ClientStateChanged(object sender, EventArgs e)
         {
             if (ClientTaskConnectionState != null)
-                ClientTaskConnectionState.SetResult(this.ClientConnection.State);
+            {
+                if (this.ClientConnection.State == ConnectionState.Closed || this.ClientConnection.State == ConnectionState.Disposed)
+                {
+                    //Force to kill the server process
+                    ServerConnection.Stop();
+                }
+                if (ClientTaskConnectionState.Task.Status == TaskStatus.Running)
+                {
+                    ClientTaskConnectionState.SetResult(this.ClientConnection.State);
+                }
+            }
         }
 
         /// <summary>

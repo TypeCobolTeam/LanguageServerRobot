@@ -240,7 +240,7 @@ namespace LanguageServerRobot.Controller
                                 if (RequestIdUriMap.ContainsKey(id))
                                 {//So this is another response for a request ==> just record it
                                     uri = RequestIdUriMap[id];
-                                    consumed = RecordScriptMessage(Script.MessageCategory.Server, Protocol.Message_Kind.Response, message, uri, jsonObject);
+                                    consumed = RecordScriptMessage(Script.MessageCategory.Result, Protocol.Message_Kind.Response, message, uri, jsonObject);
                                 }
                                 else
                                 {//Hum...There is a response from the server without a registered request

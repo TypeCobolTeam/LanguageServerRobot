@@ -28,6 +28,15 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
+        /// The Path of the source script file.
+        /// </summary>
+        public string ScriptFilePath
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
         /// The Current message index in the script message.
         /// </summary>
         private long m_ScriptMessageIndex;
@@ -265,7 +274,7 @@ namespace LanguageServerRobot.Controller
                         }
                         else if (Protocol.IsResponse(jsonObject))
                         {
-                            this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
+                            this.ResultScript.AddMessage(Script.MessageCategory.Result, message);
                             RaiseResponseEvent(message, jsonObject);
                             if (StopAtFirstError)
                             {
@@ -317,24 +326,26 @@ namespace LanguageServerRobot.Controller
 
         /// <summary>
         /// Save the result of the comparison of this script in a file using UTF-8 encoding.
+        /// <param name="exception">any exception message to be added to the result</param>
         /// <returns>true if ok , false otherwise</returns>
         /// </summary>
-        private bool SaveResult()
+        internal bool SaveResult(string exception = null)
         {
-            System.Diagnostics.Contracts.Contract.Requires(SourceScript.uri != null);
+            System.Diagnostics.Contracts.Contract.Requires(ScriptFilePath != null);
             string result_dir = null;
-            bool bExist = Util.EnsureResultDirectoryExists(SourceScript.uri, out result_dir);            
-            if (bExist)
+            bool bExist = Util.EnsureResultDirectoryExists(ScriptFilePath, out result_dir);            
+            if (!bExist)
             {
-                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScriptNoSessionDirectory, Util.GetResultFileName(SourceScript.uri)));
+                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScriptNoSessionDirectory, Util.GetResultFileName(ScriptFilePath)));
                 return false;
             }
-            string resultFile = System.IO.Path.Combine(result_dir, Util.GetResultFileName(SourceScript.uri));
+            string resultFile = System.IO.Path.Combine(result_dir, Util.GetResultFileName(ScriptFilePath));
             try
-            {
+            {                
                 using (FileStream stream = System.IO.File.Create(resultFile))
                 {
                     Result result = new Result(this.SourceScript, this.ResultScript);
+                    result.exception = exception;
                     result.Write(stream);
                     return true;
                 }

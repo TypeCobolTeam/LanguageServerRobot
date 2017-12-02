@@ -25,6 +25,10 @@ namespace LanguageServerRobot.Model
         /// Index of the first different message in the result_messages list, if success = false.
         /// </summary>
         public int diff_index;
+        /// <summary>
+        /// Any exception if the result is success is false because of an applicatio, exception or any error.
+        /// </summary>
+        public string exception;
 
         /// <summary>
         /// All resulting messages (Request, notifications, responses) in sending and reception order,
@@ -51,7 +55,7 @@ namespace LanguageServerRobot.Model
         /// <returns>true if both messages are equals, false otherwise.</returns>
         private bool Equals(Script result, Script other)
         {
-            if (other == null)
+            if (other == null  || result == null)
                 return false;
             for (int i = 0; i < result.messages.Count && i < other.messages.Count; i++)
             {
