@@ -293,19 +293,27 @@ namespace LanguageServerRobot
                                     }
                                     break;
                             }
-                            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-                            var robot = script != null ? new LanguageServerRobotController(Files[0].Item1, script, server, ScriptRepositoryPath)
-                                                       : new LanguageServerRobotController(Files[0].Item1, session, server, ScriptRepositoryPath);
-                            robot.PropagateConnectionLogs();
-                            if (!robot.Start())
+                            if (script != null)
                             {
-                                return -1;
+                                return ReplayScript(Files[0].Item1, script);
                             }
                             else
                             {
-                                bool bResult = robot.WaitExit();
-                                return bResult ? 0 : -1;
+                                return ReplaySession(Files[0].Item1, session);
                             }
+                            //var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
+                            //var robot = script != null ? new LanguageServerRobotController(Files[0].Item1, script, server, ScriptRepositoryPath)
+                            //                           : new LanguageServerRobotController(Files[0].Item1, session, server, ScriptRepositoryPath);
+                            //robot.PropagateConnectionLogs();
+                            //if (!robot.Start())
+                            //{
+                            //    return -1;
+                            //}
+                            //else
+                            //{
+                            //    bool bResult = robot.WaitExit();
+                            //    return bResult ? 0 : -1;
+                            //}
                         }
                         break;
                 }
@@ -315,6 +323,57 @@ namespace LanguageServerRobot
                 logger.Close();
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Plays a script
+        /// </summary>
+        /// <param name="script_path">The path of the script to replay</param>
+        /// <param name="script">The script model to replay</param>
+        /// <returns>0 if no error -1 otherwise.</returns>
+        private static int ReplayScript(string script_path, Model.Script script)
+        {
+            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
+            var robot = new LanguageServerRobotController(script_path, script, server, ScriptRepositoryPath);
+            robot.PropagateConnectionLogs();
+            if (!robot.Start())
+            {
+                return -1;
+            }
+            else
+            {
+                bool bResult = robot.WaitExit();
+                return bResult ? 0 : -1;
+            }
+        }
+
+        /// <summary>
+        /// Plays a session
+        /// </summary>
+        /// <param name="session_path">The path of the session to replay</param>
+        /// <param name="session">The session model to replay</param>
+        /// <returns>0 if no error -1 otherwise.</returns>
+        private static int ReplaySession(string session_path, Model.Session session)
+        {
+            bool bResult = true;
+            foreach (string scriptPath in session.scripts)
+            {
+                Model.Script script;
+                Exception exc;
+                bool bValid = Util.ReadScriptFile(scriptPath, out script, out exc);
+                if (bValid)
+                {
+                    if (ReplayScript(scriptPath, script) != 0)
+                    {
+                        bResult = false;
+                    }
+                }
+                else
+                {
+                    bResult = false;
+                }
+            }
+            return bResult ? 0 : -1;
         }
 
         /// <summary>

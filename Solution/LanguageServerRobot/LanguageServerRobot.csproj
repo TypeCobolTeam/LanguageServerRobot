@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\AbstractModeController.cs" />
+    <Compile Include="Controller\AbstractReplayRobotConnectionController.cs" />
     <Compile Include="Controller\ClientRobotConnectionController.cs" />
     <Compile Include="Controller\IRobotModeController.cs" />
     <Compile Include="Controller\LanguageServerRobotController.cs" />

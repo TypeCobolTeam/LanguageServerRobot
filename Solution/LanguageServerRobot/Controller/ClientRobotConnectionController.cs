@@ -64,7 +64,7 @@ namespace LanguageServerRobot.Controller
         /// Handling a message that comes from the Client: From Me.
         /// </summary>
         /// <param name="message"></param>
-        public void FromClient(string message)
+        public virtual void FromClient(string message)
         {
             System.Diagnostics.Contracts.Contract.Requires(RobotModeController != null);
             RobotModeController.FromClient(message);
@@ -74,7 +74,7 @@ namespace LanguageServerRobot.Controller
         /// handling a message that comes from the server.
         /// </summary>
         /// <param name="message"></param>
-        public void FromServer(string message)
+        public virtual void FromServer(string message)
         {
             //Do nothing let the server controller do its logic.
             throw new NotImplementedException();

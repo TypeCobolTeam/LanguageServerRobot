@@ -19,11 +19,23 @@ namespace LanguageServerRobot.Controller
         /// Empty constructor.
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
         /// </summary>
-        public ReplayModeController(Model.Script script, string scriptRepositoryPath = null) : base(scriptRepositoryPath)
+        public ReplayModeController(Model.Script script, string script_path, string scriptRepositoryPath = null) : base(scriptRepositoryPath)
         {
             System.Diagnostics.Debug.Assert(script != null);
             State = ModeState.NotInitialized;
             SourceScript = script;
+            ScriptFilePath = script_path;
+            ResultScript = new Script();
+        }
+
+        /// <summary>
+        /// Internal constructor with no script, use for a dummy instance for a session.
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
+        /// </summary>
+        internal ReplayModeController(string script_path, string scriptRepositoryPath = null) : base(scriptRepositoryPath)
+        {
+            State = ModeState.NotInitialized;
+            ScriptFilePath = script_path;
             ResultScript = new Script();
         }
 

@@ -11,17 +11,29 @@ namespace LanguageServerRobot.Controller
     /// <summary>
     /// A Client controller which is able to execute a script
     /// </summary>
-    public class ScriptRobotConnectionController : ClientRobotConnectionController
+    public class ScriptRobotConnectionController : AbstractReplayRobotConnectionController
     {
         /// <summary>
         /// Script Connection constructor
         /// </summary>
         /// <param name="script">The script to be executed by this Client</param>
-        public ScriptRobotConnectionController(Model.Script script)
+        /// <param name="bFromSession">true if this Script controller is for a session to be replayed,
+        /// in this case no "initialize" and "shutdown" requets will be replayed.</param>
+        public ScriptRobotConnectionController(Model.Script script, bool bFromSession = false)
         {
             this.Script = script;
-            ControllerState = ConnectionState.New;
-            InCommingNotification = new List<string>();
+            FromSession = bFromSession;
+        }
+
+        /// <summary>
+        /// Script Connection constructor
+        /// <param name="messageConnection">The message connection to be used</param>
+        /// </summary>
+        /// <param name="script">The script to be executed by this Client</param>
+        public ScriptRobotConnectionController(Model.Script script, IMessageConnection messageConnection) : base(messageConnection)
+        {
+            this.Script = script;
+            FromSession = true;
         }
 
         /// <summary>
@@ -34,47 +46,13 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// Get the Replay Mode Contoller.
+        /// Is this Script Controller for a Session controller ? In this case no "initialize" and "shutdown" messages
+        /// will be sent to the server.
         /// </summary>
-        internal ReplayModeController ReplayController
+        public bool FromSession
         {
-            get
-            {
-                return (ReplayModeController)base.RobotModeController;
-            }
-        }
-
-        private long MyConnectionState;
-        /// <summary>
-        /// The Message Connection state
-        /// </summary>
-        public override ConnectionState State
-        {
-            get
-            {
-                return (ConnectionState)System.Threading.Interlocked.Read(ref MyConnectionState);
-            }
-        }
-
-        /// <summary>
-        /// Internal state so that we can fire state change events.
-        /// </summary>
-        private ConnectionState ControllerState
-        {
-            get
-            {
-                return State;
-            }
-            set
-            {
-                if (System.Threading.Interlocked.Exchange(ref MyConnectionState, (long)value) != (long)value)
-                {
-                    if (StageChangedEvent != null)
-                    {
-                        StageChangedEvent(this, null);
-                    }
-                }
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -105,124 +83,6 @@ namespace LanguageServerRobot.Controller
             }
         }
 
-        /// <summary>
-        /// Tracking incoming notifications
-        /// </summary>
-        private List<String> InCommingNotification
-        {
-            get;
-            set;
-        }
-        event EventHandler StageChangedEvent;
-
-        public override void AddStageChangedEventHandler(EventHandler handler)
-        {
-            StageChangedEvent += handler;
-        }
-
-        /// <summary>
-        /// Remove a State Change Event Handler. 
-        /// </summary>
-        /// <param name="handler"></param>
-        public override void RemoveStageChangedEventHandler(EventHandler handler)
-        {
-            StageChangedEvent -= handler;
-        }
-
-        /// <summary>
-        /// Write the replay result
-        /// </summary>
-        /// <param name="message">any exception message to be reported</param>
-        private void WriteReplayResult(string message = null)
-        {
-            this.ReplayController.SaveResult(message);
-        }
-
-        /// <summary>
-        /// Forces the server to shutdown
-        /// </summary>
-        /// <param name="message">any shutdown exception message to be reported</param>
-        private void ForceServerShutDown(string message = null)
-        {
-            WriteReplayResult(message);
-            //This by sending Shutdown request and notificaion
-            Task<ResponseResultOrError> initTaskResponse = AsyncReplayRequest(Utilities.Protocol.DEFAULT_SHUTDOWN, LanguageServer.Protocol.ShutdownRequest.Type);
-            base.Consume(Utilities.Protocol.DEFAULT_EXIT);
-        }
-
-        /// <summary>
-        /// Replay a request
-        /// </summary>
-        /// <param name="message">The message corresponding to the request</param>
-        /// <param name="jsonObject">The Json object corresponding to the request if any</param>
-        /// <returns>The ResponseResultOrError instance of the message</returns>
-        private async Task<ResponseResultOrError> AsyncReplayRequest(string message, RequestType requestType, JObject jsonObject = null)
-        {
-            System.Diagnostics.Contracts.Contract.Requires(message != null);
-            if (jsonObject != null)
-            {
-                System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsRequest(message, out jsonObject));
-            }
-            else
-            {
-                System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsRequest(jsonObject));
-            }
-            string requestId = Utilities.Protocol.GetRequestId(jsonObject);
-            TaskCompletionSource<ResponseResultOrError> taskCompletionSource = new TaskCompletionSource<ResponseResultOrError>();
-            ResponseWaitState responseWaitState = new ResponseWaitState(requestType, requestId, taskCompletionSource);
-            responsesExpected.Add(requestId, responseWaitState);
-            base.Consume(message);
-            //Wait Sever Initialize response
-            await taskCompletionSource.Task;
-            ResponseResultOrError response = taskCompletionSource.Task.Result;
-            return response;
-        }
-
-        /// <summary>
-        /// Synchronous Replay a request
-        /// </summary>
-        /// <param name="message">The message corresponding to the request</param>
-        /// <param name="jsonObject">The Json object corresponding to the request if any</param>
-        /// <returns>The ResponseResultOrError instance of the message</returns>
-        private ResponseResultOrError SyncReplayRequest(string message, RequestType requestType, JObject jsonObject = null)
-        {
-            System.Diagnostics.Contracts.Contract.Requires(message != null);
-            if (jsonObject != null)
-            {
-                System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsRequest(message, out jsonObject));
-            }
-            else
-            {
-                System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsRequest(jsonObject));
-            }
-            string requestId = Utilities.Protocol.GetRequestId(jsonObject);
-            TaskCompletionSource<ResponseResultOrError> taskCompletionSource = new TaskCompletionSource<ResponseResultOrError>();
-            ResponseWaitState responseWaitState = new ResponseWaitState(requestType, requestId, taskCompletionSource);
-            responsesExpected.Add(requestId, responseWaitState);
-            base.Consume(message);
-            ResponseResultOrError response = taskCompletionSource.Task.Result;
-            return response;
-        }
-
-        /// <summary>
-        /// Replay a message 
-        /// </summary>
-        /// <param name="message">The message to replay</param>
-        /// <returns>If the message is a request this methods returns the response of the request, null otherwise</returns>
-        private ResponseResultOrError ReplayMessage(string message)
-        {
-            JObject jsonObject = null;
-            if (Utilities.Protocol.IsRequest(message, out jsonObject))
-            {
-                ResponseResultOrError response = SyncReplayRequest(message, null, jsonObject);
-                return response;
-            }
-            else
-            {
-                base.Consume(message);
-            }
-            return null;
-        }
         /// <summary>
         /// Replay the message contained in the Script;
         /// </summary>
@@ -291,20 +151,18 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// Connect or disconnect message event hnadlers from the REplya Controller.
+        /// Forces the server to shutdown
         /// </summary>
-        /// <param name="bConnect">true to connect , false to disconnect.</param>
-        private void ConnectMessageEventHandlers(bool bConnect)
-        {
-            if (bConnect)
+        /// <param name="message">any shutdown exception message to be reported</param>
+        protected override void ForceServerShutDown(string message = null)
+        {            
+            if (!FromSession)
             {
-                this.ReplayController.ResponseEvent += ReplayControllerResponseEvent;
-                this.ReplayController.NotificationEvent += ReplayControllerNotificationEvent;
+                base.ForceServerShutDown(message);
             }
             else
             {
-                this.ReplayController.ResponseEvent -= ReplayControllerResponseEvent;
-                this.ReplayController.NotificationEvent -= ReplayControllerNotificationEvent;
+                WriteReplayResult(message);
             }
         }
 
@@ -330,32 +188,18 @@ namespace LanguageServerRobot.Controller
                 ControllerState = ConnectionState.Listening;
 
                 JObject jsonObject = null;
-                //1) If the script contains an initialize request use it, otherwise use the default one            
-                string init_message = Script.initialize ?? Utilities.Protocol.DEFAULT_INITIALIZE;
-                if (!Utilities.Protocol.IsInitializeRequest(init_message, out jsonObject))
+                if (!FromSession)
                 {
-                    string message = string.Format(Resource.FailClientInitializeMessage, init_message);
-                    this.LogWriter?.WriteLine(message);
-                    System.Console.Out.WriteLine(message);
-                    WriteReplayResult(message);
-                    ControllerState = ConnectionState.Closed;//CLOSED
-                    ConnectMessageEventHandlers(false);
-                    return false;
+                    if (!PerformInitializeRequest(Script.initialize, true))
+                    {
+                        ConnectMessageEventHandlers(false);
+                        return false;
+                    }
                 }
-                ResponseResultOrError initTaskResponse = SyncReplayRequest(init_message, LanguageServer.Protocol.InitializeRequest.Type, jsonObject);
-                ResponseResultOrError response = initTaskResponse;
-                if (response.code.HasValue && response.code != 0)
-                {//Server initialization error
-                    string message = string.Format(Resource.ServerInitializeError, response.code, response.message);
-                    this.LogWriter?.WriteLine(message);
-                    System.Console.Out.WriteLine(message);
-                    ForceServerShutDown(message);
-                    ControllerState = ConnectionState.Closed;//CLOSED
-                    ConnectMessageEventHandlers(false);
-                    return false;
+                else
+                {//In this case forces the Replay Mode Controler to be initialized and started.
+                    ReplayController.State = AbstractModeController.ModeState.Initialized | AbstractModeController.ModeState.Start;
                 }
-                //Send an Initialized notification
-                base.Consume(Utilities.Protocol.DEFAULT_INITIALIZED);
 
                 //2) Replay all client messages
                 Task<bool> replayTask = new Task<bool>(() => { return ReplayMessages(); });
@@ -378,78 +222,6 @@ namespace LanguageServerRobot.Controller
                     ControllerState = ConnectionState.Closed;//CLOSED            
                 }
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// Handle a notification event from the ReplayController
-        /// </summary>
-        /// <param name="sender">Sender of the message in fact the ReplayController</param>
-        /// <param name="e">The response message.</param>
-        private void ReplayControllerNotificationEvent(object sender, Tuple<string, JObject> message_jsonObject)
-        {            
-            System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsNotification(message_jsonObject.Item2));
-            string uri = null;
-            if (Utilities.Protocol.IsMessageWithUri(message_jsonObject.Item2, out uri))
-            {
-                lock (InCommingNotification)
-                {
-                    InCommingNotification.Add(message_jsonObject.Item1);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handle a response event from the ReplayController
-        /// </summary>
-        /// <param name="sender">Sender of the message in fact the ReplayController</param>
-        /// <param name="e">The response message.</param>
-        private void ReplayControllerResponseEvent(object sender, Tuple<string,JObject> message_jsonObject)
-        {
-            System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsResponse(message_jsonObject.Item2));
-            ResponseWaitState responseWaitState = null;
-            string requestId = Utilities.Protocol.GetRequestId(message_jsonObject.Item2);
-            responsesExpected.TryGetValue(requestId, out responseWaitState);
-            if (responseWaitState == null)
-            {
-                WriteConnectionLog(String.Format("No response was expected for request id \"{0}\"", requestId));
-            }
-            else
-            {
-                RequestType requestType = responseWaitState.RequestType;
-                //string method = (string)jsonObject["method"];
-                //JToken parameters = jsonObject["params"];
-                JToken result = message_jsonObject.Item2["result"];
-                JToken error = message_jsonObject.Item2["error"];
-
-                object objResult = null;
-                if (result != null && requestType != null && requestType.ResultType != null)
-                {
-                    objResult = result.ToObject(requestType.ResultType);
-                }
-                object objErrorData = null;
-                if (error != null && error["data"] != null && requestType != null && requestType.ErrorDataType != null)
-                {
-                    objErrorData = error["data"].ToObject(requestType.ErrorDataType);
-                }
-
-                ResponseResultOrError resultOrError = new ResponseResultOrError();
-                resultOrError.result = objResult;
-                if (error != null && error["code"] != null)
-                {
-                    resultOrError.code = (int)error["code"];
-                    resultOrError.message = (string)error["message"];
-                    resultOrError.data = objErrorData;
-                }
-
-                try
-                {
-                    responseWaitState.TaskCompletionSource.SetResult(resultOrError);
-                }
-                catch (Exception e)
-                {
-                    WriteConnectionLog(String.Format("Task completion for the response expected by request {0} of type {1} failed : {1}", requestId, requestType.GetType().Name, e.Message));
-                }
             }
         }
     }

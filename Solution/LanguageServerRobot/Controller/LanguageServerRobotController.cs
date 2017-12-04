@@ -65,8 +65,7 @@ namespace LanguageServerRobot.Controller
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
             //Transfert the roboting mode controller instance to the client and server controller
-            RobotModeController = new ReplayModeController(script, scriptRepositoryPath);
-            (RobotModeController as ReplayModeController).ScriptFilePath = script_path;
+            RobotModeController = new ReplayModeController(script, script_path, scriptRepositoryPath);            
             this.ClientConnection.RobotModeController = RobotModeController;
             this.ServerConnection.RobotModeController = RobotModeController;
         }
@@ -79,13 +78,13 @@ namespace LanguageServerRobot.Controller
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
         public LanguageServerRobotController(string session_path, Session session, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
-            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);            
+            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ClientConnection = new SessionRobotConnectionController(session);
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
             //Transfert the roboting mode controller instance to the client and server controller
-            //TODO ==> This shall be done for each script in the session
-            //RobotModeController = new ReplayModeController(scriptRepositoryPath);
+            //This is a dummy replay mode controller, because this shall be done for each script in the session
+            RobotModeController = new ReplayModeController(session_path, scriptRepositoryPath);
             this.ClientConnection.RobotModeController = RobotModeController;
             this.ServerConnection.RobotModeController = RobotModeController;
         }
@@ -382,10 +381,10 @@ namespace LanguageServerRobot.Controller
         }
 
         /// <summary>
-        /// Start Replaying
+        /// Start Replaying a script
         /// <returns>true if the server has been launched, false otherwise.</returns>
         /// </summary>
-        protected bool StartReplaying()
+        protected bool StartReplayingScript()
         {
             StartServer();
             //Ensure that the server has succcesfuly strated
@@ -396,6 +395,35 @@ namespace LanguageServerRobot.Controller
                 return task.Result;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Start Replaying a script
+        /// <returns>true if the server has been launched, false otherwise.</returns>
+        /// </summary>
+        protected bool StartReplayingSession()
+        {
+            StartServer();
+            //Ensure that the server has succcesfuly strated
+            var serverConnectionSate = ServerTaskConnectionState.Task.Result; ;
+            {
+                StartClient();
+                Task<bool> task = WaitClientServerTermination();
+                return task.Result;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Start Replaying
+        /// <returns>true if the server has been launched, false otherwise.</returns>
+        /// </summary>
+        protected bool StartReplaying()
+        {
+            if (ClientConnection is ScriptRobotConnectionController)
+                return StartReplayingScript();
+            else
+                return StartReplayingSession();
         }
 
         /// <summary>
@@ -479,8 +507,17 @@ namespace LanguageServerRobot.Controller
 
         public void FromServer(string message)
         {
-            ServerConnection.FromServer(message);
-            ClientConnection.SendMessage(message);
+            if (ClientConnection is SessionRobotConnectionController)
+            {   //For a session all message from the server must be redirected to
+                //The ReplayModeController instance of teh script being replayed.
+                ClientConnection.FromServer(message);
+                ClientConnection.SendMessage(message);
+            }
+            else
+            {
+                ServerConnection.FromServer(message);
+                ClientConnection.SendMessage(message);
+            }
         }
     }
 }

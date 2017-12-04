@@ -67,7 +67,7 @@ namespace LanguageServerRobot.Controller
             {
                 return (ModeState)System.Threading.Interlocked.Exchange(ref myState, myState);
             }
-            protected set
+            internal set
             {
                 if (System.Threading.Interlocked.Exchange(ref myState, (int)value) != (int)value)
                 {
