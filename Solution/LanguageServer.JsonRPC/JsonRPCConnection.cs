@@ -28,10 +28,10 @@ namespace LanguageServer.JsonRPC
         }
 
         // Message server used to send Remote Procedure Calls to the client
-        protected IMessageConnection MessageConnection
+        public IMessageConnection MessageConnection
         {
             get;
-            set;
+            protected set;
         }
 
         /// <summary>
