@@ -389,6 +389,7 @@ namespace LanguageServerRobot.Controller
             StartServer();
             //Ensure that the server has succcesfuly strated
             var serverConnectionSate = ServerTaskConnectionState.Task.Result; ;
+            if (!(serverConnectionSate == ConnectionState.Closed || serverConnectionSate == ConnectionState.Disposed))
             {
                 StartClient();
                 Task<bool> task = WaitClientServerTermination();
