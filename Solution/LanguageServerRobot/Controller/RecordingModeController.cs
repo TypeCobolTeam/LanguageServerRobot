@@ -130,6 +130,17 @@ namespace LanguageServerRobot.Controller
                                     StopSession(message, jsonObject, true);
                                     consumed = true;
                                 }
+                            }                            
+                            else if (Protocol.IsDidChangeConfigurationNotification(jsonObject))
+                            {
+                                if (this.SessionModel != null)
+                                {
+                                    if (this.SessionModel.did_change_configuation == null)
+                                    {   //We take only one configuration change by session and it will be replayed after the initialize request.
+                                        this.SessionModel.did_change_configuation = message;
+                                        consumed = true;
+                                    }
+                                }
                             }
                             else if (Protocol.IsDidOpenTextDocumentNotification(jsonObject))
                             {
@@ -432,6 +443,7 @@ namespace LanguageServerRobot.Controller
             script.session = SessionModel.GetSessionFileName();
             script.initialize = SessionModel.initialize;
             script.initialize_result = SessionModel.initialize_result;
+            script.did_change_configuation = SessionModel.did_change_configuation;
             SessionModel.scripts.Add(scriptFile);
             try
             {
@@ -577,4 +589,3 @@ namespace LanguageServerRobot.Controller
         }
     }
 }
-

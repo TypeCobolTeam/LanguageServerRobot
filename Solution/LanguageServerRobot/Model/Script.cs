@@ -95,6 +95,10 @@ namespace LanguageServerRobot.Model
         /// </summary>
         public string initialize_result { get; set; }
         /// <summary>
+        /// Any did change configuration message. Only one configuration notification is taken in account per script of a sesion.
+        /// </summary>
+        public string did_change_configuation { get; set; }
+        /// <summary>
         /// the "textDocument/didOpen" notification that opened the document
         /// </summary>
         public string didOpen { get; set; }

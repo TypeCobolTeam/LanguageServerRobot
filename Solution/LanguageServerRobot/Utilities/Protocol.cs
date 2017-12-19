@@ -593,6 +593,31 @@ namespace LanguageServerRobot.Utilities
         }
 
         /// <summary>
+        /// Determines if the given message corresponds to the workspace/didChangeConfiguration notification.
+        /// </summary>
+        /// <param name="message">The message to be checked</param>
+        /// <param name="jsonObject">[out] The json object corresponding to the message if any</param>
+        /// <returns>true if yes, false otherwise</returns>
+        public static bool IsDidChangeConfigurationNotification(string message, out JObject jsonObject)
+        {
+            return IsDidChangeConfigurationNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determines if the given Json object corresponds to the workspace/didChangeConfiguration notification.
+        /// </summary>
+        /// <param name="jsonObject">The Json object to be checked</param>
+        /// <returns>true if yes, false otherwise</returns>
+        public static bool IsDidChangeConfigurationNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.DidChangeConfigurationNotification.Type.Method);
+            }
+            return false;
+        }
+        
+        /// <summary>
         /// Determine if the given message represents a LanguageServer "initialized" notification.
         /// </summary>
         /// <param name="message">The message to check</param>

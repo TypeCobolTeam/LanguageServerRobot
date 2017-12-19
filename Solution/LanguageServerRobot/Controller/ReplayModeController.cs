@@ -176,6 +176,11 @@ namespace LanguageServerRobot.Controller
                                     consumed = true;
                                 }
                             }
+                            else if (Protocol.IsDidChangeConfigurationNotification(jsonObject))
+                            {
+                                //Ignore any Configuration Change ==> don't register that as result.
+                                consumed = true;
+                            }
                             else if (Protocol.IsDidOpenTextDocumentNotification(jsonObject))
                             {
                                 //Store the message in the result script

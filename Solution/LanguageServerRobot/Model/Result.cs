@@ -24,7 +24,7 @@ namespace LanguageServerRobot.Model
         /// <summary>
         /// Index of the first different message in the result_messages list, if success = false.
         /// </summary>
-        public int diff_index;
+        public int[] diff_index;
         /// <summary>
         /// Any exception if the result is success is false because of an applicatio, exception or any error.
         /// </summary>
@@ -43,7 +43,7 @@ namespace LanguageServerRobot.Model
         /// <param name="ResultScript">The resulting script.</param>
         public Result(Script SourceScript, Script ResultScript)
         {
-            diff_index = -1;
+            diff_index = new int[]{ -1};
             result_messages = null;
             uri = SourceScript.uri;
             success = Equals(ResultScript, SourceScript);
@@ -57,23 +57,27 @@ namespace LanguageServerRobot.Model
         {
             if (other == null  || result == null)
                 return false;
+            List<int> diffindexes = new List<int>();
+            bool bSucess = true;
             for (int i = 0; i < result.messages.Count && i < other.messages.Count; i++)
             {
                 if ((result.messages[i].category != other.messages[i].category) ||
                     (result.messages[i].message != other.messages[i].message))
                 {   //Store the index of the first different message.
-                    diff_index = i;
+                    diffindexes.Add(i);                    
                     result_messages = result.messages;
-                    return false;
+                    bSucess = false;
                 }
             }
             if (result.messages.Count != other.messages.Count)
             {
-                diff_index = Math.Min(result.messages.Count, other.messages.Count);
+                diffindexes.Add(Math.Min(result.messages.Count, other.messages.Count));                
                 result_messages = result.messages;
-                return false;
+                bSucess = false;
             }
-            return true;
+            if (!bSucess)
+                diff_index = diffindexes.ToArray();
+            return bSucess;
         }
 
         /// <summary>

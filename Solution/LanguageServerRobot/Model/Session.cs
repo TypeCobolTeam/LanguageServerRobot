@@ -47,6 +47,10 @@ namespace LanguageServerRobot.Model
         /// </summary>
         public string initialized_notification { get; set; }
         /// <summary>
+        /// Any did change configuration message. Only one configuration notification is taken in account per session.
+        /// </summary>
+        public string did_change_configuation { get; set; }
+        /// <summary>
         /// All messages from the client that occured after the "initialize" request result.
         /// </summary>
         public List<string> client_in_initialize_messages { get; protected set; }

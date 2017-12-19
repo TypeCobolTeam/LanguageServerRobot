@@ -195,6 +195,11 @@ namespace LanguageServerRobot.Controller
                         ConnectMessageEventHandlers(false);
                         return false;
                     }
+                    //If there is a did change configuration also sent it.
+                    if (this.Script.did_change_configuation != null)
+                    {
+                        this.Consume(this.Script.did_change_configuation);
+                    }
                 }
                 else
                 {//In this case forces the Replay Mode Controler to be initialized and started.
