@@ -151,6 +151,8 @@ namespace LanguageServerRobot
                         }
                     }
                 },
+                { "v|version","Show version", _ => version = true },
+                { "h|help","Show help", _ => help = true },
                 { "lf|logfile=","{PATH} the target log file", (string v) => LogFile = v },
                 { "r|robot",  "Robot Client/Server mode.", v => Mode = (v!=null)
                         ? LanguageServerRobotController.ConnectionMode.ClientServer
@@ -159,13 +161,13 @@ namespace LanguageServerRobot
                 { "c|client",  "Robot Client/Replay mode.", v => Mode = LanguageServerRobotController.ConnectionMode.Client
                 },
                 { "script=",  "{PATH} the script file to be replayed.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
-                    if (version != null)Files.Add(new Tuple<string,FileType>(v,FileType.ScriptFile)); }
+                    if (!version)Files.Add(new Tuple<string,FileType>(v,FileType.ScriptFile)); }
                 },
                 { "suite=",  "{PATH} the session file to be replayed.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
-                    if (version != null)Files.Add(new Tuple<string,FileType>(v,FileType.SessionFile)); }
+                    if (!version)Files.Add(new Tuple<string,FileType>(v,FileType.SessionFile)); }
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
-                { "d|Scripts repository directory=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
+                { "d|dir=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
             };
             System.Collections.Generic.List<string> arguments;
             try { arguments = p.Parse(args); }
