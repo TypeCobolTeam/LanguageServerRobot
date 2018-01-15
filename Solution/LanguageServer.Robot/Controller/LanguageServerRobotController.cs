@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
-using LanguageServerRobot.Model;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Controller
+namespace LanguageServer.Robot.Controller
 {
     /// <summary>
     /// This class represents the Controller of the LanguageServerRobot business rules.
@@ -181,7 +181,7 @@ namespace LanguageServerRobot.Controller
         /// <returns>true if the message is filtered, false otherwise.</returns>
         private bool ClientProducedMessageFilter(string message, IMessageConnection connection)
         {
-            JObject jsonMessage = null;
+            //JObject jsonMessage = null;
             //If we have a server connection directly forward the message to it
             if (ServerConnection != null && ServerConnection.State == ConnectionState.Listening)
             {
@@ -202,7 +202,7 @@ namespace LanguageServerRobot.Controller
         /// <returns>true if the message is filtered, false otherwise.</returns>
         private bool ServerProducedMessageFilter(string message, IMessageConnection connection)
         {
-            JObject jsonMessage = null;
+            //JObject jsonMessage = null;
             //If we have a client connection directly forward the message to it
             if (ClientConnection != null && ClientConnection.State == ConnectionState.Listening)
             {
@@ -407,12 +407,13 @@ namespace LanguageServerRobot.Controller
             StartServer();
             //Ensure that the server has succcesfuly strated
             var serverConnectionSate = ServerTaskConnectionState.Task.Result; ;
+            //if (!(serverConnectionSate == ConnectionState.Closed || serverConnectionSate == ConnectionState.Disposed))
             {
                 StartClient();
                 Task<bool> task = WaitClientServerTermination();
                 return task.Result;
             }
-            return false;
+            //return false;
         }
 
         /// <summary>

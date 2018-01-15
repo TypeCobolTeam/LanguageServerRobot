@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.Protocol;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Model
+namespace LanguageServer.Robot.Model
 {
     /// <summary>
     /// The Model that describe a Test Session

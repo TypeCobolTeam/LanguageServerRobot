@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
-using LanguageServerRobot.Model;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Controller
+namespace LanguageServer.Robot.Controller
 {
     /// <summary>
     /// Robot Recording Mode Controller.
@@ -52,7 +52,7 @@ namespace LanguageServerRobot.Controller
             get
             {
                 System.Diagnostics.Contracts.Contract.Assert(uri != null);
-                uri = Protocol.NormalizeFileURI(uri);
+                uri = Utilities.Protocol.NormalizeFileURI(uri);
                 if (ScriptMap == null)
                     return null;
                 return ScriptMap.ContainsKey(uri) ? ScriptMap[uri] : null;
@@ -65,7 +65,7 @@ namespace LanguageServerRobot.Controller
                 System.Diagnostics.Contracts.Contract.Assume(script == null || script == value);
                 if (ScriptMap == null)
                     ScriptMap = new Dictionary<string, Script>();
-                uri = Protocol.NormalizeFileURI(uri);
+                uri = Utilities.Protocol.NormalizeFileURI(uri);
                 ScriptMap[uri] = value;
             }
         }
@@ -86,7 +86,7 @@ namespace LanguageServerRobot.Controller
                         System.Diagnostics.Contracts.Contract.Ensures(SessionModel == null && JInitializeObject == null);
                         if (SessionModel == null && JInitializeObject == null)
                         {
-                            if (Protocol.IsInitializeRequest(message, out jsonObject))
+                            if (Utilities.Protocol.IsInitializeRequest(message, out jsonObject))
                             {   //Save the original initialization object.
                                 JInitializeObject = jsonObject;
                                 InitializeRequest = message;
@@ -101,9 +101,9 @@ namespace LanguageServerRobot.Controller
                     break;
                 case ModeState.Initialized:
                     {
-                        if (Protocol.IsNotification(message, out jsonObject))
+                        if (Utilities.Protocol.IsNotification(message, out jsonObject))
                         {
-                            if (Protocol.IsInitializedNotification(message, out jsonObject))
+                            if (Utilities.Protocol.IsInitializedNotification(message, out jsonObject))
                             {   //Notification from the Client that it has take in account the "initialize" result from the server.
                                 //==> We can start both Client and Server are OK.
                                 State |= ModeState.Start;
@@ -120,10 +120,10 @@ namespace LanguageServerRobot.Controller
                 case ModeState.Initialized | ModeState.Start:
                     {
                         string uri = null;                        
-                        if (Protocol.IsNotification(message, out jsonObject))
+                        if (Utilities.Protocol.IsNotification(message, out jsonObject))
                         {//1)Detect any new script for a document ==> detect didOpen notification
                             //Detect the exit Notification()
-                            if (Protocol.IsExitNotification(jsonObject))
+                            if (Utilities.Protocol.IsExitNotification(jsonObject))
                             {//So forces the End of the session
                                 if (JShutdownObject != null)
                                 {//We have already received a shutdown request.
@@ -131,7 +131,7 @@ namespace LanguageServerRobot.Controller
                                     consumed = true;
                                 }
                             }                            
-                            else if (Protocol.IsDidChangeConfigurationNotification(jsonObject))
+                            else if (Utilities.Protocol.IsDidChangeConfigurationNotification(jsonObject))
                             {
                                 if (this.SessionModel != null)
                                 {
@@ -142,35 +142,35 @@ namespace LanguageServerRobot.Controller
                                     }
                                 }
                             }
-                            else if (Protocol.IsDidOpenTextDocumentNotification(jsonObject))
+                            else if (Utilities.Protocol.IsDidOpenTextDocumentNotification(jsonObject))
                             {
                                 StartScript(message, jsonObject);
                                 consumed = true;
                             }
-                            else if (Protocol.IsDidCloseTextDocumentNotification(jsonObject))
+                            else if (Utilities.Protocol.IsDidCloseTextDocumentNotification(jsonObject))
                             {
                                 StopScript(message, jsonObject);
                                 consumed = true;
                             }
-                            else if (Protocol.IsMessageWithUri(jsonObject, out uri))
+                            else if (Utilities.Protocol.IsMessageWithUri(jsonObject, out uri))
                             {
-                                consumed = RecordScriptMessage(Script.MessageCategory.Client, Protocol.Message_Kind.Notification, message, uri, jsonObject);
+                                consumed = RecordScriptMessage(Script.MessageCategory.Client, Utilities.Protocol.Message_Kind.Notification, message, uri, jsonObject);
                             }
                         }
-                        else if (Protocol.IsRequest(jsonObject))
+                        else if (Utilities.Protocol.IsRequest(jsonObject))
                         {
-                            if (Protocol.IsMessageWithUri(message, out uri, out jsonObject))
+                            if (Utilities.Protocol.IsMessageWithUri(message, out uri, out jsonObject))
                             {
-                                consumed = RecordScriptMessage(Script.MessageCategory.Client, Protocol.Message_Kind.Request, message, uri, jsonObject);
+                                consumed = RecordScriptMessage(Script.MessageCategory.Client, Utilities.Protocol.Message_Kind.Request, message, uri, jsonObject);
                             }
-                            else if (Protocol.IsShutdownRequest(jsonObject))
+                            else if (Utilities.Protocol.IsShutdownRequest(jsonObject))
                             {
                                 JShutdownObject = jsonObject;
                                 ShutdownRequest = message;
                                 consumed = true;
                             }
                         }
-                        else if (Protocol.IsErrorResponse(jsonObject))
+                        else if (Utilities.Protocol.IsErrorResponse(jsonObject))
                         {//Hum...A response receive from the Client this cannot happend ==> Log it.
                             LogUnexpectedMessage(Resource.UnexpectedResponseFromClient, message);
                         }
@@ -201,10 +201,10 @@ namespace LanguageServerRobot.Controller
                         System.Diagnostics.Contracts.Contract.Ensures(SessionModel == null && JInitializeObject != null);
                         if (SessionModel == null && JInitializeObject != null)
                         {
-                            if (Protocol.IsResponse(message, out jsonObject))
+                            if (Utilities.Protocol.IsResponse(message, out jsonObject))
                             {
-                                string requestId = Protocol.GetRequestId(JInitializeObject);
-                                string responseIde = Protocol.GetRequestId(jsonObject);
+                                string requestId = Utilities.Protocol.GetRequestId(JInitializeObject);
+                                string responseIde = Utilities.Protocol.GetRequestId(jsonObject);
                                 if (requestId != null && responseIde != null && requestId.Equals(responseIde))
                                 {//Ok Initalization result
                                     InitializeSession(message, jsonObject);
@@ -227,19 +227,19 @@ namespace LanguageServerRobot.Controller
                 case ModeState.Initialized | ModeState.Start:
                     {
                         string uri = null;
-                        if (Protocol.IsNotification(message, out jsonObject))
+                        if (Utilities.Protocol.IsNotification(message, out jsonObject))
                         {
-                            if (Protocol.IsMessageWithUri(message, out uri, out jsonObject))
+                            if (Utilities.Protocol.IsMessageWithUri(message, out uri, out jsonObject))
                             {
-                                consumed = RecordScriptMessage(Script.MessageCategory.Server, Protocol.Message_Kind.Notification, message, uri, jsonObject);
+                                consumed = RecordScriptMessage(Script.MessageCategory.Server, Utilities.Protocol.Message_Kind.Notification, message, uri, jsonObject);
                             }
                         }
-                        else if (Protocol.IsResponseAndNotError(jsonObject))
+                        else if (Utilities.Protocol.IsResponseAndNotError(jsonObject))
                         {
-                            string id = Protocol.GetRequestId(jsonObject);
+                            string id = Utilities.Protocol.GetRequestId(jsonObject);
                             if (JShutdownObject != null)
                             {
-                                string id_shutdown = Protocol.GetRequestId(JShutdownObject);
+                                string id_shutdown = Utilities.Protocol.GetRequestId(JShutdownObject);
                                 if (id.Equals(id_shutdown))
                                 {//Shutdown response
                                     StopSession(message, jsonObject, false);
@@ -251,7 +251,7 @@ namespace LanguageServerRobot.Controller
                                 if (RequestIdUriMap.ContainsKey(id))
                                 {//So this is another response for a request ==> just record it
                                     uri = RequestIdUriMap[id];
-                                    consumed = RecordScriptMessage(Script.MessageCategory.Result, Protocol.Message_Kind.Response, message, uri, jsonObject);
+                                    consumed = RecordScriptMessage(Script.MessageCategory.Result, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
                                 }
                                 else
                                 {//Hum...There is a response from the server without a registered request
@@ -259,13 +259,13 @@ namespace LanguageServerRobot.Controller
                                 }
                             }
                         }
-                        else if (Protocol.IsErrorResponse(jsonObject))
+                        else if (Utilities.Protocol.IsErrorResponse(jsonObject))
                         {
-                            string id = Protocol.GetRequestId(jsonObject);
+                            string id = Utilities.Protocol.GetRequestId(jsonObject);
                             if (RequestIdUriMap.ContainsKey(id))
                             {
                                 uri = RequestIdUriMap[id];
-                                consumed = RecordScriptMessage(Script.MessageCategory.Result, Protocol.Message_Kind.Response, message, uri, jsonObject);
+                                consumed = RecordScriptMessage(Script.MessageCategory.Result, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
                             }
                             else
                             {//Hum...There is a response from the server without a registered request
@@ -296,7 +296,7 @@ namespace LanguageServerRobot.Controller
         private void InitializeSession(string message, JObject jsonObject)
         {
             //Maybe initailization failed            
-            if (Protocol.IsErrorResponse(jsonObject))
+            if (Utilities.Protocol.IsErrorResponse(jsonObject))
             {
                 State |= ModeState.InitializationError;
             }
@@ -336,7 +336,7 @@ namespace LanguageServerRobot.Controller
         private void StartScript(string message, JObject jsonObject)
         {
             string uri = null;
-            Protocol.IsMessageWithUri(jsonObject, out uri);
+            Utilities.Protocol.IsMessageWithUri(jsonObject, out uri);
             System.Diagnostics.Contracts.Contract.Assume(uri != null);
             Script script = this[uri];
             if (script != null)
@@ -360,7 +360,7 @@ namespace LanguageServerRobot.Controller
         /// <param name="uri"><The Script's uri/param>
         /// <param name="jsonObject">The JSon object corresponding to the message</param>
         /// <returns></returns>
-        private bool RecordScriptMessage(Script.MessageCategory category, Protocol.Message_Kind kind, string message, string uri, JObject jsonObject)
+        private bool RecordScriptMessage(Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject)
         {
             System.Diagnostics.Contracts.Contract.Assert(message != null);
             System.Diagnostics.Contracts.Contract.Requires(uri != null);
@@ -372,14 +372,14 @@ namespace LanguageServerRobot.Controller
             }
             else
             {   //Record the message
-                if (category == Script.MessageCategory.Client && kind == Protocol.Message_Kind.Request)
+                if (category == Script.MessageCategory.Client && kind == Utilities.Protocol.Message_Kind.Request)
                 {//This is a request from the client ==> so remember its ID and its associated Uri.
-                    string id = Protocol.GetRequestId(jsonObject);
+                    string id = Utilities.Protocol.GetRequestId(jsonObject);
                     RequestIdUriMap[id] = uri;
                 }
-                else if (category == Script.MessageCategory.Result && kind == Protocol.Message_Kind.Response)
+                else if (category == Script.MessageCategory.Result && kind == Utilities.Protocol.Message_Kind.Response)
                 {//Rmove the reference to the request
-                    string id = Protocol.GetRequestId(jsonObject);
+                    string id = Utilities.Protocol.GetRequestId(jsonObject);
                     RequestIdUriMap.Remove(id);
                 }
                 script.AddMessage(category, kind, message, jsonObject);
@@ -395,7 +395,7 @@ namespace LanguageServerRobot.Controller
         private void StopScript(string message, JObject jsonObject)
         {
             string uri = null;
-            Protocol.IsMessageWithUri(jsonObject, out uri);
+            Utilities.Protocol.IsMessageWithUri(jsonObject, out uri);
             System.Diagnostics.Contracts.Contract.Assume(uri != null);
             Script script = this[uri];
             if (script == null)
@@ -585,7 +585,7 @@ namespace LanguageServerRobot.Controller
                 //     path is in an invalid format.
                 LogWriter?.WriteLine(string.Format(Resource.FailToSaveSession, sessionFile, nse.Message));
             }
-            return true;
+            return bResult;
         }
     }
 }

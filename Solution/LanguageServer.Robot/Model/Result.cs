@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Model
+namespace LanguageServer.Robot.Model
 {
     /// <summary>
     /// The result Model of a test for one script.

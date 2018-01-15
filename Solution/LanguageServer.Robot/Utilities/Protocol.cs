@@ -7,7 +7,7 @@ using LanguageServer.JsonRPC;
 using LanguageServer.Protocol;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Utilities
+namespace LanguageServer.Robot.Utilities
 {
     /// <summary>
     /// Utility class for the Language Server Protocol.
@@ -783,7 +783,7 @@ namespace LanguageServerRobot.Utilities
                 System.Uri file_uri = (new System.UriBuilder(new_uri)).Uri;
                 return file_uri.ToString();
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
             }
             return uri;

@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LanguageServerRobot.Model;
+using LanguageServer.Robot.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Utilities
+namespace LanguageServer.Robot.Utilities
 {
     /// <summary>
     /// Utility class
@@ -64,19 +64,19 @@ namespace LanguageServerRobot.Utilities
                             System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(path);//Create the directory
                             ScriptPath = di.FullName;
                         }
-                        catch (System.IO.IOException ioe)
+                        catch (System.IO.IOException /*ioe*/)
                         {
                             ScriptPath = path;
                         }
-                        catch (System.UnauthorizedAccessException uae)
+                        catch (System.UnauthorizedAccessException /*uae*/)
                         {
                             ScriptPath = path;
                         }
-                        catch (System.ArgumentNullException ane)
+                        catch (System.ArgumentNullException /*ane*/)
                         {
                             ScriptPath = path;
                         }
-                        catch (System.NotSupportedException nse)
+                        catch (System.NotSupportedException /*nse*/)
                         {
                             ScriptPath = path;
                         }
@@ -104,7 +104,7 @@ namespace LanguageServerRobot.Utilities
                 sessionDirectoryPath = di.FullName;
                 return true;
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
                 return false;
             }
@@ -127,7 +127,7 @@ namespace LanguageServerRobot.Utilities
                 result_dir = rdi.FullName;
                 return true;
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
                 return false;
             }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LanguageServerRobot.Controller
+namespace LanguageServer.Robot.Controller
 {
     /// <summary>
     /// Interface for a rboting mode controller

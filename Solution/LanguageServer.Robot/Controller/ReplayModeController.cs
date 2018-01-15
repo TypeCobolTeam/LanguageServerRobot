@@ -1,5 +1,5 @@
-﻿using LanguageServerRobot.Model;
-using LanguageServerRobot.Utilities;
+﻿using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace LanguageServerRobot.Controller
+namespace LanguageServer.Robot.Controller
 {
     /// <summary>
     /// Robot Replay mode controller
@@ -136,7 +136,7 @@ namespace LanguageServerRobot.Controller
                         System.Diagnostics.Contracts.Contract.Ensures(SessionModel == null && JInitializeObject == null);
                         if (SessionModel == null && JInitializeObject == null)
                         {
-                            if (Protocol.IsInitializeRequest(message, out jsonObject))
+                            if (Utilities.Protocol.IsInitializeRequest(message, out jsonObject))
                             {   //Save the original initialization object.
                                 JInitializeObject = jsonObject;
                                 InitializeRequest = message;
@@ -151,9 +151,9 @@ namespace LanguageServerRobot.Controller
                     break;
                 case ModeState.Initialized:
                     {
-                        if (Protocol.IsNotification(message, out jsonObject))
+                        if (Utilities.Protocol.IsNotification(message, out jsonObject))
                         {
-                            if (Protocol.IsInitializedNotification(message, out jsonObject))
+                            if (Utilities.Protocol.IsInitializedNotification(message, out jsonObject))
                             {   //Notification from the Client that it has take in account the "initialize" result from the server.
                                 //==> We can start both Client and Server are OK.
                                 State |= ModeState.Start;
@@ -165,10 +165,10 @@ namespace LanguageServerRobot.Controller
                 case ModeState.Initialized | ModeState.Start:
                     {
                         string uri = null;
-                        if (Protocol.IsNotification(message, out jsonObject))
+                        if (Utilities.Protocol.IsNotification(message, out jsonObject))
                         {//1)Detect any new script for a document ==> detect didOpen notification
                             //Detect the exit Notification()
-                            if (Protocol.IsExitNotification(jsonObject))
+                            if (Utilities.Protocol.IsExitNotification(jsonObject))
                             {//So forces the End of the session
                                 if (JShutdownObject != null)
                                 {//We have already received a shutdown request.
@@ -176,33 +176,33 @@ namespace LanguageServerRobot.Controller
                                     consumed = true;
                                 }
                             }
-                            else if (Protocol.IsDidChangeConfigurationNotification(jsonObject))
+                            else if (Utilities.Protocol.IsDidChangeConfigurationNotification(jsonObject))
                             {
                                 //Ignore any Configuration Change ==> don't register that as result.
                                 consumed = true;
                             }
-                            else if (Protocol.IsDidOpenTextDocumentNotification(jsonObject))
+                            else if (Utilities.Protocol.IsDidOpenTextDocumentNotification(jsonObject))
                             {
                                 //Store the message in the result script
                                 this.ResultScript.didOpen = message;
                                 consumed = true;
                             }
-                            else if (Protocol.IsDidCloseTextDocumentNotification(jsonObject))
+                            else if (Utilities.Protocol.IsDidCloseTextDocumentNotification(jsonObject))
                             {
                                 //Store the message in the result script
                                 this.ResultScript.didClose = message;
                                 consumed = true;
                             }
-                            else if (Protocol.IsMessageWithUri(jsonObject, out uri))
+                            else if (Utilities.Protocol.IsMessageWithUri(jsonObject, out uri))
                             {
                                 //Store the notification in the result script
                                 this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
                                 consumed = true;
                             }
                         }
-                        else if (Protocol.IsRequest(jsonObject))
+                        else if (Utilities.Protocol.IsRequest(jsonObject))
                         {
-                            if (Protocol.IsShutdownRequest(jsonObject))
+                            if (Utilities.Protocol.IsShutdownRequest(jsonObject))
                             {
                                 consumed = true;
                             }
@@ -212,7 +212,7 @@ namespace LanguageServerRobot.Controller
                                 consumed = true;
                             }
                         }
-                        else if (Protocol.IsErrorResponse(jsonObject))
+                        else if (Utilities.Protocol.IsErrorResponse(jsonObject))
                         {//Hum...A response receive from the Client this cannot happend ==> Log it.
                             LogUnexpectedMessage(Resource.UnexpectedResponseFromClient, message);
                             //But we must register it has result
@@ -244,10 +244,10 @@ namespace LanguageServerRobot.Controller
                         System.Diagnostics.Contracts.Contract.Ensures(SessionModel == null && JInitializeObject != null);
                         if (SessionModel == null && JInitializeObject != null)
                         {
-                            if (Protocol.IsResponse(message, out jsonObject))
+                            if (Utilities.Protocol.IsResponse(message, out jsonObject))
                             {
-                                string requestId = Protocol.GetRequestId(JInitializeObject);
-                                string responseIde = Protocol.GetRequestId(jsonObject);
+                                string requestId = Utilities.Protocol.GetRequestId(JInitializeObject);
+                                string responseIde = Utilities.Protocol.GetRequestId(jsonObject);
                                 if (requestId != null && responseIde != null && requestId.Equals(responseIde))
                                 {
                                     State &= ~ModeState.NotInitialized;
@@ -267,11 +267,11 @@ namespace LanguageServerRobot.Controller
                     break;
                 case ModeState.Initialized | ModeState.Start:
                     {
-                        if (Protocol.IsNotification(message, out jsonObject))
+                        if (Utilities.Protocol.IsNotification(message, out jsonObject))
                         {
                             //Ignore any notification which is not an uri notification                        
                             string uri = null;
-                            if (Protocol.IsMessageWithUri(jsonObject, out uri))
+                            if (Utilities.Protocol.IsMessageWithUri(jsonObject, out uri))
                             {
                                 this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
                                 RaiseNotificationEvent(message, jsonObject);
@@ -289,7 +289,7 @@ namespace LanguageServerRobot.Controller
                             }
                             consumed = true;
                         }
-                        else if (Protocol.IsResponse(jsonObject))
+                        else if (Utilities.Protocol.IsResponse(jsonObject))
                         {
                             this.ResultScript.AddMessage(Script.MessageCategory.Result, message);
                             RaiseResponseEvent(message, jsonObject);

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
-using LanguageServerRobot.Model;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Controller
+namespace LanguageServer.Robot.Controller
 {
     /// <summary>
     /// A Client controller which is able to execute a session
@@ -109,7 +109,7 @@ namespace LanguageServerRobot.Controller
         /// Propagate Connection Log settings to this.
         /// </summary>
         /// <param name="log">The Connection Logs setting.</param>
-        public void PropagateConnectionLogs(ConnectionLog log = null)
+        public new void PropagateConnectionLogs(ConnectionLog log = null)
         {
             log = log ?? ConnectionLog.GetInstance();
             foreach (ScriptRobotConnectionController controller in ScriptControllers)
@@ -124,7 +124,7 @@ namespace LanguageServerRobot.Controller
         /// <summary>
         /// The Current Replay controller.
         /// </summary>
-        private ReplayModeController ReplayController;
+        private new ReplayModeController ReplayController;
 
         /// <summary>
         /// Starts the connection
@@ -193,7 +193,7 @@ namespace LanguageServerRobot.Controller
                 ControllerState = ConnectionState.Closed;//CLOSED            
                 return bResult;
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
                 if (ControllerState != ConnectionState.Closed)
                 {

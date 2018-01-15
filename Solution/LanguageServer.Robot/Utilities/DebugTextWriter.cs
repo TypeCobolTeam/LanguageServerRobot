@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LanguageServerRobot.Utilities
+namespace LanguageServer.Robot.Utilities
 {
     /// <summary>
     /// This class is used only to redirect a Text witting to a Debug Output.

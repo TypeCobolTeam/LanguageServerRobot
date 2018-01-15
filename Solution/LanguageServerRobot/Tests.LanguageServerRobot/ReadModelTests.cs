@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using LanguageServer.JsonRPC;
 using LanguageServer.Protocol;
+using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Tests.LanguageServer.JsonRPC;
@@ -19,11 +21,11 @@ namespace Tests.LanguageServer.Robot
         [TestMethod]
         public void CheckReadScript()
         {
-            LanguageServerRobot.Model.Script script = null;
+            Script script = null;
             Exception exc = null;
             string current_dir = Directory.GetCurrentDirectory();
             string test_file = System.IO.Path.Combine(current_dir, "TestFiles\\Session0\\Script01.tlsp");
-            Assert.IsTrue(LanguageServerRobot.Utilities.Util.ReadScriptFile(test_file, out script, out exc));
+            Assert.IsTrue(Util.ReadScriptFile(test_file, out script, out exc));
             Assert.IsTrue(script.initialize == "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"initialize\",\"params\":{\"processId\":-1,\"rootPath\":\"C:\\\\Program Files (x86)\\\\IBM\\\\SDP_IDZ14\",\"rootUri\":\"file:/C:/Program%20Files%20(x86)/IBM/SDP_IDZ14/\",\"capabilities\":{\"workspace\":{\"applyEdit\":true,\"didChangeConfiguration\":{\"dynamicRegistration\":true},\"didChangeWatchedFiles\":{\"dynamicRegistration\":false},\"symbol\":{\"dynamicRegistration\":true},\"executeCommand\":{\"dynamicRegistration\":true}},\"textDocument\":{\"synchronization\":{\"willSave\":true,\"willSaveWaitUntil\":true,\"dynamicRegistration\":true},\"completion\":{\"completionItem\":{\"snippetSupport\":true},\"dynamicRegistration\":true},\"hover\":{\"dynamicRegistration\":true},\"signatureHelp\":{\"dynamicRegistration\":true},\"references\":{\"dynamicRegistration\":true},\"documentHighlight\":{\"dynamicRegistration\":true},\"documentSymbol\":{\"dynamicRegistration\":true},\"formatting\":{\"dynamicRegistration\":true},\"rangeFormatting\":{\"dynamicRegistration\":true},\"onTypeFormatting\":{\"dynamicRegistration\":true},\"definition\":{\"dynamicRegistration\":true},\"codeAction\":{\"dynamicRegistration\":true},\"codeLens\":{\"dynamicRegistration\":true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{\"dynamicRegistration\":true}}},\"trace\":\"off\"}}");
             Assert.IsTrue(script.session == "C:\\Users\\MAYANJE\\Source\\LSRSessions\\Session2017_11_16_11_03_45_034\\TestSuite_2017_11_16_11_03_45_028.slsp");
             Assert.IsTrue(script.initialize_result == "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"result\":{\"capabilities\":{\"textDocumentSync\":2,\"hoverProvider\":true,\"completionProvider\":{\"resolveProvider\":false,\"triggerCharacters\":[\"::\"]},\"definitionProvider\":true,\"referencesProvider\":false,\"documentHighlightProvider\":false,\"documentSymbolProvider\":false,\"workspaceSymbolProvider\":false,\"codeActionProvider\":false,\"documentFormattingProvider\":false,\"documentRangeFormattingProvider\":false,\"renameProvider\":false}}}");
@@ -34,20 +36,20 @@ namespace Tests.LanguageServer.Robot
             Assert.IsTrue(script.didClose == "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didClose\",\"params\":{\"textDocument\":{\"uri\":\"file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee\"}}}");
             Assert.IsTrue(script.IsValid);
             Assert.IsTrue(script.messages.Count == 2);
-            Assert.IsTrue(script.messages[0].category == LanguageServerRobot.Model.Script.MessageCategory.Client);
+            Assert.IsTrue(script.messages[0].category == Script.MessageCategory.Client);
             Assert.IsTrue(script.messages[0].message == "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"textDocument/completion\",\"params\":{\"textDocument\":{\"uri\":\"file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee\"},\"uri\":\"file:/C:/Users/MAYANJE/AppData/Local/Temp/tcbl/PARA13105124614291384263.cee\",\"position\":{\"line\":6,\"character\":19}}}");
-            Assert.IsTrue(script.messages[1].category == LanguageServerRobot.Model.Script.MessageCategory.Server);
+            Assert.IsTrue(script.messages[1].category == Script.MessageCategory.Server);
             Assert.IsTrue(script.messages[1].message == "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":[{\"label\":\"A-PARA\",\"kind\":18},{\"label\":\"B-PARA\",\"kind\":18},{\"label\":\"C-PARA\",\"kind\":18},{\"label\":\"D-PARA\",\"kind\":18},{\"label\":\"E-PARA\",\"kind\":18}]}");
         }
 
         [TestMethod]
         public void CheckReadSession()
         {
-            LanguageServerRobot.Model.Session session = null;
+            Session session = null;
             Exception exc = null;
             string current_dir = Directory.GetCurrentDirectory();
             string test_file = System.IO.Path.Combine(current_dir, "TestFiles\\Session0\\TestSuite01.slsp");
-            Assert.IsTrue(LanguageServerRobot.Utilities.Util.ReadSessionFile(test_file, out session, out exc));
+            Assert.IsTrue(Util.ReadSessionFile(test_file, out session, out exc));
             Assert.IsTrue(session.directory == "C:\\Users\\MAYANJE\\Source\\LSRSessions\\Session2017_11_16_11_03_45_034");
             Assert.IsTrue(session.user == "MAYANJE");
             Assert.IsTrue(session.date == "2017/11/16 11:03:45 028");

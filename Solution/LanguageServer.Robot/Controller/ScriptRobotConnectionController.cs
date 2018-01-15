@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LanguageServerRobot.Controller
+namespace LanguageServer.Robot.Controller
 {
     /// <summary>
     /// A Client controller which is able to execute a script
@@ -187,7 +187,7 @@ namespace LanguageServerRobot.Controller
                 //Now we start listening
                 ControllerState = ConnectionState.Listening;
 
-                JObject jsonObject = null;
+                //JObject jsonObject = null;
                 if (!FromSession)
                 {
                     if (!PerformInitializeRequest(Script.initialize, true))

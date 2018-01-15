@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Model
+namespace LanguageServer.Robot.Model
 {
     /// <summary>
     /// The Model that describe a Script associated toa document.
@@ -120,7 +120,7 @@ namespace LanguageServerRobot.Model
         public void AddMessage(MessageCategory category, string message)
         {
             JObject jsonObject = null;
-            Protocol.MessageKind(message, out jsonObject);
+            Utilities.Protocol.MessageKind(message, out jsonObject);
             AddMessage(category, message, jsonObject);
         }
 
@@ -132,7 +132,7 @@ namespace LanguageServerRobot.Model
         /// <param name="jsonObject">The Json object corresponding to the message</param>
         public void AddMessage(MessageCategory category, string message, JObject jsonObject)
         {
-            Protocol.Message_Kind kind = Protocol.MessageKind(jsonObject);
+            Utilities.Protocol.Message_Kind kind = Utilities.Protocol.MessageKind(jsonObject);
             AddMessage(category, kind, message, jsonObject);
 
         }
@@ -144,18 +144,18 @@ namespace LanguageServerRobot.Model
         /// <param name="kind">Message's kind</param>
         /// <param name="message">The message</param>
         /// <param name="jsonObject">The Json object corresponding to the message</param>
-        public void AddMessage(MessageCategory category, Protocol.Message_Kind kind, string message, JObject jsonObject)
+        public void AddMessage(MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, JObject jsonObject)
         {
             System.Diagnostics.Contracts.Contract.Assert(message != null);
             System.Diagnostics.Contracts.Contract.Assert(jsonObject != null);
-            System.Diagnostics.Contracts.Contract.Assume(kind == Protocol.MessageKind(jsonObject));
+            System.Diagnostics.Contracts.Contract.Assume(kind == Utilities.Protocol.MessageKind(jsonObject));
             System.Diagnostics.Contracts.Contract.Requires(category == MessageCategory.Client || category == MessageCategory.Server || category == MessageCategory.Result);
-            System.Diagnostics.Contracts.Contract.Requires(kind == Protocol.Message_Kind.Request || kind == Protocol.Message_Kind.Notification || kind == Protocol.Message_Kind.Response);
+            System.Diagnostics.Contracts.Contract.Requires(kind == Utilities.Protocol.Message_Kind.Request || kind == Utilities.Protocol.Message_Kind.Notification || kind == Utilities.Protocol.Message_Kind.Response);
             // client ==> (Request || Notification) && !Result
             // Server || Result ==> (Notification || Result) && !Request            
-            System.Diagnostics.Contracts.Contract.Requires((kind == Protocol.Message_Kind.Response && (category == MessageCategory.Server || category == MessageCategory.Result)) ||
-                (kind == Protocol.Message_Kind.Request && category == MessageCategory.Client) ||
-                (kind == Protocol.Message_Kind.Notification && (category == MessageCategory.Client || category == MessageCategory.Server)));
+            System.Diagnostics.Contracts.Contract.Requires((kind == Utilities.Protocol.Message_Kind.Response && (category == MessageCategory.Server || category == MessageCategory.Result)) ||
+                (kind == Utilities.Protocol.Message_Kind.Request && category == MessageCategory.Client) ||
+                (kind == Utilities.Protocol.Message_Kind.Notification && (category == MessageCategory.Client || category == MessageCategory.Server)));
 
             Message msg = new Message(category, message);
             messages.Add(msg);
@@ -171,7 +171,7 @@ namespace LanguageServerRobot.Model
             {
                 JObject jdidOpen = null;
                 JObject jdidClose = null;
-                return Protocol.IsDidOpenTextDocumentNotification(this.didOpen, out jdidOpen) && Protocol.IsDidCloseTextDocumentNotification(this.didClose, out jdidClose);
+                return Utilities.Protocol.IsDidOpenTextDocumentNotification(this.didOpen, out jdidOpen) && Utilities.Protocol.IsDidCloseTextDocumentNotification(this.didClose, out jdidClose);
             }
         }
         /// <summary>

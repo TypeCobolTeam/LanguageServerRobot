@@ -4,28 +4,25 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ADC9412F-26E7-4C05-8352-2573FBEB9E88}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{F0390474-09D7-41EE-B01C-FE4D2A57ECDA}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LanguageServerRobot</RootNamespace>
-    <AssemblyName>LanguageServerRobot</AssemblyName>
+    <RootNamespace>LanguageServer.Robot</RootNamespace>
+    <AssemblyName>LanguageServer.Robot</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <DoNotCopyLocalIfInGac>true</DoNotCopyLocalIfInGac>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>1</WarningLevel>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,20 +30,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MyDebug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\TypeCobol\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <WarningLevel>1</WarningLevel>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\LanguageServerRobot\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -59,13 +45,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LanguageServerRobot.cs" />
+    <Compile Include="Controller\AbstractModeController.cs" />
+    <Compile Include="Controller\AbstractReplayRobotConnectionController.cs" />
+    <Compile Include="Controller\ClientRobotConnectionController.cs" />
+    <Compile Include="Controller\IRobotModeController.cs" />
+    <Compile Include="Controller\LanguageServerRobotController.cs" />
+    <Compile Include="Controller\RecordingModeController.cs" />
+    <Compile Include="Controller\ReplayModeController.cs" />
+    <Compile Include="Controller\ScriptRobotConnectionController.cs" />
+    <Compile Include="Controller\ServerRobotConnectionController.cs" />
+    <Compile Include="Controller\SessionRobotConnectionController.cs" />
+    <Compile Include="Model\Result.cs" />
+    <Compile Include="Model\Script.cs" />
+    <Compile Include="Model\Session.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="LanguageServerRobot.cd" />
-    <None Include="packages.config" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\DebugTextWriter.cs" />
+    <Compile Include="Utilities\Options.cs" />
+    <Compile Include="Utilities\Protocol.cs" />
+    <Compile Include="Utilities\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LanguageServer.JsonRPC\LanguageServer.JsonRPC.csproj">
@@ -76,10 +78,15 @@
       <Project>{2950dac0-494d-46b6-a836-7eab4810952a}</Project>
       <Name>LanguageServer.Protocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LanguageServer.Robot\LanguageServer.Robot.csproj">
-      <Project>{f0390474-09d7-41ee-b01c-fe4d2a57ecda}</Project>
-      <Name>LanguageServer.Robot</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

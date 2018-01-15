@@ -6,8 +6,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
-using LanguageServerRobot.Controller;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot;
+using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Controller;
+using LanguageServer.Robot.Utilities;
 using Mono.Options;
 
 namespace LanguageServerRobot
@@ -256,14 +258,14 @@ namespace LanguageServerRobot
                         {
                             if (Files.Count == 0)
                             {//No file to test
-                                System.Console.Out.WriteLine(Resource.NoSessionOrScriptFile);
+                                System.Console.Out.WriteLine(LanguageServer.Robot.Resource.NoSessionOrScriptFile);
                                 p.WriteOptionDescriptions(System.Console.Out);
 
                                 return 0;
                             }
                             ClientRobotConnectionController client = null;
-                            Model.Script script = null;
-                            Model.Session session = null;
+                            Script script = null;
+                            Session session = null;
                             switch (Files[0].Item2)
                             {
                                 case FileType.ScriptFile:
@@ -333,7 +335,7 @@ namespace LanguageServerRobot
         /// <param name="script_path">The path of the script to replay</param>
         /// <param name="script">The script model to replay</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        private static int ReplayScript(string script_path, Model.Script script)
+        private static int ReplayScript(string script_path, Script script)
         {
             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
             var robot = new LanguageServerRobotController(script_path, script, server, ScriptRepositoryPath);
@@ -355,12 +357,12 @@ namespace LanguageServerRobot
         /// <param name="session_path">The path of the session to replay</param>
         /// <param name="session">The session model to replay</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        private static int ReplaySession(string session_path, Model.Session session)
+        private static int ReplaySession(string session_path, Session session)
         {
             bool bResult = true;
             foreach (string scriptPath in session.scripts)
             {
-                Model.Script script;
+                Script script;
                 Exception exc;
                 bool bValid = Util.ReadScriptFile(scriptPath, out script, out exc);
                 if (bValid)

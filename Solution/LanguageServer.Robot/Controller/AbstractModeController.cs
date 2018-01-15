@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
-using LanguageServerRobot.Model;
-using LanguageServerRobot.Utilities;
+using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServerRobot.Controller
+namespace LanguageServer.Robot.Controller
 {
     /// <summary>
     /// An abstract Robot Mode Controller class, that can be as based class. 
@@ -206,7 +206,7 @@ namespace LanguageServerRobot.Controller
         public void LogNotConsumedMessage(string message)
         {
             JObject jsonMessage = null;
-            if (Protocol.IsShowMessageNotification(message, out jsonMessage))
+            if (Utilities.Protocol.IsShowMessageNotification(message, out jsonMessage))
             {
                 MessageLogWriter?.WriteLine(message);
             }            
