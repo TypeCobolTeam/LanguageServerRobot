@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.Protocol", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.LanguageServerRobot", "Tests.LanguageServerRobot\Tests.LanguageServerRobot.csproj", "{27912F85-E779-4EE0-A1BD-09469EB12863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.Robot", "..\LanguageServer.Robot\LanguageServer.Robot.csproj", "{F0390474-09D7-41EE-B01C-FE4D2A57ECDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.Robot.Common", "..\LanguageServer.Robot.Common\LanguageServer.Robot.Common.csproj", "{F0390474-09D7-41EE-B01C-FE4D2A57ECDA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5A4CAD5C-F178-45D2-86E8-A75D7EAC13F4} = {5A4CAD5C-F178-45D2-86E8-A75D7EAC13F4}
 		{2950DAC0-494D-46B6-A836-7EAB4810952A} = {2950DAC0-494D-46B6-A836-7EAB4810952A}

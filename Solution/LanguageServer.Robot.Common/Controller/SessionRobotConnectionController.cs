@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
-using LanguageServer.Robot.Model;
-using LanguageServer.Robot.Utilities;
+using LanguageServer.Robot.Common.Model;
+using LanguageServer.Robot.Common.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServer.Robot.Controller
+namespace LanguageServer.Robot.Common.Controller
 {
     /// <summary>
     /// A Client controller which is able to execute a session

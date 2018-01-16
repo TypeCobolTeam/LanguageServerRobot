@@ -81,7 +81,7 @@
       <Project>{2950dac0-494d-46b6-a836-7eab4810952a}</Project>
       <Name>LanguageServer.Protocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\LanguageServer.Robot\LanguageServer.Robot.csproj">
+    <ProjectReference Include="..\..\LanguageServer.Robot.Common\LanguageServer.Robot.Common.csproj">
       <Project>{f0390474-09d7-41ee-b01c-fe4d2a57ecda}</Project>
       <Name>LanguageServer.Robot</Name>
     </ProjectReference>

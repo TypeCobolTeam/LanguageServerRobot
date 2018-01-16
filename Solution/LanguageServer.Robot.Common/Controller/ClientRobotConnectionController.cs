@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
 
-namespace LanguageServer.Robot.Controller
+namespace LanguageServer.Robot.Common.Controller
 {
     /// <summary>
     /// Class that will handle the Client side Robot connection business logic

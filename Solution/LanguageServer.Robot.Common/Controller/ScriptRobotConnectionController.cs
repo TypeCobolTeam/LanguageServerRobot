@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LanguageServer.Robot.Controller
+namespace LanguageServer.Robot.Common.Controller
 {
     /// <summary>
     /// A Client controller which is able to execute a script

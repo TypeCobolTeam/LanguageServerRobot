@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LanguageServer.Robot.Controller
+namespace LanguageServer.Robot.Common.Controller
 {
     /// <summary>
     /// Abstract class for a Robot Connection controller for replaying script or session

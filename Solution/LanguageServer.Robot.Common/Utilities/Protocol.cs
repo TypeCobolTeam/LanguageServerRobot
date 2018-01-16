@@ -7,7 +7,7 @@ using LanguageServer.JsonRPC;
 using LanguageServer.Protocol;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServer.Robot.Utilities
+namespace LanguageServer.Robot.Common.Utilities
 {
     /// <summary>
     /// Utility class for the Language Server Protocol.

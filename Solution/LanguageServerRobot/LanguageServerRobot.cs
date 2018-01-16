@@ -6,10 +6,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
-using LanguageServer.Robot;
-using LanguageServer.Robot.Model;
-using LanguageServer.Robot.Controller;
-using LanguageServer.Robot.Utilities;
+using LanguageServer.Robot.Common;
+using LanguageServer.Robot.Common.Model;
+using LanguageServer.Robot.Common.Controller;
+using LanguageServer.Robot.Common.Utilities;
 using Mono.Options;
 
 namespace LanguageServerRobot
@@ -258,7 +258,7 @@ namespace LanguageServerRobot
                         {
                             if (Files.Count == 0)
                             {//No file to test
-                                System.Console.Out.WriteLine(LanguageServer.Robot.Resource.NoSessionOrScriptFile);
+                                System.Console.Out.WriteLine(LanguageServer.Robot.Common.Resource.NoSessionOrScriptFile);
                                 p.WriteOptionDescriptions(System.Console.Out);
 
                                 return 0;

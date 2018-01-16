@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LanguageServer.Robot {
+namespace LanguageServer.Robot.Common {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace LanguageServer.Robot {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LanguageServer.Robot.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LanguageServer.Robot.Common.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

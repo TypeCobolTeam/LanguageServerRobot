@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LanguageServer.Robot.Model;
+using LanguageServer.Robot.Common.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServer.Robot.Utilities
+namespace LanguageServer.Robot.Common.Utilities
 {
     /// <summary>
     /// Utility class
