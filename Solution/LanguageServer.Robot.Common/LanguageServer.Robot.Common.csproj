@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connection\DataConnectionfactory.cs" />
     <Compile Include="Controller\AbstractModeController.cs" />
     <Compile Include="Controller\AbstractReplayRobotConnectionController.cs" />
     <Compile Include="Controller\ClientRobotConnectionController.cs" />
@@ -58,6 +59,10 @@
     <Compile Include="Model\Result.cs" />
     <Compile Include="Model\Script.cs" />
     <Compile Include="Model\Session.cs" />
+    <Compile Include="Pipe\ConsumerPipeConnection.cs" />
+    <Compile Include="Connection\IDataConnection.cs" />
+    <Compile Include="Pipe\PipeDataConnection.cs" />
+    <Compile Include="Pipe\ProducerPipeConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -88,6 +93,7 @@
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
