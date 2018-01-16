@@ -236,5 +236,15 @@ namespace LanguageServer.Robot.Common.Utilities
             }
             return false;
         }
+        /// <summary>
+        /// Create a Name for a Pipe.
+        /// </summary>
+        /// <returns></returns>
+        public static string CreatePipeName()
+        {
+            String date = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss fff");
+            date = date.Replace(':', '_').Replace('.', '_').Replace(' ', '_').Replace('/', '_').Replace('\\', '_');
+            return "LSR_" + date;
+        }
     }
 }

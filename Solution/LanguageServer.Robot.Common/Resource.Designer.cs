@@ -151,6 +151,24 @@ namespace LanguageServer.Robot.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The monitoring is activated only and only if the -robot options is pecified..
+        /// </summary>
+        public static string MonitoringInClientServerModeOnly {
+            get {
+                return ResourceManager.GetString("MonitoringInClientServerModeOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Monitoring mode is activated only and only if the -robot option is pecified..
+        /// </summary>
+        public static string MonitoringInRomotModeOnly {
+            get {
+                return ResourceManager.GetString("MonitoringInRomotModeOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There is no session or script to be replayed..
         /// </summary>
         public static string NoSessionOrScriptFile {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
+using LanguageServer.Robot.Common.Connection;
 using LanguageServer.Robot.Common.Model;
 using LanguageServer.Robot.Common.Utilities;
 using Newtonsoft.Json.Linq;
@@ -22,6 +23,7 @@ namespace LanguageServer.Robot.Common.Controller
         {
             Client,
             ClientServer,
+            Monitoring
         }
 
 
@@ -101,9 +103,30 @@ namespace LanguageServer.Robot.Common.Controller
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ClientConnection = clientConnection;
             this.ServerConnection = serverConnection;
-            Mode = ConnectionMode.ClientServer;            
+            Mode = ConnectionMode.Monitoring;            
             //Transfert the roboting mode controller instance to the client and server controller
             RobotModeController = new RecordingModeController(scriptRepositoryPath);
+            clientConnection.RobotModeController = RobotModeController;
+            serverConnection.RobotModeController = RobotModeController;
+        }
+
+        /// <summary>
+        /// Constructor for the LanguageServerRobot running as Client/Server in monitoring mode.
+        /// </summary>
+        /// <param name="clientConnection">The source client</param>
+        /// <param name="serverConnection">The target server</param>
+        /// <param name="connection">The Data Connection for used for sending monitoring messages</param>
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
+        public LanguageServerRobotController(ClientRobotConnectionController clientConnection, ServerRobotConnectionController serverConnection, IDataConnection connection, string scriptRepositoryPath = null)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(clientConnection != null);
+            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
+            System.Diagnostics.Contracts.Contract.Assert(connection != null);
+            this.ClientConnection = clientConnection;
+            this.ServerConnection = serverConnection;
+            Mode = ConnectionMode.ClientServer;
+            //Transfert the roboting mode controller instance to the client and server controller
+            RobotModeController = new MonitoringModeController(connection, scriptRepositoryPath);
             clientConnection.RobotModeController = RobotModeController;
             serverConnection.RobotModeController = RobotModeController;
         }

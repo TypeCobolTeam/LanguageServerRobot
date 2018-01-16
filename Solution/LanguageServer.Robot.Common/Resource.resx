@@ -171,4 +171,10 @@
   <data name="UnexpectedMessageFromClient" xml:space="preserve">
     <value>An Unexpected message has been received from the client: {0}.</value>
   </data>
+  <data name="MonitoringInClientServerModeOnly" xml:space="preserve">
+    <value>The monitoring is activated only and only if the -robot options is pecified.</value>
+  </data>
+  <data name="MonitoringInRomotModeOnly" xml:space="preserve">
+    <value>The Monitoring mode is activated only and only if the -robot option is pecified.</value>
+  </data>
 </root>
