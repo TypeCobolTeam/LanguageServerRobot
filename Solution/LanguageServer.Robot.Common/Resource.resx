@@ -177,4 +177,7 @@
   <data name="MonitoringInRomotModeOnly" xml:space="preserve">
     <value>The Monitoring mode is activated only and only if the -robot option is pecified.</value>
   </data>
+  <data name="MonitorConnectionTimeout" xml:space="preserve">
+    <value>LangugeServer Robot Monitor connection timeout</value>
+  </data>
 </root>

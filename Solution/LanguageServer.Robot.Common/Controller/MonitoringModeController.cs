@@ -21,6 +21,15 @@ namespace LanguageServer.Robot.Common.Controller
             private set;
         }
         /// <summary>
+        /// The Monitor Process
+        /// </summary>
+        public System.Diagnostics.Process MonitorProcess
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
         /// Data Connection controller
         /// </summary>
         public MonitoringModeController(IDataConnection connection, string scriptRepositoryPath) : base(scriptRepositoryPath)

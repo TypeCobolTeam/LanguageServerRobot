@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.JsonRPC;
@@ -14,7 +16,7 @@ namespace LanguageServer.Robot.Common.Controller
     /// <summary>
     /// This class represents the Controller of the LanguageServerRobot business rules.
     /// </summary>
-    public class LanguageServerRobotController : IRobotModeController
+    public class LanguageServerRobotController : IRobotModeController, IConnectionLog
     {
         /// <summary>
         /// Language Server Robot Controller Connection mode
@@ -23,7 +25,7 @@ namespace LanguageServer.Robot.Common.Controller
         {
             Client,
             ClientServer,
-            Monitoring
+            Monitor
         }
 
 
@@ -53,6 +55,24 @@ namespace LanguageServer.Robot.Common.Controller
             get;
             private set;
         }
+
+        /// <summary>
+        /// The Connection with the Monitor
+        /// </summary>
+        public IDataConnection MonitorConnection
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Timeoout to wait for the Monitor Application to establish the connection : 8s == 8000ms
+        /// </summary>
+        private const int MONITOR_CONNECTION_TIMEOUT = 8 * 1000;
+        /// <summary>
+        /// The LSR Executable name.
+        /// </summary>LSR_MONITOR_EXE
+        private static readonly string LSR_MONITOR_EXE = "LanguageServer.Robot.Monitor.exe";
 
         /// <summary>
         /// Constructor for the LanguageServerRobot running as Client for the Script Test replay mode.
@@ -103,7 +123,7 @@ namespace LanguageServer.Robot.Common.Controller
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
             this.ClientConnection = clientConnection;
             this.ServerConnection = serverConnection;
-            Mode = ConnectionMode.Monitoring;            
+            Mode = ConnectionMode.ClientServer;            
             //Transfert the roboting mode controller instance to the client and server controller
             RobotModeController = new RecordingModeController(scriptRepositoryPath);
             clientConnection.RobotModeController = RobotModeController;
@@ -124,7 +144,8 @@ namespace LanguageServer.Robot.Common.Controller
             System.Diagnostics.Contracts.Contract.Assert(connection != null);
             this.ClientConnection = clientConnection;
             this.ServerConnection = serverConnection;
-            Mode = ConnectionMode.ClientServer;
+            this.MonitorConnection = connection;
+            Mode = ConnectionMode.Monitor;
             //Transfert the roboting mode controller instance to the client and server controller
             RobotModeController = new MonitoringModeController(connection, scriptRepositoryPath);
             clientConnection.RobotModeController = RobotModeController;
@@ -181,6 +202,15 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Task for waiting the monitor's termination
+        /// </summary>
+        public TaskCompletionSource<bool> MonitorTaskCompletionSource
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The Client Task
         /// </summary>
         public Task<bool> ClientTask
@@ -191,6 +221,22 @@ namespace LanguageServer.Robot.Common.Controller
 
         //The Sever Task
         public Task<bool> ServerTask
+        {
+            get;
+            private set;
+        }
+
+        //The Monitor Task
+        public Task<bool> MonitorTask
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The Monitor Process
+        /// </summary>
+        public System.Diagnostics.Process MonitorProcess
         {
             get;
             private set;
@@ -324,6 +370,77 @@ namespace LanguageServer.Robot.Common.Controller
             ServerTask.Start();
         }
 
+
+        /// <summary>
+        /// Starts the monitor
+        /// </summary>
+        private bool StartMonitor()
+        {
+            string pipeName = null;
+            MonitorTaskCompletionSource = new TaskCompletionSource<bool>();
+            MonitorTask = new Task<bool>(
+                () =>
+                {
+                    bool bResult = false;
+                    try
+                    {
+                        //Create a nammed pipe
+                        pipeName = Util.CreatePipeName();
+                        //Connect to it, it will wait for Monitoring connection
+                        bResult = this.MonitorConnection.OpenConnection(pipeName);
+                    }
+                    catch (Exception e)
+                    {
+                        LogWriter?.WriteLine(e.Message);
+                    }
+                    MonitorTaskCompletionSource.SetResult(bResult);
+                    return bResult;
+                }
+                );
+            MonitorTask.Start();
+            //Run the Monitor Application.
+            string location = Assembly.GetExecutingAssembly().Location;
+            Uri uri = new Uri(location);
+            string local_location = uri.LocalPath;
+            FileInfo fi = new FileInfo(local_location);
+            string local_dir = fi.DirectoryName;
+            string monitor_path = Path.Combine(local_dir, LSR_MONITOR_EXE);
+            string monitor_argument = string.Format("-pipe \"{0}\"", pipeName);
+
+            this.MonitorProcess = new System.Diagnostics.Process();
+            this.MonitorProcess.StartInfo.FileName = monitor_path;
+            this.MonitorProcess.StartInfo.Arguments = monitor_argument;
+            try
+            {
+                if (this.MonitorProcess.Start())
+                {
+                    //Communicate the Monitoring Process to the Monitoring Mode Controller.
+                    (this.RobotModeController as MonitoringModeController).MonitorProcess = this.MonitorProcess;
+                    return true;
+                }
+                else
+                {
+                    this.MonitorConnection.CloseConnection();
+                    return false;
+                }
+            }
+            catch(Exception e)
+            {
+                LogWriter?.WriteLine(e.Message);
+                try
+                {
+                    this.MonitorConnection.CloseConnection();
+                }
+                catch(System.InvalidOperationException ioe)
+                {
+                    //     No pipe connections have been made yet.-or-The connected pipe has already disconnected.-or-The
+                    //     pipe handle has not been set.
+                    LogWriter?.WriteLine(ioe.Message);                    
+                }
+                return false;
+            }
+        }
+
         /// <summary>
         /// Wait that the client Terminate
         /// </summary>
@@ -452,6 +569,33 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Start the monitor
+        /// </summary>
+        /// <returns>true if monitor has been started, false otherwise</returns>
+        protected bool StartMonitoring()
+        {
+            StartMonitor();
+            //Wait for the monitor starting.
+            MonitorTaskCompletionSource.Task.Wait(MONITOR_CONNECTION_TIMEOUT);
+            if (MonitorTaskCompletionSource.Task.Status == TaskStatus.Running || MonitorTaskCompletionSource.Task.Status == TaskStatus.WaitingForActivation)
+            {//Connection timeout
+                if (this.MonitorProcess != null)
+                    this.MonitorProcess.Kill();
+                LogWriter?.WriteLine(Resource.MonitorConnectionTimeout);
+                return false;
+            }
+            else
+            {
+                bool bResult = MonitorTaskCompletionSource.Task.Result;
+                if (bResult)
+                {
+                    bResult = StartRoboting();
+                }
+                return bResult;
+            }
+        }
+
+        /// <summary>
         /// Start controlling according the mode.
         /// </summary>
         public bool Start()
@@ -462,6 +606,8 @@ namespace LanguageServer.Robot.Common.Controller
                     return StartReplaying();
                 case ConnectionMode.ClientServer:
                     return StartRoboting();
+                case ConnectionMode.Monitor:
+                    return StartMonitoring();
             }
             return false;
         }
@@ -523,6 +669,21 @@ namespace LanguageServer.Robot.Common.Controller
                 return RobotModeController.IsModeStopped;
             }
         }
+
+        /// <summary>
+        /// General Log TextWriter
+        /// </summary>
+        public TextWriter LogWriter { get; set; }
+
+        /// <summary>
+        /// Protocol Log TextWriter
+        /// </summary>
+        public TextWriter ProtocolLogWriter { get; set; }
+
+        /// <summary>
+        /// Message Log TextWriter
+        /// </summary>
+        public TextWriter MessageLogWriter { get; set; }
 
         public void FromClient(string message)
         {

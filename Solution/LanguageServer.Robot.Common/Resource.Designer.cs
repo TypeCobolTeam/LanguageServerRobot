@@ -151,6 +151,15 @@ namespace LanguageServer.Robot.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LangugeServer Robot Monitor connection timeout.
+        /// </summary>
+        public static string MonitorConnectionTimeout {
+            get {
+                return ResourceManager.GetString("MonitorConnectionTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The monitoring is activated only and only if the -robot options is pecified..
         /// </summary>
         public static string MonitoringInClientServerModeOnly {

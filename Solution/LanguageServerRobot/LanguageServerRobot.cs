@@ -11,6 +11,7 @@ using LanguageServer.Robot.Common.Model;
 using LanguageServer.Robot.Common.Controller;
 using LanguageServer.Robot.Common.Utilities;
 using Mono.Options;
+using LanguageServer.Robot.Common.Connection;
 
 namespace LanguageServerRobot
 {
@@ -119,6 +120,7 @@ namespace LanguageServerRobot
         {
             bool help = false;
             bool version = false;
+            bool monitoring = false;
             //Default Connection Mod eid Client/Server
             Mode = LanguageServerRobotController.ConnectionMode.ClientServer;
 
@@ -170,6 +172,7 @@ namespace LanguageServerRobot
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
                 { "d|dir=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
+                { "m|monitoring","Show the monitoring Window", _ => monitoring = true },
             };
             System.Collections.Generic.List<string> arguments;
             try { arguments = p.Parse(args); }
@@ -184,6 +187,11 @@ namespace LanguageServerRobot
             {
                 System.Console.WriteLine(Version);
                 return 0;
+            }                        
+            if (monitoring && Mode != LanguageServerRobotController.ConnectionMode.ClientServer)
+            {//using monitoring in ClientServer mode only.
+                System.Console.WriteLine(Resource.MonitoringInClientServerModeOnly);
+                return -1;
             }
 
             if (ServerPath == null)
@@ -241,7 +249,9 @@ namespace LanguageServerRobot
                             //Create and start Language Server Robot controller.
                             var client = new ClientRobotConnectionController();
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-                            var robot = new LanguageServerRobotController(client, server, ScriptRepositoryPath);
+                            var robot = monitoring 
+                                ? new LanguageServerRobotController(client, server, DataConnectionfactory.Create(DataConnectionfactory.ConnectionType.PIPE, DataConnectionfactory.ConnectionSide.Producer), ScriptRepositoryPath)
+                                : new LanguageServerRobotController(client, server, ScriptRepositoryPath);
                             robot.PropagateConnectionLogs();
                             if (!robot.Start())
                             {
