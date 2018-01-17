@@ -10,6 +10,7 @@ using LanguageServer.JsonRPC;
 using LanguageServer.Robot.Common.Utilities;
 using Mono.Options;
 using LanguageServer.Robot.Monitor.Properties;
+using LanguageServer.Robot.Common.Controller;
 
 namespace LanguageServer.Robot.Monitor
 {
@@ -73,6 +74,15 @@ namespace LanguageServer.Robot.Monitor
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// The Monitoring consumer instance.
+        /// </summary>
+        public MonitoringConsumerController MonitoringConsumer
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -147,10 +157,25 @@ namespace LanguageServer.Robot.Monitor
             {
                 this.Shutdown();
             }
-
+            
             if (ScriptRepositoryPath == null)
             {//Default path the user document path
                 ScriptRepositoryPath = Util.DefaultScriptRepositorPath;
+            }
+            if (PipeName != null)
+            {
+                //MessageBox.Show(PipeName);
+                //There is a pipe connection
+                MonitoringConsumer = new MonitoringConsumerController(PipeName);
+                try
+                {
+                    MonitoringConsumer.Start();
+                }
+                catch(Exception exc)
+                {
+                    MessageBox.Show(exc.Message + ':' + PipeName);
+                }
+
             }
         }
     }

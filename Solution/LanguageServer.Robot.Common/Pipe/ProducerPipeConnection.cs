@@ -31,6 +31,7 @@ namespace LanguageServer.Robot.Common.Pipe
             // Wait for a client to connect
             System.Console.WriteLine("Producer Wait for a client to connect");
             (PipeDataStream as NamedPipeServerStream).WaitForConnection();
+            System.Console.WriteLine("Producer got the connection");
             return true;
         }
 

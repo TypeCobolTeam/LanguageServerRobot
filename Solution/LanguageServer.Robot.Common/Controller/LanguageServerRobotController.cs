@@ -305,7 +305,7 @@ namespace LanguageServer.Robot.Common.Controller
                     try
                     {
                         task = this.ClientConnection != null ? this.ClientConnection.Start() : null;
-                        bResult = task != null ? task.Result : false;
+                        bResult = task != null ? task.Result : false;                        
                     }                    
                     catch(Exception e)
                     {
@@ -376,16 +376,17 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         private bool StartMonitor()
         {
-            string pipeName = null;
+            //Create a nammed pipe
+            string pipeName = Util.CreatePipeName();
             MonitorTaskCompletionSource = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> monitorTaskStart = new TaskCompletionSource<bool>();
             MonitorTask = new Task<bool>(
                 () =>
                 {
                     bool bResult = false;
                     try
                     {
-                        //Create a nammed pipe
-                        pipeName = Util.CreatePipeName();
+                        monitorTaskStart.SetResult(true);
                         //Connect to it, it will wait for Monitoring connection
                         bResult = this.MonitorConnection.OpenConnection(pipeName);
                     }
@@ -398,47 +399,51 @@ namespace LanguageServer.Robot.Common.Controller
                 }
                 );
             MonitorTask.Start();
-            //Run the Monitor Application.
-            string location = Assembly.GetExecutingAssembly().Location;
-            Uri uri = new Uri(location);
-            string local_location = uri.LocalPath;
-            FileInfo fi = new FileInfo(local_location);
-            string local_dir = fi.DirectoryName;
-            string monitor_path = Path.Combine(local_dir, LSR_MONITOR_EXE);
-            string monitor_argument = string.Format("-pipe \"{0}\"", pipeName);
-
-            this.MonitorProcess = new System.Diagnostics.Process();
-            this.MonitorProcess.StartInfo.FileName = monitor_path;
-            this.MonitorProcess.StartInfo.Arguments = monitor_argument;
-            try
+            if (monitorTaskStart.Task.Result)
             {
-                if (this.MonitorProcess.Start())
+                //Run the Monitor Application.
+                string location = Assembly.GetExecutingAssembly().Location;
+                Uri uri = new Uri(location);
+                string local_location = uri.LocalPath;
+                FileInfo fi = new FileInfo(local_location);
+                string local_dir = fi.DirectoryName;
+                string monitor_path = Path.Combine(local_dir, LSR_MONITOR_EXE);
+                string monitor_argument = string.Format("-pipe \"{0}\"", pipeName);
+
+                this.MonitorProcess = new System.Diagnostics.Process();
+                this.MonitorProcess.StartInfo.FileName = monitor_path;
+                this.MonitorProcess.StartInfo.Arguments = monitor_argument;
+                try
                 {
-                    //Communicate the Monitoring Process to the Monitoring Mode Controller.
-                    (this.RobotModeController as MonitoringProducerController).MonitorProcess = this.MonitorProcess;
-                    return true;
+                    if (this.MonitorProcess.Start())
+                    {
+                        //Communicate the Monitoring Process to the Monitoring Mode Controller.
+                        (this.RobotModeController as MonitoringProducerController).MonitorProcess = this.MonitorProcess;
+                        return true;
+                    }
+                    else
+                    {
+                        this.MonitorConnection.CloseConnection();
+                        return false;
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    this.MonitorConnection.CloseConnection();
+                    LogWriter?.WriteLine(e.Message);
+                    try
+                    {
+                        this.MonitorConnection.CloseConnection();
+                    }
+                    catch (System.InvalidOperationException ioe)
+                    {
+                        //     No pipe connections have been made yet.-or-The connected pipe has already disconnected.-or-The
+                        //     pipe handle has not been set.
+                        LogWriter?.WriteLine(ioe.Message);
+                    }
                     return false;
                 }
             }
-            catch(Exception e)
-            {
-                LogWriter?.WriteLine(e.Message);
-                try
-                {
-                    this.MonitorConnection.CloseConnection();
-                }
-                catch(System.InvalidOperationException ioe)
-                {
-                    //     No pipe connections have been made yet.-or-The connected pipe has already disconnected.-or-The
-                    //     pipe handle has not been set.
-                    LogWriter?.WriteLine(ioe.Message);                    
-                }
-                return false;
-            }
+            return false;
         }
 
         /// <summary>
@@ -576,11 +581,20 @@ namespace LanguageServer.Robot.Common.Controller
         {
             StartMonitor();
             //Wait for the monitor starting.
-            MonitorTaskCompletionSource.Task.Wait(MONITOR_CONNECTION_TIMEOUT);
+            MonitorTask.Wait(MONITOR_CONNECTION_TIMEOUT);
             if (MonitorTaskCompletionSource.Task.Status == TaskStatus.Running || MonitorTaskCompletionSource.Task.Status == TaskStatus.WaitingForActivation)
             {//Connection timeout
                 if (this.MonitorProcess != null)
-                    this.MonitorProcess.Kill();
+                {
+                    try
+                    {
+                        this.MonitorProcess.Kill();
+                    }                    
+                    catch(Exception e)
+                    {
+
+                    }
+                }
                 LogWriter?.WriteLine(Resource.MonitorConnectionTimeout);
                 return false;
             }
