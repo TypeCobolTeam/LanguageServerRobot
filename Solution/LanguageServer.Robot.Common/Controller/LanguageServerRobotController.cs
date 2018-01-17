@@ -147,7 +147,7 @@ namespace LanguageServer.Robot.Common.Controller
             this.MonitorConnection = connection;
             Mode = ConnectionMode.Monitor;
             //Transfert the roboting mode controller instance to the client and server controller
-            RobotModeController = new MonitoringModeController(connection, scriptRepositoryPath);
+            RobotModeController = new MonitoringProducerController(connection, scriptRepositoryPath);
             clientConnection.RobotModeController = RobotModeController;
             serverConnection.RobotModeController = RobotModeController;
         }
@@ -415,7 +415,7 @@ namespace LanguageServer.Robot.Common.Controller
                 if (this.MonitorProcess.Start())
                 {
                     //Communicate the Monitoring Process to the Monitoring Mode Controller.
-                    (this.RobotModeController as MonitoringModeController).MonitorProcess = this.MonitorProcess;
+                    (this.RobotModeController as MonitoringProducerController).MonitorProcess = this.MonitorProcess;
                     return true;
                 }
                 else

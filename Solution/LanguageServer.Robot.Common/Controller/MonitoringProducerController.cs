@@ -8,9 +8,9 @@ using LanguageServer.Robot.Common.Connection;
 namespace LanguageServer.Robot.Common.Controller
 {
     /// <summary>
-    /// Robot Monitoring Mode Controller.
+    /// Robot Monitoring Mode Consumer Controller.
     /// </summary>
-    public class MonitoringModeController : AbstractModeController
+    public class MonitoringProducerController : AbstractModeController
     {
         /// <summary>
         /// Monitoring Data Connection
@@ -32,7 +32,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// <summary>
         /// Data Connection controller
         /// </summary>
-        public MonitoringModeController(IDataConnection connection, string scriptRepositoryPath) : base(scriptRepositoryPath)
+        public MonitoringProducerController(IDataConnection connection, string scriptRepositoryPath) : base(scriptRepositoryPath)
         {
             DataConnection = connection;
         }
