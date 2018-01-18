@@ -85,13 +85,22 @@ namespace LanguageServer.Robot.Common.Model
         /// </summary>
         public void Write(System.IO.FileStream stream)
         {
-            System.Diagnostics.Contracts.Contract.Assert(stream != null);
-            System.Diagnostics.Contracts.Contract.Requires(stream.CanWrite);
-            JObject jobject = JObject.FromObject(this);
-            string text = jobject.ToString();
-            byte[] bytes = Encoding.UTF8.GetBytes(text);
-            stream.Write(bytes, 0, bytes.Length);
+            //Avoid wrinting the uri
+            string save_uri = this.uri;
+            try
+            {
+                this.uri = null;
+                System.Diagnostics.Contracts.Contract.Assert(stream != null);
+                System.Diagnostics.Contracts.Contract.Requires(stream.CanWrite);
+                JObject jobject = JObject.FromObject(this);
+                string text = jobject.ToString();
+                byte[] bytes = Encoding.UTF8.GetBytes(text);
+                stream.Write(bytes, 0, bytes.Length);
+            }
+            finally
+            {
+                this.uri = save_uri;
+            }            
         }
-
     }
 }
