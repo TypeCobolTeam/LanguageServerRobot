@@ -77,12 +77,65 @@ namespace LanguageServer.Robot.Monitor
         }
 
         /// <summary>
-        /// The Monitoring consumer instance.
+        /// The Monitoring connection instance.
         /// </summary>
-        public MonitoringConsumerController MonitoringConsumer
+        public MonitoringConnectionController MonitoringConnection
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Task for waiting the monitor's termination
+        /// </summary>
+        public TaskCompletionSource<bool> MonitorTaskCompletionSource
+        {
+            get;
+            private set;
+        }
+        /// <summary>
+        /// The monitoring connection thread
+        /// </summary>
+        public Task<MonitoringConsumerController.ConnectionState> MonitoringConnectionTask
+        {
+            get;
+            private set;
+        }
+        /// <summary>
+        /// The monitoring connection thread completion state.
+        /// </summary>
+        public TaskCompletionSource<MonitoringConsumerController.ConnectionState> MonitoringConnectionTaskCompletionSource
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Starts the client
+        /// </summary>
+        private void StartMonitoringConnectionn()
+        {
+            MonitoringConnectionTaskCompletionSource = new TaskCompletionSource<MonitoringConsumerController.ConnectionState>();
+            MonitoringConnectionTask = new Task<MonitoringConsumerController.ConnectionState>(
+                () =>
+                {
+                    MonitoringConsumerController.ConnectionState result = MonitoringConsumerController.ConnectionState.ConnectionFailed;
+                    Task<MonitoringConsumerController.ConnectionState> task = null;
+                    try
+                    {
+                        MonitorTaskCompletionSource.SetResult(true);
+                        task = this.MonitoringConnection != null ? this.MonitoringConnection.Start() : null;
+                        result = task != null ? task.Result : MonitoringConsumerController.ConnectionState.ConnectionFailed;
+                    }
+                    catch (Exception e)
+                    {
+                        //this.ClientConnection.LogWriter?.WriteLine(e.Message);
+                    }
+                    MonitoringConnectionTaskCompletionSource.SetResult(result);
+                    return result;
+                }
+                );
+            MonitoringConnectionTask.Start();
         }
 
         /// <summary>
@@ -166,16 +219,20 @@ namespace LanguageServer.Robot.Monitor
             {
                 //MessageBox.Show(PipeName);
                 //There is a pipe connection
-                MonitoringConsumer = new MonitoringConsumerController(PipeName);
-                try
-                {
-                    MonitoringConsumer.Start();
-                }
-                catch(Exception exc)
-                {
-                    MessageBox.Show(exc.Message + ':' + PipeName);
-                }
-
+                MonitoringConnection = new MonitoringConnectionController(new MonitoringConsumerController(PipeName));
+                StartMonitoringConnectionn();
+                //try
+                //{
+                //    if (!MonitoringConnection.Start())
+                //    {
+                //        MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailMessageConnectionWithLSR, PipeName));
+                //        MonitoringConsumer = null;
+                //    }
+                //}
+                //catch(Exception exc)
+                //{
+                //    MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailMessageConnectionWithLSR, exc.Message + ':' + PipeName));
+                //}
             }
         }
     }

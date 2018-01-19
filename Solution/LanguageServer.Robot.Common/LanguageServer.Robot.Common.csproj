@@ -51,6 +51,7 @@
     <Compile Include="Controller\ClientRobotConnectionController.cs" />
     <Compile Include="Controller\IRobotModeController.cs" />
     <Compile Include="Controller\LanguageServerRobotController.cs" />
+    <Compile Include="Controller\MonitoringConnectionController.cs" />
     <Compile Include="Controller\MonitoringConsumerController.cs" />
     <Compile Include="Controller\MonitoringProducerController.cs" />
     <Compile Include="Controller\RecordingModeController.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Controller\ScriptRobotConnectionController.cs" />
     <Compile Include="Controller\ServerRobotConnectionController.cs" />
     <Compile Include="Controller\SessionRobotConnectionController.cs" />
+    <Compile Include="Model\Message.cs" />
     <Compile Include="Model\Result.cs" />
     <Compile Include="Model\Script.cs" />
     <Compile Include="Model\Session.cs" />

@@ -32,18 +32,36 @@ namespace LanguageServer.Robot.Common.Controller
         /// <summary>
         /// Data Connection controller
         /// </summary>
+        /// <param name="connection">Data Connection object.</param>
+        /// <param name="scriptRepositoryPath"></param>
         public MonitoringProducerController(IDataConnection connection, string scriptRepositoryPath) : base(scriptRepositoryPath)
         {
             DataConnection = connection;
         }
         public override void FromClient(string message)
         {
-            throw new NotImplementedException();
+            if (MonitorProcess != null && DataConnection != null)
+            {
+                LanguageServer.Robot.Common.Model.Message.LspMessage lsp_message =
+                    new LanguageServer.Robot.Common.Model.Message.LspMessage(LanguageServer.Robot.Common.Model.Message.LspMessage.MessageFrom.Client, message);
+                lock (DataConnection)
+                {
+                    DataConnection.WriteData(lsp_message);
+                }
+            }            
         }
 
         public override void FromServer(string message)
         {
-            throw new NotImplementedException();
+            if (MonitorProcess != null && DataConnection != null)
+            {
+                LanguageServer.Robot.Common.Model.Message.LspMessage lsp_message =
+                    new LanguageServer.Robot.Common.Model.Message.LspMessage(LanguageServer.Robot.Common.Model.Message.LspMessage.MessageFrom.Server, message);
+                lock (DataConnection)
+                {
+                    DataConnection.WriteData(lsp_message);
+                }
+            }
         }
     }
 }

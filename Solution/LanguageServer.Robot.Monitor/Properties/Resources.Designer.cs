@@ -61,6 +61,15 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to establish a connection message with connection : &apos;{0}&apos;.
+        /// </summary>
+        public static string FailMessageConnectionWithLSR {
+            get {
+                return ResourceManager.GetString("FailMessageConnectionWithLSR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language Server Robot Monitor.
         /// </summary>
         public static string LSRMName {
