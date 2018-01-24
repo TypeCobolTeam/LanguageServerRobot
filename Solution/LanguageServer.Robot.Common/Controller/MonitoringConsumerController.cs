@@ -27,6 +27,7 @@ namespace LanguageServer.Robot.Common.Controller
             /// </summary>
             ConnectionReleased,
         }
+
         /// <summary>
         /// The Pipe's name to use
         /// </summary>
@@ -46,6 +47,19 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Lsp Message Handler
+        /// </summary>
+        public event EventHandler<Model.Message.LspMessage> LspMessageHandler;
+        /// <summary>
+        /// Command Message Handler
+        /// </summary>
+        public event EventHandler<Model.Message> CommandMessageHandler;
+        /// <summary>
+        /// Acknowledgment Message Handler
+        /// </summary>
+        public event EventHandler<Model.Message> AcknowledgmentMessageHandler;
+
+        /// <summary>
         /// Dispatch a message.
         /// </summary>
         /// <param name="message"></param>
@@ -56,11 +70,19 @@ namespace LanguageServer.Robot.Common.Controller
             switch(message.Kind)
             {
                 case Model.Message.MessageKind.Acknowledgment:
+                    {
+                        AcknowledgmentMessageHandler?.Invoke(this, message);
+                    }
                     break;
                 case Model.Message.MessageKind.Command:
+                    {
+                        CommandMessageHandler?.Invoke(this, message);
+                    }
                     break;
                 case Model.Message.MessageKind.Lsp:
                     {
+                        LspMessageHandler?.Invoke(this, (Model.Message.LspMessage)message);
+
                         Model.Message.LspMessage lsp_message = (Model.Message.LspMessage)message;
                         switch(lsp_message.From)
                         {

@@ -9,8 +9,10 @@ namespace LanguageServer.Robot.Common.Model
     /// <summary>
     /// A monotoring message
     /// </summary>
+    [Serializable]
     public abstract class Message
     {
+        [Serializable]
         public enum MessageKind
         {
             //A LSR or LSRM Command
@@ -41,11 +43,13 @@ namespace LanguageServer.Robot.Common.Model
         /// <summary>
         /// A LSP Message
         /// </summary>
+        [Serializable]
         public class LspMessage : Message
         {
             /// <summary>
             /// From who the message came.
             /// </summary>
+            [Serializable]
             public enum MessageFrom
             {
                 /// <summary>

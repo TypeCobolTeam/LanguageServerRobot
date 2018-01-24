@@ -76,6 +76,11 @@ namespace LanguageServer.Robot.Monitor
             internal set;
         }
 
+        public static ConnectionLog Log        {
+            get;
+            internal set;
+        }
+
         /// <summary>
         /// The Monitoring connection instance.
         /// </summary>
@@ -111,11 +116,22 @@ namespace LanguageServer.Robot.Monitor
         }
 
         /// <summary>
+        /// Static constructor.
+        /// </summary>
+        static App()
+        {
+            Log = new ConnectionLog();
+            Log.LogWriter = new DebugTextWriter();
+            Log.MessageLogWriter = Log.LogWriter;
+            Log.ProtocolLogWriter = Log.LogWriter;            
+        }
+        /// <summary>
         /// Starts the client
         /// </summary>
-        private void StartMonitoringConnectionn()
+        private void StartMonitoringConnection()
         {
             MonitoringConnectionTaskCompletionSource = new TaskCompletionSource<MonitoringConsumerController.ConnectionState>();
+            MonitorTaskCompletionSource = new TaskCompletionSource<bool>();
             MonitoringConnectionTask = new Task<MonitoringConsumerController.ConnectionState>(
                 () =>
                 {
@@ -128,8 +144,8 @@ namespace LanguageServer.Robot.Monitor
                         result = task != null ? task.Result : MonitoringConsumerController.ConnectionState.ConnectionFailed;
                     }
                     catch (Exception e)
-                    {
-                        //this.ClientConnection.LogWriter?.WriteLine(e.Message);
+                    {                        
+                        Log.LogWriter.WriteLine(e.Message);
                     }
                     MonitoringConnectionTaskCompletionSource.SetResult(result);
                     return result;
@@ -167,14 +183,14 @@ namespace LanguageServer.Robot.Monitor
                             {
                                 // args[0] : Trace level
                                 LogLevel = (ConnectionLogLevel)Int32.Parse(v);
-                                if (!System.Enum.IsDefined(typeof(ConnectionLogLevel), (Int32)LogLevel));
+                                if (!System.Enum.IsDefined(typeof(ConnectionLogLevel), (Int32)LogLevel))
                                 {
                                     LogLevel = ConnectionLogLevel.Protocol;
                                 }
                             }
                             catch (Exception ex)
                             {
-                                System.Console.Error.WriteLine(ex.Message);
+                                Log.LogWriter.WriteLine(ex.Message);
                             }
                         }
                     }
@@ -217,10 +233,14 @@ namespace LanguageServer.Robot.Monitor
             }
             if (PipeName != null)
             {
-                //MessageBox.Show(PipeName);
+                MessageBox.Show(PipeName);
                 //There is a pipe connection
                 MonitoringConnection = new MonitoringConnectionController(new MonitoringConsumerController(PipeName));
-                StartMonitoringConnectionn();
+                StartMonitoringConnection();
+                if (MonitorTaskCompletionSource.Task.Result)
+                {//Monitoring as started.
+                    MonitoringConnection.Consumer.LspMessageHandler += Consumer_LspMessageHandler;
+                }
                 //try
                 //{
                 //    if (!MonitoringConnection.Start())
@@ -234,6 +254,11 @@ namespace LanguageServer.Robot.Monitor
                 //    MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailMessageConnectionWithLSR, exc.Message + ':' + PipeName));
                 //}
             }
+        }
+
+        private void Consumer_LspMessageHandler(object sender, Common.Model.Message.LspMessage e)
+        {
+            Log.LogWriter.WriteLine(e.Message);
         }
     }
 }
