@@ -61,6 +61,15 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data name field cannot be empty!.
+        /// </summary>
+        public static string EmptyDataName {
+            get {
+                return ResourceManager.GetString("EmptyDataName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to establish a connection message with connection : &apos;{0}&apos;.
         /// </summary>
         public static string FailMessageConnectionWithLSR {

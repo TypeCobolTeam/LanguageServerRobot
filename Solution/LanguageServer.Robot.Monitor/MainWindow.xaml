@@ -4,9 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LanguageServer.Robot.Monitor"
+        xmlns:my="clr-namespace:LanguageServer.Robot.Monitor.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="Language Server Robot Monitor" Height="350" Width="525">
+    <Grid Name="m_Grid" HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+
+        <Menu Height="20" Name="m_MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top">
+            <MenuItem Header="_File" Name="m_menuFile">
+                <MenuItem Header="_Quit"  Name="MenuItemQuit"/>
+            </MenuItem>
+        </Menu>
+
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,20,0,0">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition Width="70*" />
+                </Grid.ColumnDefinitions>
+
+                <DockPanel Grid.Column="0" Name="m_DockPnlLeft" HorizontalAlignment="Stretch">
+                <my:SessionExplorerView x:Name="SessionExplorerView"  Margin="0,0,2,0" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
+                </DockPanel>
+
+                <GridSplitter Grid.Column="1" Width="Auto" HorizontalAlignment="Stretch" />
+
+                <DockPanel Name="AttributesPanel" Grid.Column="2">
+                </DockPanel>
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>

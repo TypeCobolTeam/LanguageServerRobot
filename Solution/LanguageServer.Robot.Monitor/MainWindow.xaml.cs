@@ -23,6 +23,17 @@ namespace LanguageServer.Robot.Monitor
         public MainWindow()
         {
             InitializeComponent();
+            App.Current.MainWindow = this;
+            ConnectCommands();
+        }
+
+        /// <summary>
+        /// Connect Windows Commands
+        /// </summary>
+        private void ConnectCommands()
+        {
+            MenuItemQuit.CommandParameter = MenuItemQuit;
+            MenuItemQuit.Command = App.Current as LanguageServer.Robot.Monitor.App;
         }
     }
 }

@@ -15,9 +15,10 @@ using LanguageServer.Robot.Common.Controller;
 namespace LanguageServer.Robot.Monitor
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Interaction logic for App.xaml, This implement ICommand Interface so that MainWindow Action
+    /// are controlled here.
     /// </summary>
-    public partial class App : Application
+    public partial class App : Application, System.Windows.Input.ICommand
     {
         /// <summary>
         /// Program name from Assembly name
@@ -125,6 +126,9 @@ namespace LanguageServer.Robot.Monitor
             Log.MessageLogWriter = Log.LogWriter;
             Log.ProtocolLogWriter = Log.LogWriter;            
         }
+
+        public event EventHandler CanExecuteChanged;
+
         /// <summary>
         /// Starts the client
         /// </summary>
@@ -233,7 +237,7 @@ namespace LanguageServer.Robot.Monitor
             }
             if (PipeName != null)
             {
-                MessageBox.Show(PipeName);
+                //MessageBox.Show(PipeName);
                 //There is a pipe connection
                 MonitoringConnection = new MonitoringConnectionController(new MonitoringConsumerController(PipeName));
                 StartMonitoringConnection();
@@ -259,6 +263,19 @@ namespace LanguageServer.Robot.Monitor
         private void Consumer_LspMessageHandler(object sender, Common.Model.Message.LspMessage e)
         {
             Log.LogWriter.WriteLine(e.Message);
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemQuit)
+                return true;
+            return false;
+        }
+
+        public void Execute(object parameter)
+        {
+            if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemQuit)
+                this.Shutdown();
         }
     }
 }
