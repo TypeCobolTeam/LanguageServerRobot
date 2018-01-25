@@ -7,7 +7,7 @@
         xmlns:my="clr-namespace:LanguageServer.Robot.Monitor.View"
         mc:Ignorable="d"
         Title="Language Server Robot Monitor" Height="350" Width="525">
-    <Grid Name="m_Grid" HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+    <Grid Name="MainGrid" HorizontalAlignment="Stretch" DockPanel.Dock="Top">
 
         <Menu Height="20" Name="m_MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top">
             <MenuItem Header="_File" Name="m_menuFile">
@@ -24,7 +24,7 @@
                 </Grid.ColumnDefinitions>
 
                 <DockPanel Grid.Column="0" Name="m_DockPnlLeft" HorizontalAlignment="Stretch">
-                <my:SessionExplorerView x:Name="SessionExplorerView"  Margin="0,0,2,0" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
+                <my:SessionExplorerView x:Name="SessionExplorerTree"  Margin="0,0,2,0" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 </DockPanel>
 
                 <GridSplitter Grid.Column="1" Width="Auto" HorizontalAlignment="Stretch" />

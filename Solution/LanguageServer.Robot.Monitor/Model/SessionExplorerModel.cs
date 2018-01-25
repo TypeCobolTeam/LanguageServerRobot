@@ -15,6 +15,13 @@ namespace LanguageServer.Robot.Monitor.Model
     public class SessionExplorerModel : INotifyPropertyChanged
     {
         /// <summary>
+        /// Empty Constructor
+        /// </summary>
+        public SessionExplorerModel() : this(new Session[0])
+        {
+        }
+
+        /// <summary>
         /// Session Constructor
         /// </summary>
         /// <param name="session">The session</param>
@@ -27,7 +34,7 @@ namespace LanguageServer.Robot.Monitor.Model
         /// </summary>
         public SessionExplorerModel(Session[] sessions)
         {
-            m_sessions = new ReadOnlyCollection<SessionItemViewModel>(
+            m_sessions = new ObservableCollection<SessionItemViewModel>(
                 (from session in sessions
                  select new SessionItemViewModel(session))
                 .ToList());
@@ -50,13 +57,40 @@ namespace LanguageServer.Robot.Monitor.Model
         }
 
         /// <summary>
+        /// Getter on the Project Item Model at the specified index.
+        /// </summary>
+        public SessionItemViewModel this[Session session]
+        {
+            get
+            {
+                return Sessions != null ? Sessions.FirstOrDefault(S => S.Data == session) : null;
+            }
+        }
+
+        /// <summary>
+        /// Add a New session
+        /// </summary>
+        /// <param name="session"></param>
+        public void AddSession(Session session)
+        {
+            if (session != null)
+            {
+                if (Sessions == null)
+                {
+                    m_sessions = new ObservableCollection<SessionItemViewModel>();
+                }
+                m_sessions.Add(new SessionItemViewModel(session));
+            }
+        }
+
+        /// <summary>
         /// In fact all available sessions
         /// </summary>
-        readonly ReadOnlyCollection<SessionItemViewModel> m_sessions;
+        private ObservableCollection<SessionItemViewModel> m_sessions;
         /// <summary>
-        /// All available projects
+        /// All available sessions
         /// </summary>
-        public ReadOnlyCollection<SessionItemViewModel> Sessions
+        public ObservableCollection<SessionItemViewModel> Sessions
         {
             get { return m_sessions; }
         }

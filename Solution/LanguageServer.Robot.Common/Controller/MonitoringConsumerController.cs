@@ -58,6 +58,22 @@ namespace LanguageServer.Robot.Common.Controller
         /// Acknowledgment Message Handler
         /// </summary>
         public event EventHandler<Model.Message> AcknowledgmentMessageHandler;
+        /// <summary>
+        /// Event when a new session has been Initialized.
+        /// </summary>
+        public event EventHandler<Model.Session> StartSessionHandler;
+        /// <summary>
+        /// Event when a session has been stopped.
+        /// </summary>
+        public event EventHandler<Model.Session> StopSessionHandler;
+        /// <summary>
+        /// Event when a new document has been started.
+        /// </summary>
+        public event EventHandler<Model.Script> StartDocumentHandler;
+        /// <summary>
+        /// Event when a document has been stopped.
+        /// </summary>
+        public event EventHandler<Model.Script> StopDocumentHandler;
 
         /// <summary>
         /// Dispatch a message.

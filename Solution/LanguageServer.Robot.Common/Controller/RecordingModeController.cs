@@ -47,7 +47,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="uri">The uri to get the string</param>
         /// <returns>The corresponding script if any, null otherwise</returns>
-        private Script this[string uri]
+        protected virtual Script this[string uri]
         {
             get
             {
@@ -293,7 +293,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="message">The LSP initialization result</param>
         /// <param name="jsonObject">The Initialization JSon result</param>
-        private void InitializeSession(string message, JObject jsonObject)
+        protected virtual void InitializeSession(string message, JObject jsonObject)
         {
             //Maybe initailization failed            
             if (Utilities.Protocol.IsErrorResponse(jsonObject))
@@ -333,7 +333,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="message">The original "textDocument/didOpen" notification</param>
         /// <param name="jsonObject">The Json object corresponding to the "textDocument/didOpen" notification</param>
-        private void StartScript(string message, JObject jsonObject)
+        protected virtual void StartScript(string message, JObject jsonObject)
         {
             string uri = null;
             Utilities.Protocol.IsMessageWithUri(jsonObject, out uri);
@@ -360,7 +360,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="uri"><The Script's uri/param>
         /// <param name="jsonObject">The JSon object corresponding to the message</param>
         /// <returns></returns>
-        private bool RecordScriptMessage(Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject)
+        protected virtual bool RecordScriptMessage(Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject)
         {
             System.Diagnostics.Contracts.Contract.Assert(message != null);
             System.Diagnostics.Contracts.Contract.Requires(uri != null);
@@ -392,7 +392,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="message">The original "textDocument/didClose" notification</param>
         /// <param name="jsonObject">The Json object corresponding to the "textDocument/didClose" notification</param>
-        private void StopScript(string message, JObject jsonObject)
+        protected virtual void StopScript(string message, JObject jsonObject)
         {
             string uri = null;
             Utilities.Protocol.IsMessageWithUri(jsonObject, out uri);
@@ -427,7 +427,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="script">The script to be saved</param>
         /// <param name="scriptFile">The script firl path</param>
-        private bool SaveScript(Script script)
+        protected virtual bool SaveScript(Script script)
         {
             System.Diagnostics.Contracts.Contract.Assume(script.IsValid);
             System.Diagnostics.Contracts.Contract.Requires(script.uri != null);
@@ -501,7 +501,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="message">The "shutdown" message</param>
         /// <param name="jsonObject">The JSON object corresponding to the shutdown message.</param>
         /// <param name="bExit">True if it comes from the exit message, false it it comes from the shutdown message.</param>
-        private void StopSession(string message, JObject jsonObject, bool bExit)
+        protected virtual void StopSession(string message, JObject jsonObject, bool bExit)
         {
             this.State = this.State | ModeState.ShutingDownOrExiting;
             System.Diagnostics.Contracts.Contract.Assert(SessionModel != null);
@@ -528,7 +528,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// Save the curreent session
         /// </summary>
         /// <returns>true if the session has been saved false otherwise</returns>
-        private bool SaveSession()
+        protected virtual bool SaveSession()
         {
             System.Diagnostics.Contracts.Contract.Assume(SessionModel != null);
             if (SessionModel.directory == null)
