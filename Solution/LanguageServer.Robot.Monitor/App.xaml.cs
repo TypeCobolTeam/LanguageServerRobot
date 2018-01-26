@@ -48,6 +48,27 @@ namespace LanguageServer.Robot.Monitor
 
         public event EventHandler CanExecuteChanged;
 
+        private void StartMonitoringController()
+        {
+            MonitorController = new LanguageServerRobotMonitor();
+            MonitorController.Main(Sender, StartupArgs);
+        }
+        internal void BindView()
+        {
+            MonitorController.BindView(MainWindow as LanguageServer.Robot.Monitor.MainWindow);
+        }
+        private object Sender
+        {
+            get;
+            set;
+        }
+
+        private StartupEventArgs StartupArgs
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Entry point of the LSRM Application, with access to the command line arguments.
         /// </summary>
@@ -55,8 +76,9 @@ namespace LanguageServer.Robot.Monitor
         /// <param name="e"></param>
         private void LSRM_Application_Startup(object sender, StartupEventArgs e)
         {
-            MonitorController = new LanguageServerRobotMonitor();
-            MonitorController.Main(sender, e);
+            Sender = sender;
+            StartupArgs = e;
+            StartMonitoringController();
         }
 
         public bool CanExecute(object parameter)

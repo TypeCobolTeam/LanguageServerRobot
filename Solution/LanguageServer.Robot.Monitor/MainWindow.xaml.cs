@@ -25,6 +25,7 @@ namespace LanguageServer.Robot.Monitor
             InitializeComponent();
             App.Current.MainWindow = this;
             ConnectCommands();
+            (App.Current as LanguageServer.Robot.Monitor.App).BindView();
         }
 
         /// <summary>

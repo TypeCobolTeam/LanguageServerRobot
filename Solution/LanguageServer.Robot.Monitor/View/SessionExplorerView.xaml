@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:LanguageServer.Robot.Monitor.View"             
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <DockPanel>
         <TreeView ItemsSource="{Binding Sessions}" Name="m_TreeView" SelectedItemChanged="SelectionChanged">
             <TreeView.ItemContainerStyle>
                 <!-- This Style binds a TreeViewItem to a TreeViewItemViewModel. -->
@@ -36,12 +36,13 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
-                <HierarchicalDataTemplate DataType="{x:Type custom:ScenarioItemViewModel}" ItemsSource="{Binding Children}">
+                <DataTemplate DataType="{x:Type custom:ScenarioItemViewModel}">
                     <StackPanel Orientation="Horizontal">
+                        <!--<Image Width="16" Height="16" Margin="3,0" Source="Images\Site.png" />-->
                         <TextBlock Text="{Binding ScenarioName}" />
                     </StackPanel>
-                </HierarchicalDataTemplate>
+                </DataTemplate>
             </TreeView.Resources>
         </TreeView>
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -66,6 +66,10 @@ namespace LanguageServer.Robot.Common.Model
         }
 
         /// <summary>
+        /// Script's name.
+        /// </summary>
+        public string name{ get; set; }
+        /// <summary>
         /// full path to the parent session file
         /// </summary>
         public string session

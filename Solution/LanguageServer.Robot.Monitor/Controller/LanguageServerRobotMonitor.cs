@@ -12,6 +12,8 @@ using Mono.Options;
 using LanguageServer.Robot.Monitor.Properties;
 using LanguageServer.Robot.Common.Controller;
 using System.Windows.Input;
+using LanguageServer.Robot.Monitor.Model;
+using LanguageServer.Robot.Common.Model;
 
 namespace LanguageServer.Robot.Monitor.Controller
 {
@@ -118,6 +120,24 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// The session explorer.
+        /// </summary>
+        public SessionExplorerController SessionExplorer
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Queue of pending session before MainWidow view binding.
+        /// </summary>
+        private Queue<Common.Model.Session> PendingSession
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Static constructor.
         /// </summary>
         static LanguageServerRobotMonitor()
@@ -135,6 +155,8 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// </summary>
         private void StartMonitoringConnection()
         {
+            PendingSession = new Queue<Common.Model.Session>();
+            this.ConnectMonitoringController(true);
             MonitoringConnectionTaskCompletionSource = new TaskCompletionSource<MonitoringConsumerController.ConnectionState>();
             MonitorTaskCompletionSource = new TaskCompletionSource<bool>();
             MonitoringConnectionTask = new Task<MonitoringConsumerController.ConnectionState>(
@@ -261,6 +283,64 @@ namespace LanguageServer.Robot.Monitor.Controller
             }
         }
 
+        /// <summary>
+        /// Add a session
+        /// </summary>
+        /// <param name="session">The session to be aadded</param>
+        internal void AddSession(Session session, bool bLock = true)
+        {
+            Action action = () =>
+            {
+                if (SessionExplorer != null)
+                    SessionExplorer.AddSession(session);
+                else
+                    PendingSession.Enqueue(session);
+            };
+            if (bLock)
+            {
+                lock (PendingSession)
+                {
+                    action();
+                }
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        /// <summary>
+        /// Add a new document
+        /// </summary>
+        /// <param name="script">The Document's script</param>
+        internal void AddDocument(Script script)
+        {
+            //MessageBox.Show("COUCOU");
+            lock (PendingSession)
+            {
+                SessionItemViewModel session = SessionExplorer.Model[script.session];
+                if (session != null)
+                {
+                    session.AddDocument(script);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when the Main Window View can be binded.
+        /// </summary>
+        /// <param name="window">The Main view to be binded</param>
+        internal void BindView(LanguageServer.Robot.Monitor.MainWindow window)
+        {            
+            lock(PendingSession)                
+            {
+                this.SessionExplorer = new SessionExplorerController(window.SessionExplorerTree);
+                //Add any pending session
+                SessionExplorer.AddSessions(PendingSession);
+                PendingSession.Clear();
+            }
+        }
+
         private void Consumer_LspMessageHandler(object sender, Common.Model.Message.LspMessage e)
         {
             Log.LogWriter.WriteLine(e.Message);
@@ -287,17 +367,47 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             if (MonitoringConnection != null)
             {
-                MonitoringConnection.StartSessionHandler += MonitoringConnection_StartSessionHandler;
+                if (bConnect)
+                {
+                    MonitoringConnection.StartSessionHandler += MonitoringConnection_StartSessionHandler;
+                    MonitoringConnection.StartDocumentHandler += MonitoringConnection_StartDocumentHandler;
+                }
+                else
+                {
+                    MonitoringConnection.StartSessionHandler -= MonitoringConnection_StartSessionHandler;
+                    MonitoringConnection.StartDocumentHandler -= MonitoringConnection_StartDocumentHandler;
+                }
             }
         }
+
         /// <summary>
         /// Handler for a Start Session from the Monitor Connection
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="e">The started session</param>
         private void MonitoringConnection_StartSessionHandler(object sender, Common.Model.Session e)
         {
-            throw new NotImplementedException();
+            lock (PendingSession)
+            {
+                if (this.SessionExplorer != null)
+                {
+                    App.Current.Dispatcher.Invoke(() => AddSession(e, false));
+                }
+                else
+                {//Pending session
+                    PendingSession.Enqueue(e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handler for a document that have been started.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">The started script</param>
+        private void MonitoringConnection_StartDocumentHandler(object sender, Common.Model.Script e)
+        {
+            App.Current.Dispatcher.Invoke(() => AddDocument(e));
         }
     }
 }

@@ -66,9 +66,9 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
-        /// Timeoout to wait for the Monitor Application to establish the connection : 10s == 10000ms
+        /// Timeoout to wait for the Monitor Application to establish the connection : 30s == 10000ms
         /// </summary>
-        private const int MONITOR_CONNECTION_TIMEOUT = 10 * 1000;
+        private const int MONITOR_CONNECTION_TIMEOUT = 30 * 1000;
         /// <summary>
         /// The LSR Executable name.
         /// </summary>LSR_MONITOR_EXE
@@ -581,8 +581,8 @@ namespace LanguageServer.Robot.Common.Controller
         {
             StartMonitor();
             //Wait for the monitor starting.
-            MonitorTask.Wait(MONITOR_CONNECTION_TIMEOUT);
-            //MonitorTask.Wait();
+            //MonitorTask.Wait(MONITOR_CONNECTION_TIMEOUT);
+            MonitorTask.Wait();
             if (MonitorTaskCompletionSource.Task.Status == TaskStatus.Running || MonitorTaskCompletionSource.Task.Status == TaskStatus.WaitingForActivation)
             {//Connection timeout
                 if (this.MonitorProcess != null)

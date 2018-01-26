@@ -68,6 +68,19 @@ namespace LanguageServer.Robot.Monitor.Model
         }
 
         /// <summary>
+        /// Getter on the Project Item Model at the specified index.
+        /// </summary>
+        /// <param name="session_dir">The session directory</param>
+        /// <returns></returns>
+        public SessionItemViewModel this[string session_dir]
+        {
+            get
+            {
+                return Sessions != null ? Sessions.FirstOrDefault(S => S.Data.directory == session_dir) : null;
+            }
+        }
+
+        /// <summary>
         /// Add a New session
         /// </summary>
         /// <param name="session"></param>
@@ -79,7 +92,19 @@ namespace LanguageServer.Robot.Monitor.Model
                 {
                     m_sessions = new ObservableCollection<SessionItemViewModel>();
                 }
-                m_sessions.Add(new SessionItemViewModel(session));
+                Sessions.Add(new SessionItemViewModel(session));
+            }
+        }
+
+        /// <summary>
+        /// Add sessions
+        /// </summary>
+        /// <param name="sessions">Session enumerator</param>
+        public void AddSessions(IEnumerable<Session> sessions)
+        {
+            foreach(Session session in sessions)
+            {
+                AddSession(session);
             }
         }
 

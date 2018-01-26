@@ -17,7 +17,22 @@ namespace LanguageServer.Robot.Monitor.Model
         /// </summary>
         /// <param name="Session">The associated script</param>
         public DocumentItemViewModel(Script script) : base(script, false)
+        {            
+        }
+
+        /// <summary>
+        /// The Document Name.
+        /// </summary>
+        public String DocumentName
         {
+            get
+            {
+                return Data.name;
+            }
+            set
+            {
+                Data.name = value;
+            }
         }
 
         /// <summary>

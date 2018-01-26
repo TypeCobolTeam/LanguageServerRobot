@@ -17,31 +17,20 @@ namespace LanguageServer.Robot.Monitor.Controller
     public class SessionExplorerController : ICommand
     {
         /// <summary>
-        /// One session Constructor
+        /// View Constructor
         /// </summary>
-        /// <param name="project">The project to explore</param>
-        public SessionExplorerController(Session session) 
-            : this(new Session[]{session}, new SessionExplorerView())
+        public SessionExplorerController(SessionExplorerView view)
+            : this(new Session[0], view)
         {
         }
 
         /// <summary>
         /// One project Constructor
         /// </summary>
-        /// <param name="ctx">Database context</param>
         /// <param name="project">The project to explore</param>
-        /// <param name="view">The project explorer view</param>
+        /// <param name="view">The session explorer view</param>
         public SessionExplorerController(Session session, SessionExplorerView view)
             : this(new Session[] { session }, view)
-        {
-        }
-
-        /// <summary>
-        /// Multi sessions Constructor
-        /// </summary>
-        /// <param name="sessions">All sessions to explore</param>
-        public SessionExplorerController(Session[] sessions)
-            : this(sessions, new SessionExplorerView())
         {
         }
 
@@ -104,6 +93,24 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// </summary>
         protected void ConnectView()
         {
+        }
+
+        /// <summary>
+        /// Add a New session
+        /// </summary>
+        /// <param name="session"></param>
+        public void AddSession(Session session)
+        {
+            Model.AddSession(session);
+        }
+
+        /// <summary>
+        /// Add sessions
+        /// </summary>
+        /// <param name="sessions">Session enumerator</param>
+        public void AddSessions(IEnumerable<Session> sessions)
+        {
+            Model.AddSessions(sessions);
         }
 
         /// <summary>

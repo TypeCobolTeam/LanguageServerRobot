@@ -5,6 +5,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.Robot.Common.Connection;
+using LanguageServer.Robot.Common.Model;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.Robot.Common.Controller
 {
@@ -47,6 +49,16 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Delegate to represent an Event Handler for a RecordedMessage in a script.
+        /// </summary>
+        /// <param name="category"></param>
+        /// <param name="kind"></param>
+        /// <param name="message"></param>
+        /// <param name="uri"></param>
+        /// <param name="jsonObject"></param>
+        public delegate void RecordedMessageEventhandler(Model.Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject);
+
+        /// <summary>
         /// Lsp Message Handler
         /// </summary>
         public event EventHandler<Model.Message.LspMessage> LspMessageHandler;
@@ -70,6 +82,10 @@ namespace LanguageServer.Robot.Common.Controller
         /// Event when a new document has been started.
         /// </summary>
         public event EventHandler<Model.Script> StartDocumentHandler;
+        /// <summary>
+        /// Event when a message has been recorded in a script.
+        /// </summary>
+        public event RecordedMessageEventhandler RecordedMessageHandler;
         /// <summary>
         /// Event when a document has been stopped.
         /// </summary>
@@ -155,6 +171,28 @@ namespace LanguageServer.Robot.Common.Controller
             {//Failed to open the data connection.
                 return ConnectionState.ConnectionFailed;
             }
+        }
+
+        protected override bool InitializeSession(string message, JObject jsonObject)
+        {
+            bool bResult = base.InitializeSession(message, jsonObject);
+            if (bResult)
+            {   //Raise a Start session event.
+                if (StartSessionHandler != null)
+                    StartSessionHandler(this, this.SessionModel);
+            }
+            return bResult;
+        }
+
+        protected override Script StartScript(string message, JObject jsonObject)
+        {
+            Script script = base.StartScript(message, jsonObject);
+            if (script != null)
+            {
+                if (StartDocumentHandler != null)
+                    StartDocumentHandler(this, script);
+            }
+            return script;
         }
     }
 }

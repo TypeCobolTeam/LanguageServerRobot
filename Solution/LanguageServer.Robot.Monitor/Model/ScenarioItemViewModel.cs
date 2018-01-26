@@ -18,6 +18,21 @@ namespace LanguageServer.Robot.Monitor.Model
         }
 
         /// <summary>
+        /// The Scenario Name.
+        /// </summary>
+        public String ScenarioName
+        {
+            get
+            {
+                return Data.name;
+            }
+            set
+            {
+                Data.name = value;
+            }
+        }
+
+        /// <summary>
         /// Accept method for a Visitor Design Pattern.
         /// </summary>
         /// <param name="visitor">The Visitor to Accept</param>

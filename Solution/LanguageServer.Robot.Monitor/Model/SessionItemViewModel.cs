@@ -21,6 +21,30 @@ namespace LanguageServer.Robot.Monitor.Model
         }
 
         /// <summary>
+        /// The Session Name.
+        /// </summary>
+        public String SessionName
+        {
+            get
+            {
+                return Data.name;
+            }
+            set
+            {
+                Data.name = value;
+            }
+        }
+
+        /// <summary>
+        /// Add a document
+        /// </summary>
+        /// <param name="script">The script associated to the document</param>
+        public void AddDocument(Script script)
+        {
+            Children.Add(new DocumentItemViewModel(script));
+        }
+
+        /// <summary>
         /// Accept method for a Visitor Design Pattern.
         /// </summary>
         /// <param name="visitor">The Visitor to Accept</param>

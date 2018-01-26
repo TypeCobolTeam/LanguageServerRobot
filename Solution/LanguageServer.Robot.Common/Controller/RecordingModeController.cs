@@ -293,12 +293,14 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="message">The LSP initialization result</param>
         /// <param name="jsonObject">The Initialization JSon result</param>
-        protected virtual void InitializeSession(string message, JObject jsonObject)
+        /// <returns>true if a session was initialized, false otherwise.</returns>
+        protected virtual bool InitializeSession(string message, JObject jsonObject)
         {
             //Maybe initailization failed            
             if (Utilities.Protocol.IsErrorResponse(jsonObject))
             {
                 State |= ModeState.InitializationError;
+                return false;
             }
             else
             {
@@ -322,9 +324,12 @@ namespace LanguageServer.Robot.Common.Controller
                 else
                 {
                     SessionModel.directory = sessionDirectoryPath;
+                    DirectoryInfo di = new DirectoryInfo(sessionDirectoryPath);
+                    SessionModel.name = di.Name;
                 }
                 SessionModel.initialize = InitializeRequest;
                 SessionModel.initialize_result = message;
+                return true;
             }
         }
 
@@ -333,7 +338,8 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="message">The original "textDocument/didOpen" notification</param>
         /// <param name="jsonObject">The Json object corresponding to the "textDocument/didOpen" notification</param>
-        protected virtual void StartScript(string message, JObject jsonObject)
+        /// <returnsThe script started if ok, null otherwise.</returns>
+        protected virtual Script StartScript(string message, JObject jsonObject)
         {
             string uri = null;
             Utilities.Protocol.IsMessageWithUri(jsonObject, out uri);
@@ -342,12 +348,17 @@ namespace LanguageServer.Robot.Common.Controller
             if (script != null)
             {//Hum...A script with the same uri is already opened??? ==> Log This
                 LogWriter?.WriteLine(string.Format(Resource.DuplicateDidOpenNotification, uri));
+                return null;
             }
             else
             {
                 script = new Script(uri);
                 script.didOpen = message;
                 this[uri] = script;
+                Uri an_uri = new Uri(uri);
+                FileInfo fi = new FileInfo(an_uri.LocalPath);
+                script.name = fi.Name;
+                return script;
             }
         }
 
@@ -359,7 +370,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="message">The original message</param>
         /// <param name="uri"><The Script's uri/param>
         /// <param name="jsonObject">The JSon object corresponding to the message</param>
-        /// <returns></returns>
+        /// <returns>true if the message was recorded in an existing script, false otherwise</returns>
         protected virtual bool RecordScriptMessage(Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject)
         {
             System.Diagnostics.Contracts.Contract.Assert(message != null);
@@ -392,7 +403,8 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="message">The original "textDocument/didClose" notification</param>
         /// <param name="jsonObject">The Json object corresponding to the "textDocument/didClose" notification</param>
-        protected virtual void StopScript(string message, JObject jsonObject)
+        /// <returns>true if the script was a existing script, false otherwise</returns>
+        protected virtual bool StopScript(string message, JObject jsonObject)
         {
             string uri = null;
             Utilities.Protocol.IsMessageWithUri(jsonObject, out uri);
@@ -401,6 +413,7 @@ namespace LanguageServer.Robot.Common.Controller
             if (script == null)
             {//Hum...No script with the same uri??? ==> Log This
                 base.ProtocolLogWriter?.WriteLine(string.Format(Resource.UnmatcheDidCloseNotification, message));
+                return false;
             }
             else
             {
@@ -419,6 +432,7 @@ namespace LanguageServer.Robot.Common.Controller
                     script.DebugDump();
 #endif
                 }
+                return true;
             }
         }
 
@@ -501,7 +515,8 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="message">The "shutdown" message</param>
         /// <param name="jsonObject">The JSON object corresponding to the shutdown message.</param>
         /// <param name="bExit">True if it comes from the exit message, false it it comes from the shutdown message.</param>
-        protected virtual void StopSession(string message, JObject jsonObject, bool bExit)
+        /// <returns>true if the session is stopped, false otherwise</returns>
+        protected virtual bool StopSession(string message, JObject jsonObject, bool bExit)
         {
             this.State = this.State | ModeState.ShutingDownOrExiting;
             System.Diagnostics.Contracts.Contract.Assert(SessionModel != null);
@@ -522,6 +537,7 @@ namespace LanguageServer.Robot.Common.Controller
             //No session anymore
             this.State = ModeState.Stop;
             SessionModel = null;
+            return true;
         }
 
         /// <summary>
