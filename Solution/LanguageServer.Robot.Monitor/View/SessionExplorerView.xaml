@@ -32,7 +32,15 @@
 
                 <HierarchicalDataTemplate DataType="{x:Type custom:DocumentItemViewModel}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding DocumentName}" />
+                        <TextBlock Text="{Binding DocumentName}" >
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <!-- <MenuItem Header ="Start Scenario" Name="StartScenario" Command="{Binding StartScenarioCommand}" Click="MenuItem_StartScenario"></MenuItem> -->
+                                    <MenuItem Header ="Start Scenario" Name="StartScenario" Command="{Binding StartScenarioCommand}"  CommandParameter="{Binding}" />
+                                    <MenuItem Header ="Stop Scenario" Name="StopScenario" Command="{Binding StopScenarioCommand}" CommandParameter="{Binding}"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                     </StackPanel>
                 </HierarchicalDataTemplate>
 

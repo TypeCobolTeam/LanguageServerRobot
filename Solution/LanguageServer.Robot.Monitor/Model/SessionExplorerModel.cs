@@ -84,16 +84,19 @@ namespace LanguageServer.Robot.Monitor.Model
         /// Add a New session
         /// </summary>
         /// <param name="session"></param>
-        public void AddSession(Session session)
+        /// <returns>Returns the session added, null otherwise.</returns>
+        public SessionItemViewModel AddSession(Session session)
         {
+            SessionItemViewModel model = null;
             if (session != null)
             {
-                if (Sessions == null)
+                if (m_sessions == null)
                 {
                     m_sessions = new ObservableCollection<SessionItemViewModel>();
                 }
-                Sessions.Add(new SessionItemViewModel(session));
+                m_sessions.Add(model = new SessionItemViewModel(session));
             }
+            return model;
         }
 
         /// <summary>

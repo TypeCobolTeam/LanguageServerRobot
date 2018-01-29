@@ -17,6 +17,70 @@ namespace LanguageServer.Robot.Monitor.Controller
     public class SessionExplorerController : ICommand
     {
         /// <summary>
+        /// The Start Scenario command
+        /// </summary>
+        public class StartScenarioCommand : ICommand
+        {
+            /// <summary>
+            /// The Session Explorer Controller.
+            /// </summary>
+            public SessionExplorerController Controller
+            { get; internal set; }
+            public StartScenarioCommand(SessionExplorerController controller)
+            {
+                this.Controller = controller;
+            }
+            public bool CanExecute(object parameter)
+            {
+                return false;
+            }
+
+            public void Execute(object parameter)
+            {
+                throw new NotImplementedException();
+            }
+
+            public event EventHandler CanExecuteChanged;
+        }
+
+        /// <summary>
+        /// The Stop Scenario command
+        /// </summary>
+        public class StopScenarioCommand : ICommand
+        {
+            /// <summary>
+            /// The Session Explorer Controller.
+            /// </summary>
+            public SessionExplorerController Controller
+            { get; internal set; }
+            public StopScenarioCommand(SessionExplorerController controller)
+            {
+                this.Controller = controller;
+            }
+            public bool CanExecute(object parameter)
+            {
+                return false;
+            }
+
+            public void Execute(object parameter)
+            {
+                throw new NotImplementedException();
+            }
+
+            public event EventHandler CanExecuteChanged;
+        }
+
+        public StartScenarioCommand StartScenario
+        {
+            get; internal set;
+        }
+
+        public StopScenarioCommand StopScenario
+        {
+            get; internal set;
+        }
+
+        /// <summary>
         /// View Constructor
         /// </summary>
         public SessionExplorerController(SessionExplorerView view)
@@ -41,6 +105,8 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// <param name="view">The session explorer view</param>
         public SessionExplorerController(Session[] sessions, SessionExplorerView view)
         {
+            StartScenario = new StartScenarioCommand(this);
+            StopScenario = new StopScenarioCommand(this);
             Model = new SessionExplorerModel(sessions);
             View = view;
             BindViewModel();
@@ -113,6 +179,23 @@ namespace LanguageServer.Robot.Monitor.Controller
             Model.AddSessions(sessions);
         }
 
+        /// <summary>
+        /// Add the a document script model in to a session model
+        /// </summary>
+        /// <param name="session">The session whose model will receive the document model</param>
+        /// <param name="script">The Document's script from which a document model will be created.</param>
+        /// <returns>The created Document Modle if any, null otherwise.</returns>
+        public DocumentItemViewModel AddDocument(Session session, Script script)
+        {
+            SessionItemViewModel sessionModel = Model[session];
+            DocumentItemViewModel documentModel = sessionModel?.AddDocument(script);
+            if (documentModel != null)
+            {   //Connect controller command to the model.
+                documentModel.StartScenarioCommand = StartScenario;
+                documentModel.StopScenarioCommand = StopScenario;
+            }
+            return documentModel;
+        }
         /// <summary>
         /// Bind the View and the Model
         /// </summary>

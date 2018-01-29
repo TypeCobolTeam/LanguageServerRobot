@@ -3,14 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LanguageServer.Robot.Monitor"
         xmlns:my="clr-namespace:LanguageServer.Robot.Monitor.View"
         mc:Ignorable="d"
         Title="Language Server Robot Monitor" Height="350" Width="525">
     <Grid Name="MainGrid" HorizontalAlignment="Stretch" DockPanel.Dock="Top">
 
-        <Menu Height="20" Name="m_MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top">
-            <MenuItem Header="_File" Name="m_menuFile">
+        <Menu Height="20" Name="MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top">
+            <MenuItem Header="_File" Name="MenuFile">
                 <MenuItem Header="_Quit"  Name="MenuItemQuit"/>
             </MenuItem>
         </Menu>
@@ -23,7 +22,7 @@
                     <ColumnDefinition Width="70*" />
                 </Grid.ColumnDefinitions>
 
-                <DockPanel Grid.Column="0" Name="m_DockPnlLeft" HorizontalAlignment="Stretch">
+                <DockPanel Grid.Column="0" Name="DockPnlLeft" HorizontalAlignment="Stretch">
                 <my:SessionExplorerView x:Name="SessionExplorerTree"  Margin="0,0,2,0" DockPanel.Dock="Top" />
                 </DockPanel>
 

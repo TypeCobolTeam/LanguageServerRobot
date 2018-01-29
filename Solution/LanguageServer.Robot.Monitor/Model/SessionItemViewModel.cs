@@ -39,9 +39,12 @@ namespace LanguageServer.Robot.Monitor.Model
         /// Add a document
         /// </summary>
         /// <param name="script">The script associated to the document</param>
-        public void AddDocument(Script script)
+        /// <returns>The Added document model.</returns>
+        public DocumentItemViewModel AddDocument(Script script)
         {
-            Children.Add(new DocumentItemViewModel(script));
+            DocumentItemViewModel model = new DocumentItemViewModel(script);
+            Children.Add(model);
+            return model;
         }
 
         /// <summary>

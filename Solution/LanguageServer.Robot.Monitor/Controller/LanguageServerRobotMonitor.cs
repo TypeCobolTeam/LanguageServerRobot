@@ -318,11 +318,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             //MessageBox.Show("COUCOU");
             lock (PendingSession)
             {
-                SessionItemViewModel session = SessionExplorer.Model[script.session];
-                if (session != null)
-                {
-                    session.AddDocument(script);
-                }
+                SessionExplorer.AddDocument(this.MonitoringConnection.Consumer.SessionModel, script);
             }
         }
 

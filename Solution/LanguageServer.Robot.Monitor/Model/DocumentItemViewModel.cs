@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using LanguageServer.Robot.Common.Model;
 
 namespace LanguageServer.Robot.Monitor.Model
@@ -34,6 +35,10 @@ namespace LanguageServer.Robot.Monitor.Model
                 Data.name = value;
             }
         }
+
+        public ICommand StartScenarioCommand { get; set; }
+
+        public ICommand StopScenarioCommand { get; set; }
 
         /// <summary>
         /// Accept method for a Visitor Design Pattern.
