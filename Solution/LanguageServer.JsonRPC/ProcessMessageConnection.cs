@@ -28,6 +28,8 @@ namespace LanguageServer.JsonRPC
         /// <param name="exithandler">Process Exit Evant Handle</param>
         public ProcessMessageConnection(String fullPath, String arguments, EventHandler exithandler = null) : base(0)
         {
+            IsRedirectStandardOutput = true;
+            IsRedirectStandardInput = true;
             this.FullPath = fullPath;
             this.Arguments = arguments;
             if (exithandler != null)
@@ -68,6 +70,16 @@ namespace LanguageServer.JsonRPC
             }
         }
 
+        public bool IsRedirectStandardOutput
+        {
+            get; set;
+        }
+
+        public bool IsRedirectStandardInput
+        {
+            get; set;
+        }
+
         /// <summary>
         /// Start the Process
         /// </summary>
@@ -79,8 +91,8 @@ namespace LanguageServer.JsonRPC
             if (Arguments != null)
                 this.Process.StartInfo.Arguments = Arguments;
             this.Process.StartInfo.UseShellExecute = false;
-            this.Process.StartInfo.RedirectStandardOutput = true;
-            this.Process.StartInfo.RedirectStandardInput = true;            
+            this.Process.StartInfo.RedirectStandardOutput = IsRedirectStandardOutput;
+            this.Process.StartInfo.RedirectStandardInput = IsRedirectStandardInput;            
             //Start the process
             try
             {                

@@ -198,8 +198,8 @@ namespace LanguageServer.JsonRPC
             }
         }
 
-        public StreamMessageProducer Producer { get; protected set; }
-        public StreamMessageConsumer Consumer { get; protected set; }
+        public StreamMessageProducer Producer { get; internal set; }
+        public StreamMessageConsumer Consumer { get; internal set; }
 
         /// <summary>
         /// General Log TextWriter

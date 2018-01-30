@@ -18,7 +18,13 @@ namespace LanguageServer.JsonRPC
         /// </summary>
         public StreamMessageProducer()
         {
-            Console.InputEncoding = Encoding.UTF8;
+            try
+            {
+                Console.InputEncoding = Encoding.UTF8;
+            }
+            catch (System.IO.IOException)
+            {//In WinIO Console this operation is not allowed.                
+            }
             InputStream = Console.OpenStandardInput();
         }
 

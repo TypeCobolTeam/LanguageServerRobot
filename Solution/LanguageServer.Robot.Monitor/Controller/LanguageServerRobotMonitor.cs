@@ -347,8 +347,27 @@ namespace LanguageServer.Robot.Monitor.Controller
             }
         }
 
+        private LanguageServerRobotController ScenarioController
+        {
+            get; set;
+        }
+
+        private void RunScenarioController()
+        {
+            if (ScenarioController == null)
+            {
+                string path = "C:\\Users\\MAYANJE\\Source\\Repos\\TypeCobol_Develop\\TypeCobol\\bin\\Debug\\TypeCobol.LanguageServer.exe";
+                var server = new ServerRobotConnectionController(new ProcessMessageConnection(path));
+                 ScenarioController = new LanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
+                ScenarioController.Start();
+            }
+        }
+
         private void Consumer_LspMessageHandler(object sender, Common.Model.Message.LspMessage e)
         {
+            //RunScenarioController();
+            //if (e.From == Message.LspMessage.MessageFrom.Client )
+            //    ScenarioController.ServerConnection.Consume(e.Message);
             Log.LogWriter.WriteLine(e.Message);
         }
 

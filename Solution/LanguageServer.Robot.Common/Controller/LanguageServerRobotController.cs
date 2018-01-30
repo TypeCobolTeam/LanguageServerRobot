@@ -25,9 +25,10 @@ namespace LanguageServer.Robot.Common.Controller
         {
             Client,
             ClientServer,
-            Monitor
+            Monitor,
+            //Scenario recording mode
+            Scenario,
         }
-
 
         /// <summary>
         /// The Connection mode
@@ -150,6 +151,23 @@ namespace LanguageServer.Robot.Common.Controller
             RobotModeController = new MonitoringProducerController(connection, scriptRepositoryPath);
             clientConnection.RobotModeController = RobotModeController;
             serverConnection.RobotModeController = RobotModeController;
+        }
+
+        /// <summary>
+        /// Constructor for the LanguageServerRobot running as ClientScenarion/Server recording mode.
+        /// </summary>
+        /// <param name="serverConnection">The target server</param>
+        /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
+        public LanguageServerRobotController(ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
+            this.ClientConnection = new ScenarioRobotConnectionController(new MessageConnection());
+            this.ServerConnection = serverConnection;            
+            Mode = ConnectionMode.Scenario;
+            //Transfert the roboting mode controller instance to the client and server controller
+            RobotModeController = new RecordingModeController(scriptRepositoryPath);
+            ClientConnection.RobotModeController = RobotModeController;
+            ServerConnection.RobotModeController = RobotModeController;
         }
 
         /// <summary>
@@ -574,6 +592,26 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Start Scenarion
+        /// <returns>true if the server has been launched, false otherwise.</returns>
+        /// </summary>
+        protected bool StartScenario()
+        {
+            StartServer();
+            //Ensure that the server has succcesfuly strated
+            var serverConnectionSate = ServerTaskConnectionState.Task.Result; ;
+            if (!(serverConnectionSate == ConnectionState.Closed || serverConnectionSate == ConnectionState.Disposed))
+            {
+                //We only start a Server not a client we assume that caller is the client Thread.
+                //StartClient();
+                //Task<bool> task = WaitClientServerTermination();
+                //return task.Result;
+                return true;//The Server has been started
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Start the monitor
         /// </summary>
         /// <returns>true if monitor has been started, false otherwise</returns>
@@ -623,6 +661,8 @@ namespace LanguageServer.Robot.Common.Controller
                     return StartRoboting();
                 case ConnectionMode.Monitor:
                     return StartMonitoring();
+                case ConnectionMode.Scenario:
+                    return StartScenario();
             }
             return false;
         }
