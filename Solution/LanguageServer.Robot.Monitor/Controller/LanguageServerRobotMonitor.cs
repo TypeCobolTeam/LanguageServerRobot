@@ -14,6 +14,7 @@ using LanguageServer.Robot.Common.Controller;
 using System.Windows.Input;
 using LanguageServer.Robot.Monitor.Model;
 using LanguageServer.Robot.Common.Model;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.Robot.Monitor.Controller
 {
@@ -323,6 +324,15 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Set the active document in the Solution explorer
+        /// </summary>
+        /// <param name="document">The Document's script to set as the active one</param>
+        internal void SetActiveDocument(Script document)
+        {
+            SessionExplorer.SetActiveDocument(this.MonitoringConnection.Consumer.SessionModel, document);
+        }
+
+        /// <summary>
         /// Called when the Main Window View can be binded.
         /// </summary>
         /// <param name="window">The Main view to be binded</param>
@@ -367,13 +377,29 @@ namespace LanguageServer.Robot.Monitor.Controller
                 {
                     MonitoringConnection.StartSessionHandler += MonitoringConnection_StartSessionHandler;
                     MonitoringConnection.StartDocumentHandler += MonitoringConnection_StartDocumentHandler;
+                    MonitoringConnection.RecordedMessageHandler += MonitoringConnection_RecordedMessageHandler;
                 }
                 else
                 {
                     MonitoringConnection.StartSessionHandler -= MonitoringConnection_StartSessionHandler;
                     MonitoringConnection.StartDocumentHandler -= MonitoringConnection_StartDocumentHandler;
+                    MonitoringConnection.RecordedMessageHandler -= MonitoringConnection_RecordedMessageHandler;
                 }
             }
+        }
+
+        /// <summary>
+        /// Handler of a received message handler.
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="category"></param>
+        /// <param name="kind"></param>
+        /// <param name="message"></param>
+        /// <param name="uri"></param>
+        /// <param name="jsonObject"></param>
+        private void MonitoringConnection_RecordedMessageHandler(Script script, Script.MessageCategory category, Common.Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject)
+        {
+            App.Current.Dispatcher.Invoke(() => SetActiveDocument(script));
         }
 
         /// <summary>

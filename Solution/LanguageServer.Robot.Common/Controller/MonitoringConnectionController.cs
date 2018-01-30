@@ -99,10 +99,10 @@ namespace LanguageServer.Robot.Common.Controller
                 StopDocumentHandler(sender, e);
         }
 
-        private void Consumer_RecordedMessageHandler(Model.Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, Newtonsoft.Json.Linq.JObject jsonObject)
+        private void Consumer_RecordedMessageHandler(Model.Script script, Model.Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, Newtonsoft.Json.Linq.JObject jsonObject)
         {
             if (RecordedMessageHandler != null)
-                RecordedMessageHandler(category, kind, message, uri, jsonObject);
+                RecordedMessageHandler(script, category, kind, message, uri, jsonObject);
         }
 
         private void Consumer_StartDocumentHandler(object sender, Model.Script e)

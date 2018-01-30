@@ -63,7 +63,7 @@ namespace LanguageServer.Robot.Monitor.Model
         {
             get
             {
-                return Sessions != null ? Sessions.FirstOrDefault(S => S.Data == session) : null;
+                return Sessions?.FirstOrDefault(S => S.Data == session);
             }
         }
 
@@ -76,7 +76,7 @@ namespace LanguageServer.Robot.Monitor.Model
         {
             get
             {
-                return Sessions != null ? Sessions.FirstOrDefault(S => S.Data.directory == session_dir) : null;
+                return Sessions?.FirstOrDefault(S => S.Data.directory == session_dir);
             }
         }
 

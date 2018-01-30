@@ -188,11 +188,27 @@ namespace LanguageServer.Robot.Monitor.Model
         /// Foreground property.
         /// </summary>
         public const String ForeGroundProperty = "ForeGround";
-        public Brush ForeGround
+        public Brush ForeGround => IsValid ? (IsCurrent ? Brushes.DarkGreen : Brushes.Black) : Brushes.Red;
+
+        public const String IsCurrentProperty = "IsCurrent";
+        private bool m_IsCurrent = false;
+        /// <summary>
+        /// Is Item The current item.
+        /// </summary>
+        public virtual bool IsCurrent
         {
             get
             {
-                return IsValid ? Brushes.Black : Brushes.Red;
+                return m_IsCurrent;
+            }
+            set
+            {
+                if (m_IsCurrent != value)
+                {
+                    m_IsCurrent = value;
+                    OnPropertyChanged(IsCurrentProperty);
+                    OnPropertyChanged(ForeGroundProperty);
+                }
             }
         }
 
@@ -212,18 +228,12 @@ namespace LanguageServer.Robot.Monitor.Model
         /// <summary>
         /// Parent
         /// </summary>
-        public TreeViewItemViewModel Parent
-        {
-            get { return this.parent; }
-        }
+        public TreeViewItemViewModel Parent => parent;
 
         /// <summary>
         /// Children
         /// </summary>
-        public ObservableCollection<TreeViewItemViewModel> Children
-        {
-            get { return this.children; }
-        }
+        public ObservableCollection<TreeViewItemViewModel> Children => children;
 
         /// <summary>
         /// Load Children

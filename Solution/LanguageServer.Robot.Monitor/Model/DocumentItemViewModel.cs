@@ -36,6 +36,30 @@ namespace LanguageServer.Robot.Monitor.Model
             }
         }
 
+        /// <summary>
+        /// Foreground property.
+        /// </summary>
+        public const String IsRecordingProperty = "IsRecording";            
+        private bool m_IsRecording = false;
+        /// <summary>
+        /// Is this Item in recording mode.
+        /// </summary>
+        public virtual bool IsRecording
+        {
+            get
+            {
+                return m_IsRecording;
+            }
+            set
+            {
+                if (m_IsRecording != value)
+                {
+                    m_IsRecording = value;
+                    OnPropertyChanged(IsRecordingProperty);
+                }
+            }
+        }
+
         public ICommand StartScenarioCommand { get; set; }
 
         public ICommand StopScenarioCommand { get; set; }

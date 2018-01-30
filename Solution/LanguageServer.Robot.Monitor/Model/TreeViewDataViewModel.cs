@@ -81,5 +81,17 @@ namespace LanguageServer.Robot.Monitor.Model
             OnPropertyChanged(sender, e);
         }
 
+        /// <summary>
+        /// Find a direct children which matches given data
+        /// </summary>
+        /// <typeparam name="E">The Generic type of the data</typeparam>
+        /// <param name="data">The data</param>
+        /// <returns>The matching child if any, null otherwise</returns>
+        public TreeViewDataViewModel<E> FindChildren<E>(E data) where E : class
+        {
+            return (Children != null && data != null) 
+                ? (TreeViewDataViewModel < E > )Children.FirstOrDefault(d => (d is TreeViewDataViewModel<E>)  && (d as TreeViewDataViewModel < E >).Data == data) 
+                : null;
+        }
     }
 }

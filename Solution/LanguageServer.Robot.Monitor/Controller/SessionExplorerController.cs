@@ -32,6 +32,10 @@ namespace LanguageServer.Robot.Monitor.Controller
             }
             public bool CanExecute(object parameter)
             {
+                if (parameter is DocumentItemViewModel)
+                {
+                    return (parameter as DocumentItemViewModel).IsCurrent && !(parameter as DocumentItemViewModel).IsRecording;
+                }
                 return false;
             }
 
@@ -59,6 +63,10 @@ namespace LanguageServer.Robot.Monitor.Controller
             }
             public bool CanExecute(object parameter)
             {
+                if (parameter is DocumentItemViewModel)
+                {
+                    return (parameter as DocumentItemViewModel).IsCurrent && (parameter as DocumentItemViewModel).IsRecording;
+                }
                 return false;
             }
 
@@ -196,6 +204,37 @@ namespace LanguageServer.Robot.Monitor.Controller
             }
             return documentModel;
         }
+
+        /// <summary>
+        /// The Current Document Item View Model
+        /// </summary>
+        public DocumentItemViewModel CurrentDocument
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Set the active document.
+        /// </summary>
+        /// <param name="session">The Session to which belong the script</param>
+        /// <param name="document">The document's script to set as the active one</param>
+        public void SetActiveDocument(Session session, Script document)
+        {
+            System.Diagnostics.Debug.Assert(session != null);
+            System.Diagnostics.Debug.Assert(document != null);
+
+            SessionItemViewModel sessionModel = Model[session];
+            DocumentItemViewModel documentModel = sessionModel[document];
+            if (documentModel != null)
+            {
+                if (CurrentDocument != null)
+                    CurrentDocument.IsCurrent = false;                
+                CurrentDocument = documentModel;
+                CurrentDocument.IsCurrent = true;
+            }
+        }
+
         /// <summary>
         /// Bind the View and the Model
         /// </summary>

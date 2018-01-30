@@ -36,6 +36,11 @@ namespace LanguageServer.Robot.Monitor.Model
         }
 
         /// <summary>
+        /// Getter on the Document Item Model having the given data.
+        /// </summary>
+        public new DocumentItemViewModel this[Script data] => base.FindChildren<Script>(data) as DocumentItemViewModel;
+
+        /// <summary>
         /// Add a document
         /// </summary>
         /// <param name="script">The script associated to the document</param>

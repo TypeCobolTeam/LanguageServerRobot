@@ -51,12 +51,13 @@ namespace LanguageServer.Robot.Common.Controller
         /// <summary>
         /// Delegate to represent an Event Handler for a RecordedMessage in a script.
         /// </summary>
-        /// <param name="category"></param>
-        /// <param name="kind"></param>
-        /// <param name="message"></param>
-        /// <param name="uri"></param>
-        /// <param name="jsonObject"></param>
-        public delegate void RecordedMessageEventhandler(Model.Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject);
+        /// <param name="script">The script in to which the message is registered</param>
+        /// <param name="category">The message's category</param>
+        /// <param name="kind">The kind of message</param>
+        /// <param name="message">The registered message</param>
+        /// <param name="uri">The Script's uri</param>
+        /// <param name="jsonObject">The Message JSON object</param>
+        public delegate void RecordedMessageEventhandler(Script script, Model.Script.MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject);
 
         /// <summary>
         /// Lsp Message Handler
@@ -193,6 +194,24 @@ namespace LanguageServer.Robot.Common.Controller
                     StartDocumentHandler(this, script);
             }
             return script;
+        }
+
+        protected override bool RecordScriptMessage(Script.MessageCategory category, Utilities.Protocol.Message_Kind kind,
+            string message, string uri, JObject jsonObject)
+        {
+            if (base.RecordScriptMessage(category, kind, message, uri, jsonObject))
+            {
+                if (this.RecordedMessageHandler != null)
+                {
+                    Script script = base[uri];
+                    this.RecordedMessageHandler(script, category, kind, message, uri, jsonObject);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
