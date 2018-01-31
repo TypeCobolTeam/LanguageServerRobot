@@ -41,7 +41,18 @@ namespace LanguageServer.Robot.Monitor.Controller
 
             public void Execute(object parameter)
             {
-                throw new NotImplementedException();
+                if (CanExecute(parameter))
+                {
+                    Controller.StartScenarioHandler?.Invoke(Controller, parameter as DocumentItemViewModel);
+                }
+            }
+
+            public void RaiseCanExecuteChanged(object parameter)
+            {
+                if (CanExecuteChanged != null)
+                {
+                    CanExecuteChanged(parameter, EventArgs.Empty);
+                }
             }
 
             public event EventHandler CanExecuteChanged;
@@ -70,6 +81,14 @@ namespace LanguageServer.Robot.Monitor.Controller
                 return false;
             }
 
+            public void RaiseCanExecuteChanged(object parameter)
+            {
+                if (CanExecuteChanged != null)
+                {
+                    CanExecuteChanged(parameter, EventArgs.Empty);
+                }
+            }
+
             public void Execute(object parameter)
             {
                 throw new NotImplementedException();
@@ -87,6 +106,16 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             get; internal set;
         }
+
+        /// <summary>
+        /// Start Scenario Handler
+        /// </summary>
+        public event EventHandler<DocumentItemViewModel> StartScenarioHandler;
+
+        /// <summary>
+        /// Stop Scenario Handler
+        /// </summary>
+        public event EventHandler<DocumentItemViewModel> StopScenarioHandler;
 
         /// <summary>
         /// View Constructor
@@ -233,6 +262,9 @@ namespace LanguageServer.Robot.Monitor.Controller
                 CurrentDocument = documentModel;
                 CurrentDocument.IsCurrent = true;
             }
+            StartScenario?.RaiseCanExecuteChanged(this);;
+            StopScenario?.RaiseCanExecuteChanged(this);
+
         }
 
         /// <summary>

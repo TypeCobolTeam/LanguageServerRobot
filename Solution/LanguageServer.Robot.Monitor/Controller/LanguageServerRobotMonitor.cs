@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using LanguageServer.JsonRPC;
@@ -14,6 +15,7 @@ using LanguageServer.Robot.Common.Controller;
 using System.Windows.Input;
 using LanguageServer.Robot.Monitor.Model;
 using LanguageServer.Robot.Common.Model;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.Robot.Monitor.Controller
@@ -182,6 +184,17 @@ namespace LanguageServer.Robot.Monitor.Controller
             MonitoringConnectionTask.Start();
         }
 
+        const string DefaultTypeCobolLanguageServerPath = "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
+
+        /// <summary>
+        /// The Server path.
+        /// </summary>
+        public string ServerPath
+        {
+            get;
+            internal set;
+        }
+
         /// <summary>
         /// Entry point of the LSRM Controller, with access to the command line arguments.
         /// </summary>
@@ -228,6 +241,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 { "lf|logfile=","{PATH} the target log file", (string v) => LogFile = v },
                 { "p|pipe=","Communication Pipe's name with LSR", (string v) => PipeName = v },
                 { "d|dir=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
+                { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
             };
             System.Collections.Generic.List<string> arguments;
             try { arguments = p.Parse(e.Args); }
@@ -250,9 +264,15 @@ namespace LanguageServer.Robot.Monitor.Controller
                 sw.Flush();
                 MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.VersionTitle, sw.ToString()), LanguageServer.Robot.Monitor.Properties.Resources.LSRMName, MessageBoxButton.OK, MessageBoxImage.Information);
             }
+
             if (help || version)
             {
                 App.Current.Shutdown();
+            }
+
+            if (ServerPath == null)
+            {
+                ServerPath = DefaultTypeCobolLanguageServerPath;
             }
 
             if (ScriptRepositoryPath == null)
@@ -341,15 +361,69 @@ namespace LanguageServer.Robot.Monitor.Controller
             lock(PendingSession)                
             {
                 this.SessionExplorer = new SessionExplorerController(window.SessionExplorerTree);
+                this.SessionExplorer.StartScenarioHandler += SessionExplorer_StartScenarioHandler;
                 //Add any pending session
                 SessionExplorer.AddSessions(PendingSession);
                 PendingSession.Clear();
             }
         }
+        /// <summary>
+        /// Startinga Scenario Handler.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SessionExplorer_StartScenarioHandler(object sender, DocumentItemViewModel e)
+        {
+            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
+            ScenarioController = new MonitorLanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
+            ScenarioRobotConnectionController scenarioConnect =
+                ScenarioController.ClientConnection as ScenarioRobotConnectionController;
+            if (ScenarioController.Start())
+            {
+                scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data);
+                //Open a dialog
+                var result = MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.RecordingMessage,
+                    LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Information);
+                if (result == MessageBoxResult.OK)
+                {
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        var saveCtrl = ScenarioController;
+                        ScenarioController = null;
+                        scenarioConnect?.SaveScenario(e.Data, saveFileDialog.FileName);
+                        saveCtrl.Dispose();
+                    }
+                    else
+                    {
+                        var saveCtrl = ScenarioController;
+                        ScenarioController = null;
+                        saveCtrl.Dispose();
+                    }
+                }
+                else
+                {
+                    var saveCtrl = ScenarioController;
+                    ScenarioController = null;
+                    saveCtrl.Dispose();                    
+                }
+            }
+        }
 
+        private LanguageServerRobotController MyScenarioController;
         private LanguageServerRobotController ScenarioController
         {
-            get; set;
+            get
+            {
+                return Interlocked.Exchange<LanguageServerRobotController>(ref MyScenarioController, MyScenarioController);
+            }
+            set
+            {
+                Interlocked.Exchange<LanguageServerRobotController>(ref MyScenarioController, value);
+            }
         }
 
         private void RunScenarioController()
@@ -366,8 +440,6 @@ namespace LanguageServer.Robot.Monitor.Controller
         private void Consumer_LspMessageHandler(object sender, Common.Model.Message.LspMessage e)
         {
             //RunScenarioController();
-            //if (e.From == Message.LspMessage.MessageFrom.Client )
-            //    ScenarioController.ServerConnection.Consume(e.Message);
             Log.LogWriter.WriteLine(e.Message);
         }
 
@@ -418,6 +490,16 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// <param name="jsonObject"></param>
         private void MonitoringConnection_RecordedMessageHandler(Script script, Script.MessageCategory category, Common.Utilities.Protocol.Message_Kind kind, string message, string uri, JObject jsonObject)
         {
+            if (ScenarioController != null)
+            {
+                if (category == Script.MessageCategory.Client)
+                {
+                    //In recording mode add the message
+                    ScenarioRobotConnectionController controller =
+                        ScenarioController.ClientConnection as ScenarioRobotConnectionController;
+                    controller?.AddMessage(script, message);
+                }
+            }
             App.Current.Dispatcher.Invoke(() => SetActiveDocument(script));
         }
 
@@ -449,6 +531,13 @@ namespace LanguageServer.Robot.Monitor.Controller
         private void MonitoringConnection_StartDocumentHandler(object sender, Common.Model.Script e)
         {
             App.Current.Dispatcher.Invoke(() => AddDocument(e));
+        }
+
+        /// <summary>
+        /// Internal testing for a scenario engine.
+        /// </summary>
+        private void TestScenarioEngine()
+        {            
         }
     }
 }

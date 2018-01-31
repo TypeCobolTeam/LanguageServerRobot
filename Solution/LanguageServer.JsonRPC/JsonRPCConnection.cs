@@ -86,11 +86,15 @@ namespace LanguageServer.JsonRPC
         }
 
         /// <summary>
-        /// Send a notification to the client
+        /// Create a notification
         /// </summary>
-        public void SendNotification(NotificationType notificationType, object parameters)
+        /// <param name="notificationType"></param>
+        /// <param name="parameters"></param>
+        /// <param name="jsonMessage"></param>
+        /// <returns></returns>
+        public static string CreateNotification(NotificationType notificationType, object parameters, out JObject jsonMessage)
         {
-            JObject jsonMessage = new JObject();
+            jsonMessage = new JObject();
             PrepareJsonPRCMessage(jsonMessage);
 
             jsonMessage["method"] = notificationType.Method;
@@ -98,13 +102,21 @@ namespace LanguageServer.JsonRPC
             {
                 jsonMessage["params"] = JToken.FromObject(parameters);
             }
+            return jsonMessage.ToString(Formatting.None);
+        }
 
-            // Send text message
-            SendMessage(jsonMessage.ToString(Formatting.None));
+        /// <summary>
+        /// Send a notification to the client
+        /// </summary>
+        public void SendNotification(NotificationType notificationType, object parameters)
+        {
+            JObject jsonMessage = null;
+            string message = CreateNotification(notificationType, parameters, out jsonMessage);
+            SendMessage(message);
         }
 
         // Add Json RPC standard property
-        protected void PrepareJsonPRCMessage(JObject jsonMessage)
+        protected static void PrepareJsonPRCMessage(JObject jsonMessage)
         {
             jsonMessage["jsonrpc"] = "2.0";
         }
@@ -115,17 +127,14 @@ namespace LanguageServer.JsonRPC
         // Remeber all requests sent and still waiting for a response 
         protected IDictionary<string, ResponseWaitState> responsesExpected = new Dictionary<string, ResponseWaitState>();
 
-        /// <summary>
-        /// Send an async request to the client and await later for the response or error
-        /// </summary>
-        public virtual Task<ResponseResultOrError> SendRequest(RequestType requestType, object parameters)
+        public string CreateRequest(RequestType requestType, object parameters, out string requestId, out JObject jsonMessage)
         {
-            JObject jsonMessage = new JObject();
+            jsonMessage = new JObject();
             PrepareJsonPRCMessage(jsonMessage);
 
             // Generate a unique id for the request
             int id = Interlocked.Increment(ref sequenceNumber);
-            string requestId = id.ToString();
+            requestId = id.ToString();
             jsonMessage["id"] = requestId;
 
             jsonMessage["method"] = requestType.Method;
@@ -133,9 +142,19 @@ namespace LanguageServer.JsonRPC
             {
                 jsonMessage["params"] = JToken.FromObject(parameters);
             }
+            return jsonMessage.ToString(Formatting.None);
+        }
 
+        /// <summary>
+        /// Send an async request to the client and await later for the response or error
+        /// </summary>
+        public virtual Task<ResponseResultOrError> SendRequest(RequestType requestType, object parameters)
+        {
+            JObject jsonMessage = null;
+            string requestId = "";
+            string message = CreateRequest(requestType, parameters, out requestId, out jsonMessage);
             //  Send text message
-            SendMessage(jsonMessage.ToString(Formatting.None));
+            SendMessage(message);
 
             // Remember all elements which will be needed to handle correctly the response to the request
             TaskCompletionSource<ResponseResultOrError> taskCompletionSource = new TaskCompletionSource<ResponseResultOrError>();
@@ -413,6 +432,11 @@ namespace LanguageServer.JsonRPC
             {
                 (this.MessageConnection as LanguageServer.JsonRPC.MessageConnection).PropagateConnectionLogs(log);
             }            
+        }
+
+        public virtual void Dispose()
+        {
+            this.MessageConnection?.Dispose();
         }
     }
 }

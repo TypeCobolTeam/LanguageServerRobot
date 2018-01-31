@@ -10,7 +10,7 @@ namespace LanguageServer.Robot.Common.Controller
     /// <summary>
     /// Class that will handle the Client side Robot connection business logic
     /// </summary>
-    public class ClientRobotConnectionController : JsonRPCConnection, IRobotModeController
+    public class ClientRobotConnectionController : JsonRPCConnection, IRobotModeController, IDisposable
     {        
         /// <summary>
         /// Default Client Robot Connection controller, using LanguageServerRobot's application
@@ -60,6 +60,12 @@ namespace LanguageServer.Robot.Common.Controller
             get;
             internal set;
         }
+
+        public void Dispose()
+        {
+            this.MessageConnection?.Dispose();
+        }
+
         /// <summary>
         /// Handling a message that comes from the Client: From Me.
         /// </summary>

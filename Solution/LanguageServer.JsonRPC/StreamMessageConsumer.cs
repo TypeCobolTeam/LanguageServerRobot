@@ -10,7 +10,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// A String Message consumer based on a Stream.
     /// </summary>
-    public class StreamMessageConsumer : IMessageConsumer, IConnectionLog
+    public class StreamMessageConsumer : IMessageConsumer, IConnectionLog, IDisposable
     {
         /// <summary>
         /// Empty constructor on the Console Output
@@ -117,6 +117,11 @@ namespace LanguageServer.JsonRPC
         {
             log = log ?? ConnectionLog.GetInstance();
             log.AssignTo(this);
+        }
+
+        public void Dispose()
+        {
+            //throw new NotImplementedException();
         }
     }
 }

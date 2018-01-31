@@ -11,7 +11,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// Class of an instance that produces message from a Stream.
     /// </summary>
-    public class StreamMessageProducer : IMessageProducer, IConnectionLog
+    public class StreamMessageProducer : IMessageProducer, IConnectionLog, IDisposable
     {
         /// <summary>
         /// Configure the Producer on the Console Input Stream
@@ -288,6 +288,11 @@ namespace LanguageServer.JsonRPC
         {
             log = log ?? ConnectionLog.GetInstance();
             log.AssignTo(this);
+        }
+
+        public void Dispose()
+        {   //Forces to exit
+            ShutdownAfterNextMessage = true;
         }
     }
 }

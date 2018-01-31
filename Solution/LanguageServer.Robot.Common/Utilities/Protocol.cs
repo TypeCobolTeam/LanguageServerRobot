@@ -744,6 +744,56 @@ namespace LanguageServer.Robot.Common.Utilities
         }
 
         /// <summary>
+        /// Determine if the given message represents a LanguageServer "textDocument/didSave" notification.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a "textDocument/didSave" message, false otherwise.</returns>
+        public static bool IsDidSaveTextDocumentNotification(string message, out JObject jsonObject)
+        {
+            return IsDidSaveTextDocumentNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon objects corresponds to the "textDocument/didSave" request.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns>true if yes, false otherwise</returns>
+        public static bool IsDidSaveTextDocumentNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.DidSaveTextDocumentNotification.Type.Method);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if the given message represents a LanguageServer "textDocument/didChange" notification.
+        /// </summary>
+        /// <param name="message">The message to check</param>
+        /// <param name="jsonObject">[out] the parsed JSon Object if any, null otherwise</param>
+        /// <returns>true if the message is a "textDocument/didSave" message, false otherwise.</returns>
+        public static bool IsDidChangeTextDocumentNotification(string message, out JObject jsonObject)
+        {
+            return IsDidChangeTextDocumentNotification(jsonObject = ToJson(message));
+        }
+
+        /// <summary>
+        /// Determine if the given JSon objects corresponds to the "textDocument/didChange" request.
+        /// </summary>
+        /// <param name="jsonObject"></param>
+        /// <returns>true if yes, false otherwise</returns>
+        public static bool IsDidChangeTextDocumentNotification(JObject jsonObject)
+        {
+            if (IsNotification(jsonObject))
+            {
+                return ((string)jsonObject[String.Intern("method")]).Equals(LanguageServer.Protocol.DidChangeTextDocumentNotification.Type.Method);
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Determine if the given message represents a LanguageServer "window/showMessage" notification.
         /// </summary>
         /// <param name="message">The message to check</param>

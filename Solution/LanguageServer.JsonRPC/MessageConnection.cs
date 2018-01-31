@@ -11,7 +11,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// This class implements the Producer/Consumer message communication DataFlow concept.
     /// </summary>
-    public class MessageConnection : IMessageConnection, IConnectionLog
+    public class MessageConnection : IMessageConnection, IConnectionLog, IDisposable
     {
         /// <summary>
         /// A Connection exception class.
@@ -281,6 +281,14 @@ namespace LanguageServer.JsonRPC
             log.AssignTo(this);
             Producer?.PropagateConnectionLogs(log);
             Consumer?.PropagateConnectionLogs(log);
+        }
+
+        public virtual void Dispose()
+        {
+            // Forces the Producer to dispose
+            Producer?.Dispose();
+            // Forces the consumer to dispose
+            Consumer?.Dispose();
         }
     }
 }

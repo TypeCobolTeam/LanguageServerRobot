@@ -182,6 +182,13 @@ namespace LanguageServer.JsonRPC
             }
         }
 
+        public override void Dispose()
+        {
+            //Forces the process to kill.
+            if (this.Process != null && !this.Process.HasExited)
+                this.Process.Kill();
+        }
+
         /// <summary>
         /// Process Exited event handler
         /// </summary>

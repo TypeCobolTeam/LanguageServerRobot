@@ -126,6 +126,9 @@
   <data name="LSRMName" xml:space="preserve">
     <value>Language Server Robot Monitor</value>
   </data>
+  <data name="RecordingMessage" xml:space="preserve">
+    <value>Recording...</value>
+  </data>
   <data name="VersionTitle" xml:space="preserve">
     <value>Version {0}</value>
   </data>

@@ -16,7 +16,7 @@ namespace LanguageServer.Robot.Common.Controller
     /// <summary>
     /// This class represents the Controller of the LanguageServerRobot business rules.
     /// </summary>
-    public class LanguageServerRobotController : IRobotModeController, IConnectionLog
+    public class LanguageServerRobotController : IRobotModeController, IConnectionLog, IDisposable
     {
         /// <summary>
         /// Language Server Robot Controller Connection mode
@@ -161,8 +161,8 @@ namespace LanguageServer.Robot.Common.Controller
         public LanguageServerRobotController(ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
-            this.ClientConnection = new ScenarioRobotConnectionController(new MessageConnection());
-            this.ServerConnection = serverConnection;            
+            this.ClientConnection = new ScenarioRobotConnectionController(serverConnection.MessageConnection);
+            this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Scenario;
             //Transfert the roboting mode controller instance to the client and server controller
             RobotModeController = new RecordingModeController(scriptRepositoryPath);
@@ -740,13 +740,13 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         public TextWriter MessageLogWriter { get; set; }
 
-        public void FromClient(string message)
+        public virtual void FromClient(string message)
         {
             ClientConnection.FromClient(message);
             ServerConnection.SendMessage(message);
         }
 
-        public void FromServer(string message)
+        public virtual void FromServer(string message)
         {
             if (ClientConnection is SessionRobotConnectionController)
             {   //For a session all message from the server must be redirected to
@@ -759,6 +759,15 @@ namespace LanguageServer.Robot.Common.Controller
                 ServerConnection.FromServer(message);
                 ClientConnection.SendMessage(message);
             }
+        }
+
+        /// <summary>
+        /// Dispose the controller
+        /// </summary>
+        public void Dispose()
+        {            
+            ServerConnection?.Dispose();
+            ClientConnection?.Dispose();
         }
     }
 }

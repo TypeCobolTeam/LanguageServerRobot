@@ -88,6 +88,15 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recording....
+        /// </summary>
+        public static string RecordingMessage {
+            get {
+                return ResourceManager.GetString("RecordingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version {0}.
         /// </summary>
         public static string VersionTitle {

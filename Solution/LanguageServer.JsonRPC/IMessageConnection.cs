@@ -9,7 +9,7 @@ namespace LanguageServer.JsonRPC
     /// <summary>
     /// Interface for a class which can send messages
     /// </summary>
-    public interface IMessageConnection
+    public interface IMessageConnection : IDisposable
     {
         /// <summary>
         /// Starts a connection

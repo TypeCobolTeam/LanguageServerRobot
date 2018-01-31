@@ -440,19 +440,22 @@ namespace LanguageServer.Robot.Common.Controller
         /// Save a script in a file using UTF-8 encoding.
         /// </summary>
         /// <param name="script">The script to be saved</param>
-        /// <param name="scriptFile">The script firl path</param>
-        protected virtual bool SaveScript(Script script)
+        /// <param name="scriptFile">The script file path</param>
+        protected virtual bool SaveScript(Script script, string scriptFile = null)
         {
             System.Diagnostics.Contracts.Contract.Assume(script.IsValid);
             System.Diagnostics.Contracts.Contract.Requires(script.uri != null);
-            string scriptFile = Util.UriToIdentifierName(script.uri + '_' + script.date);
-            scriptFile += Util.SCRIPT_FILE_EXTENSION;
-            if (SessionModel.directory == null)
+            if (scriptFile == null)
             {
-                LogWriter?.WriteLine(string.Format(Resource.FailToSaveScriptNoSessionDirectory, scriptFile));
-                return false;
+                Util.UriToIdentifierName(script.uri + '_' + script.date);
+                scriptFile += Util.SCRIPT_FILE_EXTENSION;
+                if (SessionModel.directory == null)
+                {
+                    LogWriter?.WriteLine(string.Format(Resource.FailToSaveScriptNoSessionDirectory, scriptFile));
+                    return false;
+                }
+                scriptFile = System.IO.Path.Combine(SessionModel.directory, scriptFile);
             }
-            scriptFile = System.IO.Path.Combine(SessionModel.directory, scriptFile);
             bool bResult = false;
             script.session = SessionModel.GetSessionFileName();
             script.initialize = SessionModel.initialize;
