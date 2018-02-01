@@ -33,6 +33,17 @@ namespace LanguageServer.Robot.Monitor.View
             //Perform actions when SelectedItem changes
             //MessageBox.Show(((TreeViewItem)e.NewValue).Header.ToString());
         }
+
+        /// <summary>
+        /// Handler when the contextual menu is about to be shown.
+        /// </summary>
+        public event EventHandler<ContextMenuEventArgs> ContextMenuOpeningOpeningHandler;
+
+        private void FrameworkElement_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (ContextMenuOpeningOpeningHandler != null)
+                ContextMenuOpeningOpeningHandler(sender, e);
+        }
     }
 
 }

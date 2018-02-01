@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BadDocumentScript" xml:space="preserve">
+    <value>The Script document is ill-formed.</value>
+  </data>
   <data name="EmptyDataName" xml:space="preserve">
     <value>Data name field cannot be empty!</value>
   </data>
+  <data name="FailInitalizeScerarioRecording" xml:space="preserve">
+    <value>Fail to initialize a scenario recording with TypeCobol LanguageServer.</value>
+  </data>
   <data name="FailMessageConnectionWithLSR" xml:space="preserve">
     <value>Failed to establish a connection message with connection : '{0}'</value>
+  </data>
+  <data name="FailStopScenarioRecording" xml:space="preserve">
+    <value>Failed to stop the scenario recording.</value>
   </data>
   <data name="LSRMName" xml:space="preserve">
     <value>Language Server Robot Monitor</value>

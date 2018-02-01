@@ -380,7 +380,18 @@ namespace LanguageServer.Robot.Monitor.Controller
                 ScenarioController.ClientConnection as ScenarioRobotConnectionController;
             if (ScenarioController.Start())
             {
-                scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data);
+                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data))
+                {
+                    MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.FailInitalizeScerarioRecording,
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                        );
+                    var saveCtrl = ScenarioController;
+                    ScenarioController = null;
+                    saveCtrl.Dispose();
+                    return;
+                }
                 //Open a dialog
                 var result = MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.RecordingMessage,
                     LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
@@ -388,6 +399,18 @@ namespace LanguageServer.Robot.Monitor.Controller
                     MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
                 {
+                    if (!scenarioConnect.StopScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data))
+                    {
+                        MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.FailStopScenarioRecording,
+                            LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Hand
+                            );
+                        var saveCtrl = ScenarioController;
+                        ScenarioController = null;
+                        saveCtrl.Dispose();
+                        return;
+                    }
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
                     if (saveFileDialog.ShowDialog() == true)

@@ -37,9 +37,28 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
         /// </summary>
         public RecordingModeController(string scriptRepositoryPath = null) : base(scriptRepositoryPath)
-        {            
+        {
+            IsSaveOnDidClose = true;
             State = ModeState.NotInitialized;
             RequestIdUriMap = new Dictionary<string, string> ();
+        }
+
+        /// <summary>
+        /// Event handlers when a Response to a request is received from the server.
+        /// </summary>
+        public event EventHandler<Tuple<string, JObject>> ResponseEvent;
+
+        /// <summary>
+        /// Event handlers when a Notification is received from the server.
+        /// </summary>
+        public event EventHandler<Tuple<string, JObject>> NotificationEvent;
+
+        /// <summary>
+        /// Set weither or not thie script is save when the didColse notification is sent.
+        /// </summary>
+        public bool IsSaveOnDidClose
+        {
+            get; set;
         }
 
         /// <summary>
@@ -47,7 +66,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="uri">The uri to get the string</param>
         /// <returns>The corresponding script if any, null otherwise</returns>
-        protected virtual Script this[string uri]
+        internal virtual Script this[string uri]
         {
             get
             {
@@ -209,6 +228,7 @@ namespace LanguageServer.Robot.Common.Controller
                                 {//Ok Initalization result
                                     InitializeSession(message, jsonObject);
                                     consumed = true;
+                                    RaiseResponseEvent(message, jsonObject);
                                 }
                             }
                         }
@@ -232,6 +252,7 @@ namespace LanguageServer.Robot.Common.Controller
                             if (Utilities.Protocol.IsMessageWithUri(message, out uri, out jsonObject))
                             {
                                 consumed = RecordScriptMessage(Script.MessageCategory.Server, Utilities.Protocol.Message_Kind.Notification, message, uri, jsonObject);
+                                RaiseNotificationEvent(message, jsonObject);
                             }
                         }
                         else if (Utilities.Protocol.IsResponseAndNotError(jsonObject))
@@ -271,6 +292,7 @@ namespace LanguageServer.Robot.Common.Controller
                             {//Hum...There is a response from the server without a registered request
                                 LogUnexpectedMessage(Resource.UnexpectedResponseFromServer, message);
                             }
+                            RaiseResponseEvent(message, jsonObject);
                         }
                         else
                         {//It's a Request from the server??? cannot happend a Server cannot send a request to a client.
@@ -441,7 +463,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="script">The script to be saved</param>
         /// <param name="scriptFile">The script file path</param>
-        protected virtual bool SaveScript(Script script, string scriptFile = null)
+        internal virtual bool SaveScript(Script script, string scriptFile = null)
         {
             System.Diagnostics.Contracts.Contract.Assume(script.IsValid);
             System.Diagnostics.Contracts.Contract.Requires(script.uri != null);
@@ -533,7 +555,10 @@ namespace LanguageServer.Robot.Common.Controller
                 SessionModel.exit = message;
                 SessionModel.shutdown = ShutdownRequest;
             }
-            SaveSession();
+            if (IsSaveOnDidClose)
+            {
+                SaveSession();
+            }
 #if DEBUG
             SessionModel.DebugDump();
 #endif
@@ -606,5 +631,32 @@ namespace LanguageServer.Robot.Common.Controller
             }
             return bResult;
         }
+
+        /// <summary>
+        /// raise a response event
+        /// </summary>
+        /// <param name="message">The text message</param>
+        /// <param name="jsonObject">The Json object representing the message</param>
+        private void RaiseResponseEvent(string message, JObject jsonObject)
+        {
+            if (ResponseEvent != null)
+            {//Notify all listener
+                ResponseEvent(this, new Tuple<string, JObject>(message, jsonObject));
+            }
+        }
+
+        /// <summary>
+        /// raise a notification event
+        /// </summary>
+        /// <param name="message">The text message</param>
+        /// <param name="jsonObject">The Json object representing the message</param>
+        private void RaiseNotificationEvent(string message, JObject jsonObject)
+        {
+            if (NotificationEvent != null)
+            {//Notify all listener
+                NotificationEvent(this, new Tuple<string, JObject>(message, jsonObject));
+            }
+        }
+
     }
 }

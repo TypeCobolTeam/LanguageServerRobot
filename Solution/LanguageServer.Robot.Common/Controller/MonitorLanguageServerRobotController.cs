@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace LanguageServer.Robot.Common.Controller
 {
     /// <summary>
-    /// 
+    /// A Monitor Language Server Robot Controller.
     /// </summary>
     public class MonitorLanguageServerRobotController : LanguageServerRobotController
     {

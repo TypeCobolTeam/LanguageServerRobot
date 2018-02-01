@@ -61,6 +61,15 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Script document is ill-formed..
+        /// </summary>
+        public static string BadDocumentScript {
+            get {
+                return ResourceManager.GetString("BadDocumentScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data name field cannot be empty!.
         /// </summary>
         public static string EmptyDataName {
@@ -70,11 +79,29 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to initialize a scenario recording with TypeCobol LanguageServer..
+        /// </summary>
+        public static string FailInitalizeScerarioRecording {
+            get {
+                return ResourceManager.GetString("FailInitalizeScerarioRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to establish a connection message with connection : &apos;{0}&apos;.
         /// </summary>
         public static string FailMessageConnectionWithLSR {
             get {
                 return ResourceManager.GetString("FailMessageConnectionWithLSR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to stop the scenario recording..
+        /// </summary>
+        public static string FailStopScenarioRecording {
+            get {
+                return ResourceManager.GetString("FailStopScenarioRecording", resourceCulture);
             }
         }
         

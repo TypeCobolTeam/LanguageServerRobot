@@ -262,9 +262,15 @@ namespace LanguageServer.Robot.Monitor.Controller
                 CurrentDocument = documentModel;
                 CurrentDocument.IsCurrent = true;
             }
-            StartScenario?.RaiseCanExecuteChanged(this);;
-            StopScenario?.RaiseCanExecuteChanged(this);
+        }
 
+        /// <summary>
+        /// Update Commands State
+        /// </summary>
+        public void UpdateCommandState()
+        {
+            StartScenario?.RaiseCanExecuteChanged(this); ;
+            StopScenario?.RaiseCanExecuteChanged(this);
         }
 
         /// <summary>
@@ -273,7 +279,17 @@ namespace LanguageServer.Robot.Monitor.Controller
         protected void BindViewModel()
         {
             View.DataContext = Model;
+            View.ContextMenuOpeningOpeningHandler += View_ContextMenuOpeningOpeningHandler;
             Model.PropertyChanged += OnModelPropertyChangeEvent;
+        }
+        /// <summary>
+        /// Handler when the Contextual menu is about to be shown.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void View_ContextMenuOpeningOpeningHandler(object sender, System.Windows.Controls.ContextMenuEventArgs e)
+        {
+            UpdateCommandState();
         }
 
         /// <summary>
