@@ -65,6 +65,19 @@ namespace LanguageServer.Robot.Monitor.Model
         public ICommand StopScenarioCommand { get; set; }
 
         /// <summary>
+        /// Add a scenario to this document.
+        /// </summary>
+        /// <param name="script">The Scenario's cript</param>
+        public void AddScenario(Script script)
+        {
+            if (script != null)
+            {
+                ScenarioItemViewModel scenario = new ScenarioItemViewModel(script);
+                Children.Add(scenario);
+            }
+        }
+
+        /// <summary>
         /// Accept method for a Visitor Design Pattern.
         /// </summary>
         /// <param name="visitor">The Visitor to Accept</param>

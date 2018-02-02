@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -424,15 +425,20 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="script">The original script from which the scenario was created is created</param>
         /// <param name="filepath">The filepath to save the scenarion</param>
+        /// <param name="recordedScenario">(out] the recorded scenario</param>
         /// <returns>true if the scenario has been saved false otherwise</returns>
-        public bool SaveScenario(Script script, string filepath)
+        public bool SaveScenario(Script script, string filepath, out Script recordedScenario)
         {
+            recordedScenario = null;
             if (DidCloseTextDocument != null && DidOpenParameters != null)
             {
-                Model.Script targetScript = this.RecordingController[DidOpenParameters.textDocument.uri];
-                if (targetScript != null)
+                recordedScenario = this.RecordingController[DidOpenParameters.textDocument.uri];                
+                if (recordedScenario != null)
                 {
-                    return this.RecordingController.SaveScript(targetScript, filepath);
+                    recordedScenario.uri = (new Uri(filepath)).ToString();
+                    FileInfo fi = new FileInfo(filepath);
+                    recordedScenario.name = fi.Name;
+                    return this.RecordingController.SaveScript(recordedScenario, filepath);
                 }
             }            
             return false;

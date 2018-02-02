@@ -417,7 +417,12 @@ namespace LanguageServer.Robot.Monitor.Controller
                     {
                         var saveCtrl = ScenarioController;
                         ScenarioController = null;
-                        scenarioConnect?.SaveScenario(e.Data, saveFileDialog.FileName);
+                        Script recordedScenario;
+                        if (scenarioConnect.SaveScenario(e.Data, saveFileDialog.FileName, out recordedScenario))
+                        {                            
+                            //Add the scenario to its Document
+                            e.AddScenario(recordedScenario);
+                        }
                         saveCtrl.Dispose();
                     }
                     else
