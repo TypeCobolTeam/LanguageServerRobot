@@ -11,7 +11,7 @@ namespace LanguageServer.Robot.Common.Model
     /// <summary>
     /// The Model that describe a Script associated toa document.
     /// </summary>
-    public class Script : IEquatable<Script>
+    public class Script : IEquatable<Script>, ICloneable
     {
         /// <summary>
         /// Enumeration of the categories to which can belong a message.
@@ -22,10 +22,12 @@ namespace LanguageServer.Robot.Common.Model
             /// A message sent by the client
             /// </summary>
             Client,
+
             /// <summary>
             /// A Message received from the server
             /// </summary>
             Server,
+
             /// <summary>
             /// A result (response) received from the server.
             /// </summary>
@@ -33,17 +35,16 @@ namespace LanguageServer.Robot.Common.Model
         }
 
         public class Message
-        {            
+        {
             /// <summary>
             /// The message's category.
             /// </summary>
-            public MessageCategory category
-            { get; set; }
+            public MessageCategory category { get; set; }
+
             /// <summary>
             /// The message
             /// </summary>
-            public string message
-            { get; set; }
+            public string message { get; set; }
 
             /// <summary>
             /// Empty constructor
@@ -52,6 +53,7 @@ namespace LanguageServer.Robot.Common.Model
             {
 
             }
+
             /// <summary>
             /// Cosntructor
             /// </summary>
@@ -68,40 +70,48 @@ namespace LanguageServer.Robot.Common.Model
         /// <summary>
         /// Script's name.
         /// </summary>
-        public string name{ get; set; }
+        public string name { get; set; }
+
         /// <summary>
         /// full path to the parent session file
         /// </summary>
-        public string session
-        { get; set; }
+        public string session { get; set; }
+
         /// <summary>
         /// Session creator user name
         /// </summary>
         public string user { get; set; }
+
         /// <summary>
         /// Session's date
         /// </summary>
         public string date { get; set; }
+
         /// <summary>
         /// Session description
         /// </summary>
         public string description { get; set; }
+
         /// <summary>
         /// The Uri corresponding to this stript.
         /// </summary>
         public string uri { get; set; }
+
         /// <summary>
         /// Parameters of the Initialization message request request
         /// </summary>
         public string initialize { get; set; }
+
         /// <summary>
         /// the resulting message of the initalization request
         /// </summary>
         public string initialize_result { get; set; }
+
         /// <summary>
         /// Any did change configuration message. Only one configuration notification is taken in account per script of a sesion.
         /// </summary>
         public string did_change_configuation { get; set; }
+
         /// <summary>
         /// the "textDocument/didOpen" notification that opened the document
         /// </summary>
@@ -111,6 +121,7 @@ namespace LanguageServer.Robot.Common.Model
         /// All messages (Request, notifications, responses) in sending and reception order.
         /// </summary>
         public List<Message> messages { get; protected set; }
+
         /// <summary>
         /// the "textDocument/didOpen" notification that opened the document
         /// </summary>
@@ -148,18 +159,28 @@ namespace LanguageServer.Robot.Common.Model
         /// <param name="kind">Message's kind</param>
         /// <param name="message">The message</param>
         /// <param name="jsonObject">The Json object corresponding to the message</param>
-        public void AddMessage(MessageCategory category, Utilities.Protocol.Message_Kind kind, string message, JObject jsonObject)
+        public void AddMessage(MessageCategory category, Utilities.Protocol.Message_Kind kind, string message,
+            JObject jsonObject)
         {
             System.Diagnostics.Contracts.Contract.Assert(message != null);
             System.Diagnostics.Contracts.Contract.Assert(jsonObject != null);
             System.Diagnostics.Contracts.Contract.Assume(kind == Utilities.Protocol.MessageKind(jsonObject));
-            System.Diagnostics.Contracts.Contract.Requires(category == MessageCategory.Client || category == MessageCategory.Server || category == MessageCategory.Result);
-            System.Diagnostics.Contracts.Contract.Requires(kind == Utilities.Protocol.Message_Kind.Request || kind == Utilities.Protocol.Message_Kind.Notification || kind == Utilities.Protocol.Message_Kind.Response);
+            System.Diagnostics.Contracts.Contract.Requires(category == MessageCategory.Client ||
+                                                           category == MessageCategory.Server ||
+                                                           category == MessageCategory.Result);
+            System.Diagnostics.Contracts.Contract.Requires(kind == Utilities.Protocol.Message_Kind.Request ||
+                                                           kind == Utilities.Protocol.Message_Kind.Notification ||
+                                                           kind == Utilities.Protocol.Message_Kind.Response);
             // client ==> (Request || Notification) && !Result
             // Server || Result ==> (Notification || Result) && !Request            
-            System.Diagnostics.Contracts.Contract.Requires((kind == Utilities.Protocol.Message_Kind.Response && (category == MessageCategory.Server || category == MessageCategory.Result)) ||
-                (kind == Utilities.Protocol.Message_Kind.Request && category == MessageCategory.Client) ||
-                (kind == Utilities.Protocol.Message_Kind.Notification && (category == MessageCategory.Client || category == MessageCategory.Server)));
+            System.Diagnostics.Contracts.Contract.Requires((kind == Utilities.Protocol.Message_Kind.Response &&
+                                                            (category == MessageCategory.Server ||
+                                                             category == MessageCategory.Result)) ||
+                                                           (kind == Utilities.Protocol.Message_Kind.Request &&
+                                                            category == MessageCategory.Client) ||
+                                                           (kind == Utilities.Protocol.Message_Kind.Notification &&
+                                                            (category == MessageCategory.Client ||
+                                                             category == MessageCategory.Server)));
 
             Message msg = new Message(category, message);
             messages.Add(msg);
@@ -175,9 +196,11 @@ namespace LanguageServer.Robot.Common.Model
             {
                 JObject jdidOpen = null;
                 JObject jdidClose = null;
-                return Utilities.Protocol.IsDidOpenTextDocumentNotification(this.didOpen, out jdidOpen) && Utilities.Protocol.IsDidCloseTextDocumentNotification(this.didClose, out jdidClose);
+                return Utilities.Protocol.IsDidOpenTextDocumentNotification(this.didOpen, out jdidOpen) &&
+                       Utilities.Protocol.IsDidCloseTextDocumentNotification(this.didClose, out jdidClose);
             }
         }
+
         /// <summary>
         /// Dump to the Debug Output Stream
         /// </summary>
@@ -194,7 +217,7 @@ namespace LanguageServer.Robot.Common.Model
         public void Write(System.IO.FileStream stream)
         {
             System.Diagnostics.Contracts.Contract.Assert(stream != null);
-            System.Diagnostics.Contracts.Contract.Requires(stream.CanWrite);            
+            System.Diagnostics.Contracts.Contract.Requires(stream.CanWrite);
             JObject jobject = JObject.FromObject(this);
             string text = jobject.ToString();
             byte[] bytes = Encoding.UTF8.GetBytes(text);
@@ -227,7 +250,7 @@ namespace LanguageServer.Robot.Common.Model
         /// Empty constructor
         /// </summary>
         public Script() : this(null)
-        {            
+        {
         }
 
         /// <summary>
@@ -240,6 +263,35 @@ namespace LanguageServer.Robot.Common.Model
             user = Environment.UserName;
             date = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss fff");
             messages = new List<Message>();
+        }
+
+        /// <summary>
+        /// Clone this script.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            Script cloned = new Script();
+
+            cloned.name = name;
+            cloned.session = session;
+            cloned.user = user;
+            cloned.date = date;
+            cloned.description = description;
+            cloned.uri = uri;
+            cloned.initialize = initialize;
+            cloned.initialize_result = initialize_result;
+            cloned.did_change_configuation = did_change_configuation;
+            cloned.didOpen = didOpen;
+            cloned.messages = messages;
+            cloned.didClose = didClose;            
+            if (messages != null)
+            {
+                cloned.messages = new List<Message>();
+                cloned.messages.AddRange(messages);
+            }
+
+            return cloned;
         }
     }
 }
