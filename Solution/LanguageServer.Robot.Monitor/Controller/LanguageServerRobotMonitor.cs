@@ -15,6 +15,7 @@ using LanguageServer.Robot.Common.Controller;
 using System.Windows.Input;
 using LanguageServer.Robot.Monitor.Model;
 using LanguageServer.Robot.Common.Model;
+using LanguageServer.Robot.Monitor.View;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
@@ -138,6 +139,15 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// The Main Window as View
+        /// </summary>
+        private LanguageServer.Robot.Monitor.MainWindow View
+        {
+            get { return App.Current.MainWindow as LanguageServer.Robot.Monitor.MainWindow; }
+            
         }
 
         /// <summary>
@@ -353,6 +363,74 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// The itemViewModel of the tree session explorer that was previously selected (before selection changed)
+        /// </summary>
+        protected TreeViewItemViewModel PreviousTreeItemViewModel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The Controller of the current Scenario being edited.
+        /// </summary>
+        protected ScenarioAttributesController CurrentScenarioController
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Connect the Model
+        /// </summary>
+        protected void ConnectModel()
+        {
+            this.SessionExplorer.ElementIsSelectedPropertyChanged += OnSessiontExplorerElementIsSelected;
+            this.SessionExplorer.View.MouseDoubleClick += OnSessionExplorerElementDoubleClick;
+        }
+
+        /// <summary>
+        /// Disconnect the Model
+        /// </summary>
+        protected void DisonnectModel()
+        {
+            this.SessionExplorer.ElementIsSelectedPropertyChanged -= OnSessiontExplorerElementIsSelected;
+            this.SessionExplorer.View.MouseDoubleClick -= OnSessionExplorerElementDoubleClick;
+        }
+
+        private void OnSessiontExplorerElementIsSelected(object sender, EventArgs e)
+        {
+            TreeViewItemViewModel item = sender as TreeViewItemViewModel;
+            if (item.IsSelected)
+            {
+                if (sender is ScenarioItemViewModel)
+                {
+                    ScenarioItemViewModel model = sender as ScenarioItemViewModel;
+                    PreviousTreeItemViewModel = model;
+                    ScenarioAttributesController controller = new ScenarioAttributesController(
+                        new ScenarioAttributesModel(model.Data),
+                        new ScenarioAttributesView());
+                    this.View.AttributesPanel.Children.Add(controller.View);
+                    CurrentScenarioController = controller;
+                }
+                else
+                {
+                    //Remove the panel
+                    this.View.AttributesPanel.Children.Clear();
+                }
+            }
+            else
+            {
+                CurrentScenarioController = null;
+                PreviousTreeItemViewModel = null;
+            }
+        }
+
+        private void OnSessionExplorerElementDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Called when the Main Window View can be binded.
         /// </summary>
         /// <param name="window">The Main view to be binded</param>
@@ -365,6 +443,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 //Add any pending session
                 SessionExplorer.AddSessions(PendingSession);
                 PendingSession.Clear();
+                ConnectModel();
             }
         }
         /// <summary>

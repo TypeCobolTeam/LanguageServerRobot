@@ -47,8 +47,8 @@ namespace LanguageServer.Robot.Monitor.Model
         /// <returns>The Added document model.</returns>
         public DocumentItemViewModel AddDocument(Script script)
         {
-            DocumentItemViewModel model = new DocumentItemViewModel(script);
-            Children.Add(model);
+            DocumentItemViewModel model = new DocumentItemViewModel(script, this);
+            Children.Add(model);            
             return model;
         }
 

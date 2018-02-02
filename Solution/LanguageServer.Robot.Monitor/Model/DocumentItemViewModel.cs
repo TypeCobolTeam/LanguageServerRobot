@@ -16,6 +16,15 @@ namespace LanguageServer.Robot.Monitor.Model
         /// <summary>
         /// Constructor 
         /// </summary>
+        /// <param name="script">The associated script</param>
+        /// <param name="Session">The associated parent session</param>
+        public DocumentItemViewModel(Script script, SessionItemViewModel session) : base(script, session, false)
+        {
+        }
+
+        /// <summary>
+        /// Constructor 
+        /// </summary>
         /// <param name="Session">The associated script</param>
         public DocumentItemViewModel(Script script) : base(script, false)
         {            
@@ -72,7 +81,7 @@ namespace LanguageServer.Robot.Monitor.Model
         {
             if (script != null)
             {
-                ScenarioItemViewModel scenario = new ScenarioItemViewModel(script);
+                ScenarioItemViewModel scenario = new ScenarioItemViewModel(script, this);
                 Children.Add(scenario);
             }
         }

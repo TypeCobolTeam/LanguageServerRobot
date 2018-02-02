@@ -13,7 +13,16 @@ namespace LanguageServer.Robot.Monitor.Model
         /// <summary>
         /// Constructor 
         /// </summary>
-        /// <param name="Session">The associated script</param>
+        /// <param name="script">The associated script</param>
+        /// <param name="document">The parent document</param>
+        public ScenarioItemViewModel(Script script, DocumentItemViewModel document) : base(script, document, false)
+        {
+        }
+
+        /// <summary>
+        /// Constructor 
+        /// </summary>
+        /// <param name="script">The associated script</param>
         public ScenarioItemViewModel(Script script) : base(script, false)
         {
         }

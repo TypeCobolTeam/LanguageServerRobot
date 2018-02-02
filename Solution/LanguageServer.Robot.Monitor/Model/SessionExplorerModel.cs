@@ -34,14 +34,10 @@ namespace LanguageServer.Robot.Monitor.Model
         /// </summary>
         public SessionExplorerModel(Session[] sessions)
         {
-            m_sessions = new ObservableCollection<SessionItemViewModel>(
-                (from session in sessions
-                 select new SessionItemViewModel(session))
-                .ToList());
-            //Connect Childen Property Change Propagation to US.            
-            foreach (var session in Sessions)
+            m_sessions = new ObservableCollection<SessionItemViewModel>();
+            foreach (var session in sessions)
             {
-                session.PropertyChanged += PropagatePropertyChangedEventHandler;
+                AddSession(session);
             }
         }
 
@@ -90,11 +86,9 @@ namespace LanguageServer.Robot.Monitor.Model
             SessionItemViewModel model = null;
             if (session != null)
             {
-                if (m_sessions == null)
-                {
-                    m_sessions = new ObservableCollection<SessionItemViewModel>();
-                }
                 m_sessions.Add(model = new SessionItemViewModel(session));
+                //Connect Childen Property Change Propagation to US.            
+                model.PropertyChanged += PropagatePropertyChangedEventHandler;
             }
             return model;
         }
@@ -154,6 +148,14 @@ namespace LanguageServer.Robot.Monitor.Model
 
             var eventArgs = new PropertyChangedEventArgs(propertyName);
             PropertyChanged(this, eventArgs);
+        }
+
+        /// <summary>
+        /// All properties changed notification
+        /// </summary>
+        internal void NotifyToRefreshAllProperties()
+        {
+            OnPropertyChanged(String.Empty);
         }
     }
 }

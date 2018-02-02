@@ -184,8 +184,7 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             if (sender is TreeViewItemViewModel && args.PropertyName.Equals(TreeViewItemViewModel.IsSelectedPropertyName))
             {
-                if (ElementIsSelectedPropertyChanged != null)
-                    ElementIsSelectedPropertyChanged(sender, EventArgs.Empty);
+                ElementIsSelectedPropertyChanged?.Invoke(sender, EventArgs.Empty);
             }
         }
 
@@ -298,6 +297,7 @@ namespace LanguageServer.Robot.Monitor.Controller
         protected void UnbindViewModel()
         {
             View.DataContext = null;
+            View.ContextMenuOpeningOpeningHandler -= View_ContextMenuOpeningOpeningHandler;
             Model.PropertyChanged -= OnModelPropertyChangeEvent;
         }
 

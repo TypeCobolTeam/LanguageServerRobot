@@ -132,11 +132,20 @@
   <data name="FailStopScenarioRecording" xml:space="preserve">
     <value>Failed to stop the scenario recording.</value>
   </data>
+  <data name="FailToSaveData" xml:space="preserve">
+    <value>Failed to save data '{0}' '{1}'</value>
+  </data>
   <data name="LSRMName" xml:space="preserve">
     <value>Language Server Robot Monitor</value>
   </data>
   <data name="RecordingMessage" xml:space="preserve">
     <value>Recording...</value>
+  </data>
+  <data name="ScenarioCategory" xml:space="preserve">
+    <value>Scenario</value>
+  </data>
+  <data name="ScenarioEditingTitle" xml:space="preserve">
+    <value>Scenario Editing</value>
   </data>
   <data name="VersionTitle" xml:space="preserve">
     <value>Version {0}</value>

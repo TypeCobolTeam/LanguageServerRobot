@@ -106,6 +106,15 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to save data &apos;{0}&apos; &apos;{1}&apos;.
+        /// </summary>
+        public static string FailToSaveData {
+            get {
+                return ResourceManager.GetString("FailToSaveData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language Server Robot Monitor.
         /// </summary>
         public static string LSRMName {
@@ -120,6 +129,24 @@ namespace LanguageServer.Robot.Monitor.Properties {
         public static string RecordingMessage {
             get {
                 return ResourceManager.GetString("RecordingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scenario.
+        /// </summary>
+        public static string ScenarioCategory {
+            get {
+                return ResourceManager.GetString("ScenarioCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scenario Editing.
+        /// </summary>
+        public static string ScenarioEditingTitle {
+            get {
+                return ResourceManager.GetString("ScenarioEditingTitle", resourceCulture);
             }
         }
         
