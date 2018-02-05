@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Media;
 
 namespace LanguageServer.Robot.Monitor.Model
@@ -189,6 +190,7 @@ namespace LanguageServer.Robot.Monitor.Model
         /// </summary>
         public const String ForeGroundProperty = "ForeGround";
         public Brush ForeGround => IsValid ? (IsCurrent ? Brushes.DarkGreen : Brushes.Black) : Brushes.Red;
+        //public FontWeight FontWeight => IsCurrent ? FontWeights.Bold : FontWeights.Normal;
 
         public const String IsCurrentProperty = "IsCurrent";
         private bool m_IsCurrent = false;

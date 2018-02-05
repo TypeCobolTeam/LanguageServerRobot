@@ -272,26 +272,28 @@ namespace LanguageServer.Robot.Common.Model
         public object Clone()
         {
             Script cloned = new Script();
-
-            cloned.name = name;
-            cloned.session = session;
-            cloned.user = user;
-            cloned.date = date;
-            cloned.description = description;
-            cloned.uri = uri;
-            cloned.initialize = initialize;
-            cloned.initialize_result = initialize_result;
-            cloned.did_change_configuation = did_change_configuation;
-            cloned.didOpen = didOpen;
-            cloned.messages = messages;
-            cloned.didClose = didClose;            
-            if (messages != null)
-            {
-                cloned.messages = new List<Message>();
-                cloned.messages.AddRange(messages);
-            }
-
+            cloned.Copy(this);
             return cloned;
+        }
+
+        /// <summary>
+        /// Copy the Script attribute from another script.
+        /// </summary>
+        /// <param name="from">The Other script to copy attributes from.</param>
+        public void Copy(Script from)
+        {
+            this.name = from.name;
+            this.session = from.session;
+            this.user = from.user;
+            this.date = from.date;
+            this.description = from.description;
+            this.uri = from.uri;
+            this.initialize = from.initialize;
+            this.initialize_result = from.initialize_result;
+            this.did_change_configuation = from.did_change_configuation;
+            this.didOpen = from.didOpen;
+            this.messages = from.messages;
+            this.didClose = from.didClose;
         }
     }
 }

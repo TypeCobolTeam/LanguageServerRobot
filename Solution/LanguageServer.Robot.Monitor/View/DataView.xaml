@@ -20,9 +20,7 @@
                 </Label>
 
                 <TextBox Name="NameText" HorizontalContentAlignment="Left" VerticalAlignment="Center" Margin="2,0" MaxWidth="520" Grid.Column="1" Grid.ColumnSpan="2"
-                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" 
-                         >
-                </TextBox>
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"                         />
             </Grid>
             <Separator Margin="15,3" />
         </StackPanel>

@@ -8,10 +8,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
-        <TreeView ItemsSource="{Binding Sessions}" Name="m_TreeView" SelectedItemChanged="SelectionChanged">
+        <TreeView ItemsSource="{Binding Sessions}" Name="TreeView" SelectedItemChanged="SelectionChanged">
             <TreeView.ItemContainerStyle>
                 <!-- This Style binds a TreeViewItem to a TreeViewItemViewModel. -->
                 <Style TargetType="{x:Type TreeViewItem}">
+                    <!-- <EventSetter Event="MouseDoubleClick" Handler="OnItemMouseDoubleClick" /> -->
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                     <Setter Property="FontWeight" Value="Normal" />

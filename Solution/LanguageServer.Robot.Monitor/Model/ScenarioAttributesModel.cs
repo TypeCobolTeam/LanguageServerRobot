@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,13 +80,23 @@ namespace LanguageServer.Robot.Monitor.Model
             }
             set
             {
-                this.Data.description = value;
+                if (value != this.Data.description)
+                {
+                    this.Data.description = value;
+                    OnPropertyChanged(DESCRIPTION_PROPERTY);
+                }
             }
         }
 
         public override bool Apply()
         {
-            //throw new NotImplementedException();
+            if (IsModified)
+            {
+                DataOrigin.Copy(Data);
+                NeedToBeSaved = true;
+                IsBold = IsItalic = true;
+                OnPropertyChanged(IS_MODIFIED_PROPERTY);
+            }
             return true;
         }
 
@@ -96,7 +107,14 @@ namespace LanguageServer.Robot.Monitor.Model
 
         protected override void Update()
         {
-            //throw new NotImplementedException();
+            //This is an update -> save the script on disk.
+            if (this.FilePath != null)
+            {
+                using (FileStream stream = System.IO.File.Create(this.FilePath))
+                {
+                    DataOrigin.Write(stream);
+                }
+            }
         }
 
         protected override void Delete()
@@ -106,7 +124,9 @@ namespace LanguageServer.Robot.Monitor.Model
 
         public override void Cancel()
         {
-            //throw new NotImplementedException();
+            Data.Copy(DataOrigin);
+            ValidationFlags = 0;
+            OnPropertyChanged("");
         }
     }
 }

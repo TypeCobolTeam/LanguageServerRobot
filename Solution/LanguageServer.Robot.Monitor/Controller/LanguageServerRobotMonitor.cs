@@ -380,6 +380,14 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// The View of the current Scenario selected
+        /// </summary>
+        protected ScenarioItemViewModel CurrentScenarioItemViewModel
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Connect the Model
         /// </summary>
         protected void ConnectModel()
@@ -404,30 +412,83 @@ namespace LanguageServer.Robot.Monitor.Controller
             {
                 if (sender is ScenarioItemViewModel)
                 {
-                    ScenarioItemViewModel model = sender as ScenarioItemViewModel;
-                    PreviousTreeItemViewModel = model;
-                    ScenarioAttributesController controller = new ScenarioAttributesController(
-                        new ScenarioAttributesModel(model.Data),
-                        new ScenarioAttributesView());
-                    this.View.AttributesPanel.Children.Add(controller.View);
-                    CurrentScenarioController = controller;
-                }
-                else
-                {
-                    //Remove the panel
-                    this.View.AttributesPanel.Children.Clear();
+                    if (sender != CurrentScenarioItemViewModel)
+                    {
+                        ScenarioItemViewModel model = sender as ScenarioItemViewModel;
+                        PreviousTreeItemViewModel = model;
+                        ScenarioAttributesController controller = new ScenarioAttributesController(
+                            new ScenarioAttributesModel(model.Data),
+                            new ScenarioAttributesView());
+                        this.View.AttributesPanel.Children.Add(controller.View);
+                        CurrentScenarioItemViewModel = model;
+                        CurrentScenarioController = controller;                        
+                    }
+                    return;
                 }
             }
-            else
-            {
-                CurrentScenarioController = null;
-                PreviousTreeItemViewModel = null;
-            }
+            //Remove the panel
+            this.View.AttributesPanel.Children.Clear();
+            CurrentScenarioItemViewModel = null;
+            CurrentScenarioController = null;
+            PreviousTreeItemViewModel = null;                
         }
 
         private void OnSessionExplorerElementDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            TreeViewItemViewModel item = (sender as SessionExplorerView).TreeView.SelectedItem as TreeViewItemViewModel;
+            if (item != null && item.IsSelected)
+            {
+                if (item is ScenarioItemViewModel)
+                {//Edit Scenario attributes.
+                    EditScenarioAttributesView();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Edit the current Scenario
+        /// </summary>
+        protected void EditScenarioAttributesView()
+        {
+            View.DockPnlLeft.IsEnabled = false;//Disable the panel with the explorer in order to not allow selection change.
+            CurrentScenarioController.Edit();
+            CurrentScenarioController.SaveEvent += OnScenarioAttributesSaved;
+            CurrentScenarioController.ApplyEvent += OnScenarioAttributesApplied;
+            CurrentScenarioController.CancelEvent += OnScenarioAttributesCancelled;
+        }
+
+        /// <summary>
+        /// To call at the end of the edition of the scenarion attributes view.
+        /// </summary>
+        protected void EndEditScenarioAttributesView()
+        {
+            // Memorise the current calculation model selected
+            ScenarioItemViewModel scenarioItmViewMdel = CurrentScenarioItemViewModel;
+            CurrentScenarioController.SaveEvent -= OnScenarioAttributesSaved;
+            CurrentScenarioController.ApplyEvent -= OnScenarioAttributesApplied;
+            CurrentScenarioController.CancelEvent -= OnScenarioAttributesCancelled;
+            View.DockPnlLeft.IsEnabled = true;            
+            scenarioItmViewMdel.Name = scenarioItmViewMdel.Data.name;            
+            // Refresh the tree and the TabItem Name
+            SessionExplorer.View.TreeView.Items.Refresh();
+            SessionExplorer.View.TreeView.UpdateLayout();
+            scenarioItmViewMdel.IsSelected = true;
+            OnSessiontExplorerElementIsSelected(scenarioItmViewMdel, EventArgs.Empty);
+        }
+
+        private void OnScenarioAttributesCancelled(object sender, EventArgs e)
+        {
+            EndEditScenarioAttributesView();
+        }
+
+        private void OnScenarioAttributesApplied(object sender, EventArgs e)
+        {
+            EndEditScenarioAttributesView();
+        }
+
+        private void OnScenarioAttributesSaved(object sender, EventArgs e)
+        {
+            EndEditScenarioAttributesView();
         }
 
         /// <summary>
