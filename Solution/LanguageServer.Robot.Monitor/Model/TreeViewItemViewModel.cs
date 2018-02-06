@@ -190,6 +190,7 @@ namespace LanguageServer.Robot.Monitor.Model
         /// </summary>
         public const String ForeGroundProperty = "ForeGround";
         public Brush ForeGround => IsValid ? (IsCurrent || IsSelected ? Brushes.DarkGreen : Brushes.Black) : Brushes.Red;
+
         /// <summary>
         /// FontWeight property.
         /// </summary>
