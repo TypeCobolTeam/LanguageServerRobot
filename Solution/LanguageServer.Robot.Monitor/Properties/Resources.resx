@@ -135,8 +135,14 @@
   <data name="FailToSaveData" xml:space="preserve">
     <value>Failed to save data '{0}' '{1}'</value>
   </data>
+  <data name="LSRConnectioinSideStopped" xml:space="preserve">
+    <value>The Language Server Robot application has been interrupted.</value>
+  </data>
   <data name="LSRMName" xml:space="preserve">
     <value>Language Server Robot Monitor</value>
+  </data>
+  <data name="NoLSRConnection" xml:space="preserve">
+    <value>No Connection with Language Server Robot</value>
   </data>
   <data name="RecordingMessage" xml:space="preserve">
     <value>Recording...</value>

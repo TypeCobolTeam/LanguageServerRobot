@@ -188,6 +188,15 @@ namespace LanguageServer.Robot.Monitor.Controller
                         Log.LogWriter.WriteLine(e.Message);
                     }
                     MonitoringConnectionTaskCompletionSource.SetResult(result);
+                    //Inform that the LSR connection has been stopped ==> Display an ansynchoneous message message box
+                    Application.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.LSRConnectioinSideStopped,
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand);
+                        }
+                    );
                     return result;
                 }
                 );
@@ -507,6 +516,24 @@ namespace LanguageServer.Robot.Monitor.Controller
                 ConnectModel();
             }
         }
+
+        /// <summary>
+        /// Chech weither the LSR connection is active or not.
+        /// </summary>
+        /// <param name="bPrompt">true if a message box must be promted to the in case of an interrupted connection.</param>
+        /// <returns>true if the connection is alive, false otherwise.</returns>
+        private bool CheckLSRConnection(bool bPrompt)
+        {
+            if (MonitoringConnectionTask == null || MonitoringConnectionTask.Status != TaskStatus.Running)
+            {
+                if (bPrompt)
+                    MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.NoLSRConnection, LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand);
+                return false;
+            }
+            return true;
+        }
         /// <summary>
         /// Startinga Scenario Handler.
         /// </summary>
@@ -514,6 +541,10 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// <param name="e"></param>
         private void SessionExplorer_StartScenarioHandler(object sender, DocumentItemViewModel e)
         {
+            if (!CheckLSRConnection(true))
+            {
+                return;
+            }
             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
             ScenarioController = new MonitorLanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
             ScenarioRobotConnectionController scenarioConnect =

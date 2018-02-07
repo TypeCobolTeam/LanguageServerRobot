@@ -115,11 +115,29 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Language Server Robot application has been interrupted..
+        /// </summary>
+        public static string LSRConnectioinSideStopped {
+            get {
+                return ResourceManager.GetString("LSRConnectioinSideStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language Server Robot Monitor.
         /// </summary>
         public static string LSRMName {
             get {
                 return ResourceManager.GetString("LSRMName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Connection with Language Server Robot.
+        /// </summary>
+        public static string NoLSRConnection {
+            get {
+                return ResourceManager.GetString("NoLSRConnection", resourceCulture);
             }
         }
         
