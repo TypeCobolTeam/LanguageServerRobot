@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using LanguageServer.JsonRPC;
 using LanguageServer.Robot.Common.Utilities;
 using Mono.Options;
@@ -16,8 +17,10 @@ using System.Windows.Input;
 using LanguageServer.Robot.Monitor.Model;
 using LanguageServer.Robot.Common.Model;
 using LanguageServer.Robot.Monitor.View;
-using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace LanguageServer.Robot.Monitor.Controller
 {
@@ -372,6 +375,15 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Invalidate a document, that is to say no further scenario can be recorded with it
+        /// </summary>
+        /// <param name="document">The document to invalidate</param>
+        internal void SetInvalidDocument(Script document)
+        {
+            SessionExplorer.SetInvalidDocument(this.MonitoringConnection.Consumer.SessionModel, document);
+        }
+
+        /// <summary>
         /// The itemViewModel of the tree session explorer that was previously selected (before selection changed)
         /// </summary>
         protected TreeViewItemViewModel PreviousTreeItemViewModel
@@ -668,14 +680,26 @@ namespace LanguageServer.Robot.Monitor.Controller
                     MonitoringConnection.StartSessionHandler += MonitoringConnection_StartSessionHandler;
                     MonitoringConnection.StartDocumentHandler += MonitoringConnection_StartDocumentHandler;
                     MonitoringConnection.RecordedMessageHandler += MonitoringConnection_RecordedMessageHandler;
+                    MonitoringConnection.StopDocumentHandler += MonitoringConnection_StopDocumentHandler;
                 }
                 else
                 {
                     MonitoringConnection.StartSessionHandler -= MonitoringConnection_StartSessionHandler;
                     MonitoringConnection.StartDocumentHandler -= MonitoringConnection_StartDocumentHandler;
                     MonitoringConnection.RecordedMessageHandler -= MonitoringConnection_RecordedMessageHandler;
+                    MonitoringConnection.StopDocumentHandler -= MonitoringConnection_StopDocumentHandler;
                 }
             }
+        }
+
+        /// <summary>
+        /// Stop a Document : Document is closed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MonitoringConnection_StopDocumentHandler(object sender, Script e)
+        {
+            App.Current.Dispatcher.Invoke(() => SetInvalidDocument(e));
         }
 
         /// <summary>

@@ -213,5 +213,17 @@ namespace LanguageServer.Robot.Common.Controller
                 return false;
             }
         }
+
+        /// <summary>
+        /// Save a script in a file using UTF-8 encoding.
+        /// </summary>
+        /// <param name="script">The script to be saved</param>
+        /// <param name="scriptFile">The script file path</param>
+        internal override bool SaveScript(Script script, string scriptFile)
+        {
+            bool bResult = base.SaveScript(script, scriptFile);
+            StopDocumentHandler?.Invoke(this, script);
+            return bResult;
+        }
     }
 }

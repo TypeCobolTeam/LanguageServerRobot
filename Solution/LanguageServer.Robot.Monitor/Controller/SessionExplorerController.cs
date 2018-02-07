@@ -254,12 +254,30 @@ namespace LanguageServer.Robot.Monitor.Controller
 
             SessionItemViewModel sessionModel = Model[session];
             DocumentItemViewModel documentModel = sessionModel[document];
+            if (CurrentDocument != null && CurrentDocument != documentModel)
+                CurrentDocument.IsCurrent = false;
             if (documentModel != null)
             {
-                if (CurrentDocument != null)
-                    CurrentDocument.IsCurrent = false;                
                 CurrentDocument = documentModel;
                 CurrentDocument.IsCurrent = true;
+            }
+        }
+
+        /// <summary>
+        /// Set the document as invalid.
+        /// </summary>
+        /// <param name="session">The Session to which belong the script</param>
+        /// <param name="document">The document's script to set as invalid</param>
+        public void SetInvalidDocument(Session session, Script document)
+        {
+            System.Diagnostics.Debug.Assert(session != null);
+            System.Diagnostics.Debug.Assert(document != null);
+
+            SessionItemViewModel sessionModel = Model[session];
+            DocumentItemViewModel documentModel = sessionModel[document];
+            if (documentModel != null)
+            {
+                documentModel.IsValid = false;
             }
         }
 

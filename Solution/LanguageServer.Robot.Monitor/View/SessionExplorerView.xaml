@@ -16,6 +16,7 @@
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                     <Setter Property="FontWeight" Value="{Binding FontWeight, Mode=OneWay}" />
+                    <Setter Property="FontStyle" Value="{Binding FontStyle, Mode=OneWay}" />
                     <Setter Property="Foreground" Value="{Binding ForeGround, Mode=OneWay}" />
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
@@ -32,6 +33,17 @@
                 </HierarchicalDataTemplate>
 
                 <HierarchicalDataTemplate DataType="{x:Type custom:DocumentItemViewModel}" ItemsSource="{Binding Children}">
+                    <HierarchicalDataTemplate.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsValid}" Value="false">
+                                    <!--<Setter Property="TextBlock.Foreground" Value="red" />-->
+                                    <Setter Property="TextBlock.TextDecorations" Value="Strikethrough" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </HierarchicalDataTemplate.Resources>
+
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding DocumentName}" ContextMenuOpening="FrameworkElement_OnContextMenuOpening" >
                             <TextBlock.ContextMenu>

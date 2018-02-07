@@ -181,6 +181,7 @@ namespace LanguageServer.Robot.Monitor.Model
                     m_IsValid = value;
                     OnPropertyChanged(IsValidProperty);
                     OnPropertyChanged(ForeGroundProperty);
+                    OnPropertyChanged(FontWeightProperty);
                 }
             }
         }
@@ -189,14 +190,15 @@ namespace LanguageServer.Robot.Monitor.Model
         /// Foreground property.
         /// </summary>
         public const String ForeGroundProperty = "ForeGround";
-        public Brush ForeGround => IsValid ? (IsCurrent || IsSelected ? Brushes.DarkGreen : Brushes.Black) : Brushes.Red;
+        public Brush ForeGround => IsValid ? (IsCurrent ? Brushes.DarkGreen : Brushes.Black) : Brushes.Red;
 
         /// <summary>
         /// FontWeight property.
         /// </summary>
         public const String FontWeightProperty = "FontWeight";
-        public FontWeight FontWeight => IsCurrent ? FontWeights.Bold : FontWeights.Normal;
+        public FontWeight FontWeight => IsCurrent && IsValid ? FontWeights.Bold : FontWeights.Normal;
 
+        public FontStyle FontStyle => FontStyles.Normal;
         public const String IsCurrentProperty = "IsCurrent";
         private bool m_IsCurrent = false;
         /// <summary>
