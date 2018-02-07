@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.Robot.Common
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.Robot.Monitor", "..\LanguageServer.Robot.Monitor\LanguageServer.Robot.Monitor.csproj", "{DF8B4274-0B85-4CF5-809F-5A3C8A1531D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFMessageBox", "..\WPF Messagebox\C#\WPFMessageBox\WPFMessageBox.csproj", "{0BB37251-B523-401F-9CA2-8B409AB47FA8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,16 +115,6 @@ Global
 		{DF8B4274-0B85-4CF5-809F-5A3C8A1531D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF8B4274-0B85-4CF5-809F-5A3C8A1531D5}.Release|x86.ActiveCfg = Release|Any CPU
 		{DF8B4274-0B85-4CF5-809F-5A3C8A1531D5}.Release|x86.Build.0 = Release|Any CPU
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.Debug|x86.ActiveCfg = Debug|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.Debug|x86.Build.0 = Debug|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.MyDebug|Any CPU.ActiveCfg = Release|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.MyDebug|Any CPU.Build.0 = Release|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.MyDebug|x86.ActiveCfg = Debug|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.MyDebug|x86.Build.0 = Debug|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.Release|Any CPU.ActiveCfg = Release|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.Release|x86.ActiveCfg = Release|x86
-		{0BB37251-B523-401F-9CA2-8B409AB47FA8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
