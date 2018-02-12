@@ -12,6 +12,7 @@ using Mono.Options;
 using LanguageServer.Robot.Monitor.Properties;
 using LanguageServer.Robot.Common.Controller;
 using LanguageServer.Robot.Monitor.Controller;
+using LanguageServer.Robot.Monitor.View;
 
 namespace LanguageServer.Robot.Monitor
 {
@@ -81,10 +82,23 @@ namespace LanguageServer.Robot.Monitor
             StartMonitoringController();
         }
 
+        /// <summary>
+        /// Show the settings dialog.
+        /// </summary>
+        private void ShowSettingsDialog()
+        {
+            SettingsController controller = new SettingsController();
+            controller.Show();
+        }
+
         public bool CanExecute(object parameter)
         {
             if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemQuit)
                 return true;
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemSettings)
+                return true;
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuPlayScenario)
+                return MonitorController != null;
             return false;
         }
 
@@ -92,6 +106,16 @@ namespace LanguageServer.Robot.Monitor
         {
             if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemQuit)
                 this.Shutdown();
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemSettings)
+                ShowSettingsDialog();
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuPlayScenario)
+            {
+                if (MonitorController != null)
+                {
+                    MonitorController.PlayScenario();
+                }
+            }
+
         }
     }
 }

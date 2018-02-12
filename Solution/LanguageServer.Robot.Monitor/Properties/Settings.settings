@@ -1,7 +1,33 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LanguageServer.Robot.Monitor.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ServerPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\TypeCobol\Sources\##Latest_Release##</Value>
+    </Setting>
+    <Setting Name="LSRPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\TypeCobol\Sources\##Latest_Release##</Value>
+    </Setting>
+    <Setting Name="ScriptPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\TypeCobol\Sources\Sessions</Value>
+    </Setting>
+    <Setting Name="BatchTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@ECHO OFF
+SET TEST_NAME=$1
+SET PATH_TEST=%~dp0
+REM $2 = LSR Path value
+SET LSR_EXE=$2\LanguageServerRobot.exe
+REM $3 = ServerPath value
+SET LSP_EXE=$3\TypeCobol.LanguageServer.exe
+DEL %PATH_TEST%\Results\%TEST_NAME%.rlsp 2&gt; nul
+
+SET result=KO
+%LSR_EXE% -c -s %LSP_EXE% -script %PATH_TEST%\%TEST_NAME%.tlsp 1&gt; nul 2&gt; nul
+FC %PATH_TEST%\%TEST_NAME%.rlsp %PATH_TEST%\Results\%TEST_NAME%.rlsp 1&gt; nul 2&gt; nul
+if %ERRORLEVEL%==0 set result=OK
+echo %PATH_TEST%\%TEST_NAME%.tlsp %result%
+exit %ERRORLEVEL%
+</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

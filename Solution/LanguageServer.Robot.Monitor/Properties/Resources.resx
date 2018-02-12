@@ -120,6 +120,35 @@
   <data name="BadDocumentScript" xml:space="preserve">
     <value>The Script document is ill-formed.</value>
   </data>
+  <data name="DefaultBatchTemplate" xml:space="preserve">
+    <value>@ECHO OFF
+SET TEST_NAME={0}
+SET PATH_TEST=%~dp0
+REM {1} = LSR Path value
+SET LSR_EXE={1}\LanguageServerRobot.exe
+REM {2} = ServerPath value
+SET LSP_EXE={2}\TypeCobol.LanguageServer.exe
+DEL %PATH_TEST%\Results\%TEST_NAME%.rlsp 2&gt; nul
+
+SET result=KO
+%LSR_EXE% -c -s %LSP_EXE% -script %PATH_TEST%\%TEST_NAME%.tlsp 1&gt; nul 2&gt; nul
+FC %PATH_TEST%\%TEST_NAME%.rlsp %PATH_TEST%\Results\%TEST_NAME%.rlsp 1&gt; nul 2&gt; nul
+if %ERRORLEVEL%==0 set result=OK
+echo %PATH_TEST%\%TEST_NAME%.tlsp %result%
+exit %ERRORLEVEL%</value>
+    <comment>Default Templaet used to replay a script.</comment>
+  </data>
+  <data name="DefaultLSRPath" xml:space="preserve">
+    <value>C:\TypeCobol\Sources\##Latest_Release##</value>
+  </data>
+  <data name="DefaultScriptRepositoryPath" xml:space="preserve">
+    <value>C:\TypeCobol\Sources\Sessions</value>
+    <comment>Default Script/Session Repository Path</comment>
+  </data>
+  <data name="DefaultServerPath" xml:space="preserve">
+    <value>C:\TypeCobol\Sources\##Latest_Release##</value>
+    <comment>Default TypeCobol.LanguageServer Path</comment>
+  </data>
   <data name="EmptyDataName" xml:space="preserve">
     <value>Data name field cannot be empty!</value>
   </data>
@@ -132,8 +161,23 @@
   <data name="FailStopScenarioRecording" xml:space="preserve">
     <value>Failed to stop the scenario recording.</value>
   </data>
+  <data name="FailToReadScriptFile" xml:space="preserve">
+    <value>Fail to read the script file '{0}'</value>
+  </data>
+  <data name="FailToReplayAScenario" xml:space="preserve">
+    <value>Fail to replay scenario: {0}</value>
+  </data>
   <data name="FailToSaveData" xml:space="preserve">
     <value>Failed to save data '{0}' '{1}'</value>
+  </data>
+  <data name="InvalidLSRPath" xml:space="preserve">
+    <value>Invalid Language Server Robot application path: {0}</value>
+  </data>
+  <data name="InvalidScriptRepositoryPath" xml:space="preserve">
+    <value>Invalid Script Repository Path directory: {0}</value>
+  </data>
+  <data name="InvalidServerPath" xml:space="preserve">
+    <value>Invalid Server Path directory : {0}</value>
   </data>
   <data name="LSRConnectioinSideStopped" xml:space="preserve">
     <value>The Language Server Robot application has been interrupted.</value>

@@ -236,6 +236,53 @@ namespace LanguageServer.Robot.Common.Utilities
             }
             return false;
         }
+
+        /// <summary>
+        /// Determines if the given filepath has a Result File Extension
+        /// </summary>
+        /// <param name="filepath">The file path to check.</param>
+        /// <returns>true if the file path has resut file path extension, false otherwise</returns>
+        public static bool HasResultFileExtension(string filepath)
+        {
+            System.Diagnostics.Debug.Assert(filepath != null);
+            return filepath.EndsWith(RESULT_FILE_EXTENSION);
+        }
+
+        /// <summary>
+        /// Read a result file.
+        /// </summary>
+        /// <param name="filepath">The file path of the result</param>
+        /// <param name="result">[out] the Result model if the file path corresponds to a Script file</param>
+        /// <param name="exc">[out] Any exception that might have be thrown if the read failed.</param>
+        /// <returns>true if a result file has been read, false otherwise</returns>
+        public static bool ReadResultFile(string filepath, out Result result, out Exception exc)
+        {
+            System.Diagnostics.Debug.Assert(filepath != null);
+            exc = null;
+            result = null;
+            if (HasResultFileExtension(filepath))
+            {//Read the file using UTF8.
+                try
+                {
+                    using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                        {
+                            string data = sr.ReadToEnd();
+                            JObject jobject = JObject.Parse(data);
+                            result = (Result)jobject.ToObject(typeof(Result));
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    exc = e;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Create a Name for a Pipe.
         /// </summary>

@@ -762,6 +762,61 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Plays a script
+        /// </summary>
+        /// <param name="script_path">The path of the script to replay</param>
+        /// <param name="script">The script model to replay</param>
+        /// <param name="serverPath">The Server's path</param>
+        /// <param name="scriptRepositoryPath">The script repository path</param>
+        /// <returns>0 if no error -1 otherwise.</returns>
+        public static int ReplayScript(string script_path, Script script, string serverPath, string scriptRepositoryPath)
+        {
+            var server = new ServerRobotConnectionController(new ProcessMessageConnection(serverPath));
+            var robot = new LanguageServerRobotController(script_path, script, server, scriptRepositoryPath);
+            robot.PropagateConnectionLogs();
+            if (!robot.Start())
+            {
+                return -1;
+            }
+            else
+            {
+                bool bResult = robot.WaitExit();
+                return bResult ? 0 : -1;
+            }
+        }
+
+        /// <summary>
+        /// Plays a session
+        /// </summary>
+        /// <param name="session_path">The path of the session to replay</param>
+        /// <param name="session">The session model to replay</param>
+        /// <param name="serverPath">The Server's path</param>
+        /// <param name="scriptRepositoryPath">The script repository path</param>
+        /// <returns>0 if no error -1 otherwise.</returns>
+        public static int ReplaySession(string session_path, Session session, string serverPath, string scriptRepositoryPath)
+        {
+            bool bResult = true;
+            foreach (string scriptPath in session.scripts)
+            {
+                Script script;
+                Exception exc;
+                bool bValid = Util.ReadScriptFile(scriptPath, out script, out exc);
+                if (bValid)
+                {
+                    if (ReplayScript(scriptPath, script, serverPath, scriptRepositoryPath) != 0)
+                    {
+                        bResult = false;
+                    }
+                }
+                else
+                {
+                    bResult = false;
+                }
+            }
+            return bResult ? 0 : -1;
+        }
+
+        /// <summary>
         /// Dispose the controller
         /// </summary>
         public void Dispose()

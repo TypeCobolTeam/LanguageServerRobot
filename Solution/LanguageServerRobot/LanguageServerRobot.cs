@@ -347,18 +347,7 @@ namespace LanguageServerRobot
         /// <returns>0 if no error -1 otherwise.</returns>
         private static int ReplayScript(string script_path, Script script)
         {
-            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
-            var robot = new LanguageServerRobotController(script_path, script, server, ScriptRepositoryPath);
-            robot.PropagateConnectionLogs();
-            if (!robot.Start())
-            {
-                return -1;
-            }
-            else
-            {
-                bool bResult = robot.WaitExit();
-                return bResult ? 0 : -1;
-            }
+            return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ScriptRepositoryPath);
         }
 
         /// <summary>
@@ -369,25 +358,7 @@ namespace LanguageServerRobot
         /// <returns>0 if no error -1 otherwise.</returns>
         private static int ReplaySession(string session_path, Session session)
         {
-            bool bResult = true;
-            foreach (string scriptPath in session.scripts)
-            {
-                Script script;
-                Exception exc;
-                bool bValid = Util.ReadScriptFile(scriptPath, out script, out exc);
-                if (bValid)
-                {
-                    if (ReplayScript(scriptPath, script) != 0)
-                    {
-                        bResult = false;
-                    }
-                }
-                else
-                {
-                    bResult = false;
-                }
-            }
-            return bResult ? 0 : -1;
+            return LanguageServerRobotController.ReplaySession(session_path, session, ServerPath, ScriptRepositoryPath);
         }
 
         /// <summary>

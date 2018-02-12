@@ -35,6 +35,10 @@ namespace LanguageServer.Robot.Monitor
         {
             MenuItemQuit.CommandParameter = MenuItemQuit;
             MenuItemQuit.Command = App.Current as LanguageServer.Robot.Monitor.App;
+            MenuItemSettings.CommandParameter = MenuItemSettings;
+            MenuItemSettings.Command = App.Current as LanguageServer.Robot.Monitor.App;
+            MenuPlayScenario.CommandParameter = MenuPlayScenario;
+            MenuPlayScenario.Command = App.Current as LanguageServer.Robot.Monitor.App;
         }
     }
 }

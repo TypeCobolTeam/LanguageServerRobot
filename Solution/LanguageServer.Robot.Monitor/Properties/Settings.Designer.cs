@@ -8,22 +8,81 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LanguageServer.Robot.Monitor.Properties
-{
-
-
+namespace LanguageServer.Robot.Monitor.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TypeCobol\\Sources\\##Latest_Release##")]
+        public string ServerPath {
+            get {
+                return ((string)(this["ServerPath"]));
+            }
+            set {
+                this["ServerPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TypeCobol\\Sources\\##Latest_Release##")]
+        public string LSRPath {
+            get {
+                return ((string)(this["LSRPath"]));
+            }
+            set {
+                this["LSRPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TypeCobol\\Sources\\Sessions")]
+        public string ScriptPath {
+            get {
+                return ((string)(this["ScriptPath"]));
+            }
+            set {
+                this["ScriptPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"@ECHO OFF
+SET TEST_NAME=$1
+SET PATH_TEST=%~dp0
+REM $2 = LSR Path value
+SET LSR_EXE=$2\LanguageServerRobot.exe
+REM $3 = ServerPath value
+SET LSP_EXE=$3\TypeCobol.LanguageServer.exe
+DEL %PATH_TEST%\Results\%TEST_NAME%.rlsp 2> nul
+
+SET result=KO
+%LSR_EXE% -c -s %LSP_EXE% -script %PATH_TEST%\%TEST_NAME%.tlsp 1> nul 2> nul
+FC %PATH_TEST%\%TEST_NAME%.rlsp %PATH_TEST%\Results\%TEST_NAME%.rlsp 1> nul 2> nul
+if %ERRORLEVEL%==0 set result=OK
+echo %PATH_TEST%\%TEST_NAME%.tlsp %result%
+exit %ERRORLEVEL%
+")]
+        public string BatchTemplate {
+            get {
+                return ((string)(this["BatchTemplate"]));
+            }
+            set {
+                this["BatchTemplate"] = value;
             }
         }
     }

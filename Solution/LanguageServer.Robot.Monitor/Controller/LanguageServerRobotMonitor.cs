@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using LanguageServer.JsonRPC;
 using LanguageServer.Robot.Common.Utilities;
 using Mono.Options;
@@ -21,6 +21,7 @@ using Newtonsoft.Json.Linq;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace LanguageServer.Robot.Monitor.Controller
 {
@@ -206,7 +207,39 @@ namespace LanguageServer.Robot.Monitor.Controller
             MonitoringConnectionTask.Start();
         }
 
-        const string DefaultTypeCobolLanguageServerPath = "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
+        public static string DefaultTypeCobolLanguageServerPath
+        {
+            get
+            {
+                string path = Properties.Settings.Default.ServerPath;
+                DirectoryInfo di = new DirectoryInfo(path);
+                if (di.Exists)
+                {
+                    return System.IO.Path.Combine(di.FullName, "TypeCobol.LanguageServer.exe");
+                }
+                else
+                {
+                    return "C:\\TypeCobol\\Sources\\##Latest_Release##\\TypeCobol.LanguageServer.exe";
+                }
+            }
+        }
+
+        public static string DefaultScriptRepositorPath
+        {
+            get
+            {
+                string path = Properties.Settings.Default.ScriptPath;
+                DirectoryInfo di = new DirectoryInfo(path);
+                if (di.Exists)
+                {
+                    return path;
+                }
+                else
+                {
+                    return Util.DefaultScriptRepositorPath;
+                }                
+            }
+        }
 
         /// <summary>
         /// The Server path.
@@ -545,6 +578,78 @@ namespace LanguageServer.Robot.Monitor.Controller
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Entry pointfor loading and playing a scenario.
+        /// </summary>
+        public void PlayScenario()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string fileName = openFileDialog.FileName;
+                Script script = null;
+                Exception exc = null;
+                if (Util.ReadScriptFile(fileName, out script, out exc))
+                {
+                    ReplayScenario(fileName, script);
+                }
+                else
+                {
+                    MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReadScriptFile, fileName),
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                        );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replays a scenario
+        /// </summary>
+        private void ReplayScenario(string scenario_path, Script scenario)
+        {
+            if (LanguageServerRobotController.ReplayScript(scenario_path, scenario, ServerPath, ScriptRepositoryPath) == 0)
+            {
+                //Load the result if any
+                string result_dir = null;
+                bool bExist = Util.EnsureResultDirectoryExists(scenario_path, out result_dir);
+                if (!bExist)
+                {
+                    MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReplayAScenario, scenario.name),
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                        );
+
+                    return;
+                }
+                string resultFile = System.IO.Path.Combine(result_dir, Util.GetResultFileName(scenario_path));
+                Result result = null;
+                Exception exc = null;
+                if (Util.ReadResultFile(resultFile, out result, out exc))
+                {//Here Dispaly a dialog box with the result.                    
+                    JObject jobject = JObject.FromObject(result);
+                    JSonTreeController controller = new JSonTreeController(jobject);
+                    controller.Show();
+                }
+                else
+                {
+                    MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReplayAScenario, scenario.name),
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                        );
+
+                    return;
+                }
+            }
+            else
+            {
+            }
         }
         /// <summary>
         /// Startinga Scenario Handler.

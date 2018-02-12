@@ -10,7 +10,12 @@
 
         <Menu Height="20" Name="MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top">
             <MenuItem Header="_File" Name="MenuFile">
+                <MenuItem Header="_Settings..."  Name="MenuItemSettings"/>
+                <Separator />
                 <MenuItem Header="_Quit"  Name="MenuItemQuit"/>
+            </MenuItem>
+            <MenuItem Header="Test" Name="MenuTest">
+                <MenuItem Header="_Play scenario..."  Name="MenuPlayScenario"/>
             </MenuItem>
         </Menu>
 

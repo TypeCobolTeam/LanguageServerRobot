@@ -70,6 +70,56 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @ECHO OFF
+        ///SET TEST_NAME={0}
+        ///SET PATH_TEST=%~dp0
+        ///REM {1} = LSR Path value
+        ///SET LSR_EXE={1}\LanguageServerRobot.exe
+        ///REM {2} = ServerPath value
+        ///SET LSP_EXE={2}\TypeCobol.LanguageServer.exe
+        ///DEL %PATH_TEST%\Results\%TEST_NAME%.rlsp 2&gt; nul
+        ///
+        ///SET result=KO
+        ///%LSR_EXE% -c -s %LSP_EXE% -script %PATH_TEST%\%TEST_NAME%.tlsp 1&gt; nul 2&gt; nul
+        ///FC %PATH_TEST%\%TEST_NAME%.rlsp %PATH_TEST%\Results\%TEST_NAME%.rlsp 1&gt; nul 2&gt; nul
+        ///if %ERRORLEVEL%==0 set result=OK
+        ///echo %PATH_TEST%\%TEST_NAME%.tlsp %result%
+        ///exit %ERRORLEV [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string DefaultBatchTemplate {
+            get {
+                return ResourceManager.GetString("DefaultBatchTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C:\TypeCobol\Sources\##Latest_Release##.
+        /// </summary>
+        public static string DefaultLSRPath {
+            get {
+                return ResourceManager.GetString("DefaultLSRPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C:\TypeCobol\Sources\Sessions.
+        /// </summary>
+        public static string DefaultScriptRepositoryPath {
+            get {
+                return ResourceManager.GetString("DefaultScriptRepositoryPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C:\TypeCobol\Sources\##Latest_Release##.
+        /// </summary>
+        public static string DefaultServerPath {
+            get {
+                return ResourceManager.GetString("DefaultServerPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data name field cannot be empty!.
         /// </summary>
         public static string EmptyDataName {
@@ -106,11 +156,56 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to read the script file &apos;{0}&apos;.
+        /// </summary>
+        public static string FailToReadScriptFile {
+            get {
+                return ResourceManager.GetString("FailToReadScriptFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to replay scenario: {0}.
+        /// </summary>
+        public static string FailToReplayAScenario {
+            get {
+                return ResourceManager.GetString("FailToReplayAScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to save data &apos;{0}&apos; &apos;{1}&apos;.
         /// </summary>
         public static string FailToSaveData {
             get {
                 return ResourceManager.GetString("FailToSaveData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Language Server Robot application path: {0}.
+        /// </summary>
+        public static string InvalidLSRPath {
+            get {
+                return ResourceManager.GetString("InvalidLSRPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Script Repository Path directory: {0}.
+        /// </summary>
+        public static string InvalidScriptRepositoryPath {
+            get {
+                return ResourceManager.GetString("InvalidScriptRepositoryPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Server Path directory : {0}.
+        /// </summary>
+        public static string InvalidServerPath {
+            get {
+                return ResourceManager.GetString("InvalidServerPath", resourceCulture);
             }
         }
         
