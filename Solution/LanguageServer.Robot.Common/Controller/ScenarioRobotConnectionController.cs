@@ -443,5 +443,54 @@ namespace LanguageServer.Robot.Common.Controller
             }            
             return false;
         }
+
+        /// <summary>
+        /// Create a Snapshot for a script
+        /// </summary>
+        /// <param name="session">The session to which belongs the script.</param>
+        /// <param name="script">The script to create a session</param>
+        /// <param name="snapshot">[out] The snapshot script</param>
+        /// <returns>true if the snapshot has been created, false</returns>
+        public static bool CreateSnapshot(Model.Session session, Model.Script script, out Script snapshot)
+        {
+            snapshot = null;
+            if (session.initialize == null)
+            {
+                return false;
+            }
+            if (script.didOpen == null)
+            {
+                return false;
+            }
+
+            DidOpenTextDocumentParams didOpen = null;
+            JObject jsonJObject = null;
+            if (Utilities.Protocol.IsDidOpenTextDocumentNotification(script.didOpen, out jsonJObject))
+            {
+                NotificationType notificationType = DidOpenTextDocumentNotification.Type;
+                object objParams = null;
+                JToken parameters = jsonJObject["params"];
+                if (parameters != null)
+                {
+                    objParams = parameters.ToObject(notificationType.ParamsType);
+                }
+                didOpen = (DidOpenTextDocumentParams)objParams;                
+            }
+            if (didOpen == null)
+                return false;
+
+            snapshot = new Script();
+            snapshot.Copy(script);
+            snapshot.initialize = session.initialize;
+            snapshot.initialize_result = session.initialize_result;
+            snapshot.did_change_configuation = session.did_change_configuation;
+
+            JObject jsonObject = null;
+            DidCloseTextDocumentParams didCloseParameters =
+                new DidCloseTextDocumentParams(new TextDocumentIdentifier(didOpen.textDocument.uri));
+            string didClosMessage = CreateNotification(DidCloseTextDocumentNotification.Type, didCloseParameters, out jsonObject);
+            snapshot.didClose = didClosMessage;
+            return true;
+        }
     }
 }

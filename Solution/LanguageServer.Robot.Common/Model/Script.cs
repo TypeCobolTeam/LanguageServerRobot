@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using LanguageServer.Robot.Common.Utilities;
 using Newtonsoft.Json.Linq;
@@ -183,7 +184,10 @@ namespace LanguageServer.Robot.Common.Model
                                                              category == MessageCategory.Server)));
 
             Message msg = new Message(category, message);
-            messages.Add(msg);
+            lock (this)
+            {
+                messages.Add(msg);
+            }
         }
 
         /// <summary>
@@ -280,7 +284,8 @@ namespace LanguageServer.Robot.Common.Model
         /// Copy the Script attribute from another script.
         /// </summary>
         /// <param name="from">The Other script to copy attributes from.</param>
-        public void Copy(Script from)
+        /// <param name="bDeepCopy">True if a new List of message must be created, false otherwise.</param>
+        public void Copy(Script from, bool bDeepCopy = false)
         {
             this.name = from.name;
             this.session = from.session;
@@ -292,7 +297,18 @@ namespace LanguageServer.Robot.Common.Model
             this.initialize_result = from.initialize_result;
             this.did_change_configuation = from.did_change_configuation;
             this.didOpen = from.didOpen;
-            this.messages = from.messages;
+            if (bDeepCopy)
+            {
+                this.messages.Clear();
+                lock (from)
+                {
+                    this.messages.AddRange(from.messages);
+                }
+            }
+            else
+            {
+                this.messages = from.messages;
+            }
             this.didClose = from.didClose;
         }
     }

@@ -16,19 +16,30 @@ namespace LanguageServer.Robot.Common.Model
         /// <summary>
         /// Is The result successfull ? true if yes, false otherwise.
         /// </summary>
-        public bool success;
+        public bool success
+        {
+            get; set;
+        }
         /// <summary>
         /// The Uri corresponding to the source stript.
         /// </summary>
         public string uri { get; set; }
+
         /// <summary>
         /// Index of the first different message in the result_messages list, if success = false.
         /// </summary>
-        public int[] diff_index;
+        public int[] diff_index
+        {
+            get; set;
+        }
+
         /// <summary>
         /// Any exception if the result is success is false because of an applicatio, exception or any error.
         /// </summary>
-        public string exception;
+        public string exception
+        {
+            get; set;
+        }
 
         /// <summary>
         /// All resulting messages (Request, notifications, responses) in sending and reception order,
@@ -36,6 +47,13 @@ namespace LanguageServer.Robot.Common.Model
         /// </summary>
         public List<Script.Message> result_messages { get; protected set; }
 
+        /// <summary>
+        /// Empty constructor
+        /// </summary>
+        public Result()
+        {
+            
+        }
         /// <summary>
         /// Result constructor
         /// </summary>
