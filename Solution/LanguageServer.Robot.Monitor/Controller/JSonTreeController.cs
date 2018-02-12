@@ -26,7 +26,8 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// </summary>
         public JSonTreeController(JToken token) : base(GenericDialogButton.OK, new JSonTreeViewer())
         {
-            View = (JSonTreeViewer) base.UserControl;            
+            View = (JSonTreeViewer) base.UserControl;
+            SetJSonContent(token);
         }
 
         /// <summary>

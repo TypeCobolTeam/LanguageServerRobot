@@ -49,8 +49,9 @@
                             <TextBlock.ContextMenu>
                                 <ContextMenu>
                                     <!-- <MenuItem Header ="Start Scenario" Name="StartScenario" Command="{Binding StartScenarioCommand}" Click="MenuItem_StartScenario"></MenuItem> -->
-                                    <MenuItem Header ="Start Scenario" Name="StartScenario" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding StartScenarioCommand}"   />
+                                    <MenuItem Header ="_Start Scenario..." Name="StartScenario" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding StartScenarioCommand}"   />
                                     <!-- <MenuItem Header ="Stop Scenario" Name="StopScenario" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding StopScenarioCommand}" /> -->
+                                    <MenuItem Header ="_Create Snapshot..." Name="CreateSnapshot" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding CreateSnapshotCommand}"   />
                                 </ContextMenu>
                             </TextBlock.ContextMenu>
                         </TextBlock>

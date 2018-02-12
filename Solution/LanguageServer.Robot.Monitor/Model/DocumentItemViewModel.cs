@@ -73,6 +73,8 @@ namespace LanguageServer.Robot.Monitor.Model
 
         public ICommand StopScenarioCommand { get; set; }
 
+        public ICommand CreateSnapshotCommand { get; set; }
+
         /// <summary>
         /// Add a scenario to this document.
         /// </summary>

@@ -22,6 +22,7 @@ using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using LanguageServer.Robot.Monitor.Utilities;
 
 namespace LanguageServer.Robot.Monitor.Controller
 {
@@ -171,8 +172,7 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// Starts the client
         /// </summary>
         private void StartMonitoringConnection()
-        {
-            PendingSession = new Queue<Common.Model.Session>();
+        {            
             this.ConnectMonitoringController(true);
             MonitoringConnectionTaskCompletionSource = new TaskCompletionSource<MonitoringConsumerController.ConnectionState>();
             MonitorTaskCompletionSource = new TaskCompletionSource<bool>();
@@ -248,6 +248,14 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// Empty constructor.
+        /// </summary>
+        public LanguageServerRobotMonitor()
+        {
+            PendingSession = new Queue<Common.Model.Session>();
         }
 
         /// <summary>
@@ -555,6 +563,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             {
                 this.SessionExplorer = new SessionExplorerController(window.SessionExplorerTree);
                 this.SessionExplorer.StartScenarioHandler += SessionExplorer_StartScenarioHandler;
+                this.SessionExplorer.CreateSnapshotHandler += SessionExplorer_CreateSnapshotHandler;
                 //Add any pending session
                 SessionExplorer.AddSessions(PendingSession);
                 PendingSession.Clear();
@@ -612,47 +621,112 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// </summary>
         private void ReplayScenario(string scenario_path, Script scenario)
         {
-            if (LanguageServerRobotController.ReplayScript(scenario_path, scenario, ServerPath, ScriptRepositoryPath) == 0)
+            //Create a Process and run it
+            string result_dir = null;
+            bool bExist = Util.EnsureResultDirectoryExists(scenario_path, out result_dir);
+            if (!bExist)
             {
-                //Load the result if any
-                string result_dir = null;
-                bool bExist = Util.EnsureResultDirectoryExists(scenario_path, out result_dir);
-                if (!bExist)
-                {
-                    MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReplayAScenario, scenario.name),
+                MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReplayAScenario, scenario.name),
+                    LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Hand
+                    );
+
+                return;
+            }
+            string resultFile = System.IO.Path.Combine(result_dir, Util.GetResultFileName(scenario_path));
+            FileInfo fiResult = new FileInfo(resultFile);
+            System.DateTime? lastWriteTime = null;
+            if (fiResult.Exists)
+            {
+                lastWriteTime = fiResult.LastWriteTime;
+            }
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = Path.Combine(Settings.Default.LSRPath, Settings.Default.LSRExe);
+            string arguments = string.Format(Settings.Default.LSRReplayArguments,
+                Settings.Default.ServerPath, scenario_path);
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.UseShellExecute = true;
+
+            //Start the process
+            try
+            {
+                if (!process.Start())
+                {   //We didn't succed to run the Process
+                    string msg = string.Format(Properties.Resources.FailToRunLSRProcess, process.StartInfo.FileName, arguments);
+                    MessageBox.Show(msg,
                         LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
                         MessageBoxButton.OK,
                         MessageBoxImage.Hand
                         );
-
                     return;
-                }
-                string resultFile = System.IO.Path.Combine(result_dir, Util.GetResultFileName(scenario_path));
-                Result result = null;
-                Exception exc = null;
-                if (Util.ReadResultFile(resultFile, out result, out exc))
-                {//Here Dispaly a dialog box with the result.                    
-                    JObject jobject = JObject.FromObject(result);
-                    JSonTreeController controller = new JSonTreeController(jobject);
-                    controller.Show();
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReplayAScenario, scenario.name),
-                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Hand
-                        );
+                    process.WaitForExit();
+                    int exitCode = process.ExitCode;
+                    FileInfo newResult = new FileInfo(resultFile);
+                    if (newResult.Exists)
+                    {
+                        if (newResult.LastWriteTime == lastWriteTime)
+                        {
+                            string msg = string.Format(Properties.Resources.FailToGetResultFromScenario, scenario_path);
+                            MessageBox.Show(msg,
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                                );
+                            return;
+                        }
+                        else
+                        {
+                            Result result = null;
+                            Exception exc = null;
+                            if (Util.ReadResultFile(resultFile, out result, out exc))
+                            {//Here Dispaly a dialog box with the result.                    
+                                JObject jobject = JObject.FromObject(result);
+                                JSonTreeController controller = new JSonTreeController(jobject);
+                                controller.Show();
+                            }
+                            else
+                            {
+                                MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReplayAScenario, scenario.name),
+                                    LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Hand
+                                    );
 
-                    return;
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {//No result file
+                        string msg = string.Format(Properties.Resources.FailToGetResultFromScenario, scenario_path);
+                        MessageBox.Show(msg,
+                            LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Hand
+                            );
+                        return;
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-            }
+                string msg = string.Format(Properties.Resources.FailToRunLSRProcessExc, process.StartInfo.FileName, arguments, e.Message);
+                MessageBox.Show(msg,
+                    LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Hand
+                    );
+                return;
+            }            
         }
+
         /// <summary>
-        /// Startinga Scenario Handler.
+        /// Starting a Scenario Handler.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -707,9 +781,17 @@ namespace LanguageServer.Robot.Monitor.Controller
                         ScenarioController = null;
                         Script recordedScenario;
                         if (scenarioConnect.SaveScenario(e.Data, saveFileDialog.FileName, out recordedScenario))
-                        {                            
+                        {
                             //Add the scenario to its Document
                             e.AddScenario(recordedScenario);
+                        }
+                        else
+                        {
+                            MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToSaveTheScenario, saveFileDialog.FileName),
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                                );
                         }
                         saveCtrl.Dispose();
                     }
@@ -726,6 +808,65 @@ namespace LanguageServer.Robot.Monitor.Controller
                     ScenarioController = null;
                     saveCtrl.Dispose();                    
                 }
+            }
+        }
+
+        /// <summary>
+        /// Creatinga snapshot Handler.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SessionExplorer_CreateSnapshotHandler(object sender, DocumentItemViewModel e)
+        {
+            WaitCursor wc = new WaitCursor();
+            try
+            {
+                if (!CheckLSRConnection(true))
+                {
+                    return;
+                }
+                Script snapshot = null;
+                if (ScenarioRobotConnectionController.CreateSnapshot(this.MonitoringConnection.Consumer.SessionModel,
+                    e.Data,
+                    out snapshot))
+                {
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        snapshot.name = (new FileInfo(saveFileDialog.FileName)).Name;
+                        try
+                        {
+                            using (FileStream stream = System.IO.File.Create(saveFileDialog.FileName))
+                            {
+                                snapshot.Write(stream);
+                            }
+                            e.AddScenario(snapshot);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(
+                                string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToSaveTheScenario,
+                                    saveFileDialog.FileName, ex.Message),
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                            );
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.FailToCreateSnapshot,
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                    );
+                }
+            }
+            finally
+            {
+                wc.Dispose();
             }
         }
 

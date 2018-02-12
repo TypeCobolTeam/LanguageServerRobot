@@ -161,14 +161,32 @@ exit %ERRORLEVEL%</value>
   <data name="FailStopScenarioRecording" xml:space="preserve">
     <value>Failed to stop the scenario recording.</value>
   </data>
+  <data name="FailToCreateSnapshot" xml:space="preserve">
+    <value>Fail to create a snapshot.</value>
+  </data>
+  <data name="FailToGetResultFromScenario" xml:space="preserve">
+    <value>Fail to get a result from the execution of the scenario : {0}</value>
+  </data>
   <data name="FailToReadScriptFile" xml:space="preserve">
     <value>Fail to read the script file '{0}'</value>
   </data>
   <data name="FailToReplayAScenario" xml:space="preserve">
     <value>Fail to replay scenario: {0}</value>
   </data>
+  <data name="FailToRunLSRProcess" xml:space="preserve">
+    <value>Fail to run the LSR process with the following command line: {0} {1}</value>
+  </data>
+  <data name="FailToRunLSRProcessExc" xml:space="preserve">
+    <value>Fail to run the LSR process with the following command line: {0} {1} : {2}</value>
+  </data>
   <data name="FailToSaveData" xml:space="preserve">
     <value>Failed to save data '{0}' '{1}'</value>
+  </data>
+  <data name="FailToSaveTheScenario" xml:space="preserve">
+    <value>Fail to save the scenario : {0}</value>
+  </data>
+  <data name="FailToSaveTheScenarioExc" xml:space="preserve">
+    <value>Fail to save the scenario  {0} : {1}</value>
   </data>
   <data name="InvalidLSRPath" xml:space="preserve">
     <value>Invalid Language Server Robot application path: {0}</value>

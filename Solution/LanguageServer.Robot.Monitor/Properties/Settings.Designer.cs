@@ -85,5 +85,29 @@ exit %ERRORLEVEL%
                 this["BatchTemplate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-c -s {0}\\TypeCobol.LanguageServer.exe -script {1}")]
+        public string LSRReplayArguments {
+            get {
+                return ((string)(this["LSRReplayArguments"]));
+            }
+            set {
+                this["LSRReplayArguments"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LanguageServerRobot.exe")]
+        public string LSRExe {
+            get {
+                return ((string)(this["LSRExe"]));
+            }
+            set {
+                this["LSRExe"] = value;
+            }
+        }
     }
 }

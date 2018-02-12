@@ -85,6 +85,7 @@
     <Compile Include="Model\TreeViewItemViewModel.cs" />
     <Compile Include="Utilities\FolderBrowserDialog.cs" />
     <Compile Include="Utilities\MethodToValueConverter.cs" />
+    <Compile Include="Utilities\WaitCursor.cs" />
     <Compile Include="View\DataView.xaml.cs">
       <DependentUpon>DataView.xaml</DependentUpon>
     </Compile>

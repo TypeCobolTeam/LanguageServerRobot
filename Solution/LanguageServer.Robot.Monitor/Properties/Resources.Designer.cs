@@ -156,6 +156,24 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to create a snapshot..
+        /// </summary>
+        public static string FailToCreateSnapshot {
+            get {
+                return ResourceManager.GetString("FailToCreateSnapshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to get a result from the execution of the scenario : {0}.
+        /// </summary>
+        public static string FailToGetResultFromScenario {
+            get {
+                return ResourceManager.GetString("FailToGetResultFromScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fail to read the script file &apos;{0}&apos;.
         /// </summary>
         public static string FailToReadScriptFile {
@@ -174,11 +192,47 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to run the LSR process with the following command line: {0} {1}.
+        /// </summary>
+        public static string FailToRunLSRProcess {
+            get {
+                return ResourceManager.GetString("FailToRunLSRProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to run the LSR process with the following command line: {0} {1} : {2}.
+        /// </summary>
+        public static string FailToRunLSRProcessExc {
+            get {
+                return ResourceManager.GetString("FailToRunLSRProcessExc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to save data &apos;{0}&apos; &apos;{1}&apos;.
         /// </summary>
         public static string FailToSaveData {
             get {
                 return ResourceManager.GetString("FailToSaveData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to save the scenario : {0}.
+        /// </summary>
+        public static string FailToSaveTheScenario {
+            get {
+                return ResourceManager.GetString("FailToSaveTheScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to save the scenario  {0} : {1}.
+        /// </summary>
+        public static string FailToSaveTheScenarioExc {
+            get {
+                return ResourceManager.GetString("FailToSaveTheScenarioExc", resourceCulture);
             }
         }
         

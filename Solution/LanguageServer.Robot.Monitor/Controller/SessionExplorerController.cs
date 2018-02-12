@@ -97,12 +97,58 @@ namespace LanguageServer.Robot.Monitor.Controller
             public event EventHandler CanExecuteChanged;
         }
 
+        /// <summary>
+        /// The Create Snapshot command
+        /// </summary>
+        public class CreateSnapshotCommand : ICommand
+        {
+            /// <summary>
+            /// The Session Explorer Controller.
+            /// </summary>
+            public SessionExplorerController Controller
+            { get; internal set; }
+            public CreateSnapshotCommand(SessionExplorerController controller)
+            {
+                this.Controller = controller;
+            }
+            public bool CanExecute(object parameter)
+            {
+                if (parameter is DocumentItemViewModel)
+                {
+                    return (parameter as DocumentItemViewModel).IsCurrent && !(parameter as DocumentItemViewModel).IsRecording;
+                }
+                return false;
+            }
+
+            public void Execute(object parameter)
+            {
+                if (CanExecute(parameter))
+                {
+                    Controller.CreateSnapshotHandler?.Invoke(Controller, parameter as DocumentItemViewModel);
+                }
+            }
+
+            public void RaiseCanExecuteChanged(object parameter)
+            {
+                if (CanExecuteChanged != null)
+                {
+                    CanExecuteChanged(parameter, EventArgs.Empty);
+                }
+            }
+            public event EventHandler CanExecuteChanged;
+        }
+
         public StartScenarioCommand StartScenario
         {
             get; internal set;
         }
 
         public StopScenarioCommand StopScenario
+        {
+            get; internal set;
+        }
+
+        public CreateSnapshotCommand CreateSnapshot
         {
             get; internal set;
         }
@@ -116,6 +162,11 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// Stop Scenario Handler
         /// </summary>
         public event EventHandler<DocumentItemViewModel> StopScenarioHandler;
+
+        /// <summary>
+        /// Create Snapshot Handler
+        /// </summary>
+        public event EventHandler<DocumentItemViewModel> CreateSnapshotHandler;
 
         /// <summary>
         /// View Constructor
@@ -144,6 +195,7 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             StartScenario = new StartScenarioCommand(this);
             StopScenario = new StopScenarioCommand(this);
+            CreateSnapshot = new CreateSnapshotCommand(this);
             Model = new SessionExplorerModel(sessions);
             View = view;
             BindViewModel();
@@ -229,6 +281,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             {   //Connect controller command to the model.
                 documentModel.StartScenarioCommand = StartScenario;
                 documentModel.StopScenarioCommand = StopScenario;
+                documentModel.CreateSnapshotCommand = CreateSnapshot;
             }
             return documentModel;
         }
