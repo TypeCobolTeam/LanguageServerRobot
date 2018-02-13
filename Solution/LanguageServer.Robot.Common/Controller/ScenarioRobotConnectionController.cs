@@ -280,24 +280,7 @@ namespace LanguageServer.Robot.Common.Controller
                     return false;
                 }
                 //Lookup the position of the last didSave message.
-                int lastSaveIndex = 0;
-                for (int i = script.messages.Count - 1; i >= 0; i--)
-                {                    
-                    var msg = script.messages[i];
-                    if (msg.category == Script.MessageCategory.Client)
-                    {
-                        string text = msg.message;
-                        if (text.Contains(DidSaveTextDocumentNotification.Type.Method))
-                        {
-                            JObject jsonJObject = null;
-                            if (Utilities.Protocol.IsDidSaveTextDocumentNotification(text, out jsonJObject))
-                            {
-                                lastSaveIndex = i;
-                                break;
-                            }
-                        }
-                    }
-                }
+                int lastSaveIndex = LookupLastSavePosition(script);
                 //Apply didOpen all text changes from the beginning.
                 for (int i = lastSaveIndex; i < script.messages.Count; i++)
                 {
@@ -445,13 +428,42 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Lookup the last save position in the script
+        /// </summary>
+        /// <param name="script">Last save position</param>
+        /// <returns>The index of the last save position in the script's messages.</returns>
+        private static int LookupLastSavePosition(Script script)
+        {
+            //Lookup the position of the last didSave message.
+            int lastSaveIndex = 0;
+            for (int i = script.messages.Count - 1; i >= 0; i--)
+            {
+                var msg = script.messages[i];
+                if (msg.category == Script.MessageCategory.Client)
+                {
+                    string text = msg.message;
+                    if (text.Contains(DidSaveTextDocumentNotification.Type.Method))
+                    {
+                        JObject jsonJObject = null;
+                        if (Utilities.Protocol.IsDidSaveTextDocumentNotification(text, out jsonJObject))
+                        {
+                            lastSaveIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            return lastSaveIndex;
+        }
+
+        /// <summary>
         /// Create a Snapshot for a script
         /// </summary>
         /// <param name="session">The session to which belongs the script.</param>
         /// <param name="script">The script to create a session</param>
         /// <param name="snapshot">[out] The snapshot script</param>
         /// <returns>true if the snapshot has been created, false</returns>
-        public static bool CreateSnapshot(Model.Session session, Model.Script script, out Script snapshot)
+        public static bool CreateSnapshot(Model.Session session, Model.Script script, out Script snapshot, bool bFromLastSave = false)
         {
             snapshot = null;
             if (session.initialize == null)
@@ -474,13 +486,24 @@ namespace LanguageServer.Robot.Common.Controller
                 {
                     objParams = parameters.ToObject(notificationType.ParamsType);
                 }
-                didOpen = (DidOpenTextDocumentParams)objParams;                
+                didOpen = (DidOpenTextDocumentParams)objParams;
             }
             if (didOpen == null)
                 return false;
 
             snapshot = new Script();
-            snapshot.Copy(script);
+            if (bFromLastSave)
+            {
+                int lastSaveIndex = LookupLastSavePosition(script);
+                List<Script.Message> messages = new List<Script.Message>();
+                messages.AddRange(script.messages.Skip(lastSaveIndex));
+                snapshot.Copy(script);
+                snapshot.messages = messages;
+            }
+            else
+            {
+                snapshot.Copy(script, true);
+            }
             snapshot.initialize = session.initialize;
             snapshot.initialize_result = session.initialize_result;
             snapshot.did_change_configuation = session.did_change_configuation;

@@ -70,6 +70,8 @@ namespace LanguageServer.Robot.Monitor.Controller
             {
                 Properties.Settings.Default.Reset();
                 Model.ReadFromSettings();
+                View.DataContext = null;
+                View.DataContext = Model;
                 return;
             }
             base.Button_Click(sender, e);

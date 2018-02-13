@@ -121,7 +121,7 @@ namespace LanguageServer.Robot.Common.Model
         /// <summary>
         /// All messages (Request, notifications, responses) in sending and reception order.
         /// </summary>
-        public List<Message> messages { get; protected set; }
+        public List<Message> messages { get; internal set; }
 
         /// <summary>
         /// the "textDocument/didOpen" notification that opened the document
