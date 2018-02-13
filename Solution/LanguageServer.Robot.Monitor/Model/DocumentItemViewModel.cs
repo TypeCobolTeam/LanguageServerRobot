@@ -75,6 +75,8 @@ namespace LanguageServer.Robot.Monitor.Model
 
         public ICommand CreateSnapshotCommand { get; set; }
 
+        public ICommand CreateLastSaveSnapshotCommand { get; set; }
+
         /// <summary>
         /// Add a scenario to this document.
         /// </summary>

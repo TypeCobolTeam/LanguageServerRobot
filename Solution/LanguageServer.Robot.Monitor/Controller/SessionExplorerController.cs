@@ -107,9 +107,11 @@ namespace LanguageServer.Robot.Monitor.Controller
             /// </summary>
             public SessionExplorerController Controller
             { get; internal set; }
-            public CreateSnapshotCommand(SessionExplorerController controller)
+            public bool LastSaveSnapshot { get; internal set; }
+            public CreateSnapshotCommand(SessionExplorerController controller, bool bLastSave)
             {
                 this.Controller = controller;
+                this.LastSaveSnapshot = bLastSave;
             }
             public bool CanExecute(object parameter)
             {
@@ -124,7 +126,10 @@ namespace LanguageServer.Robot.Monitor.Controller
             {
                 if (CanExecute(parameter))
                 {
-                    Controller.CreateSnapshotHandler?.Invoke(Controller, parameter as DocumentItemViewModel);
+                    if (LastSaveSnapshot)
+                        Controller.CreateLastSaveSnapshotHandler?.Invoke(Controller, parameter as DocumentItemViewModel);
+                    else
+                        Controller.CreateSnapshotHandler?.Invoke(Controller, parameter as DocumentItemViewModel);
                 }
             }
 
@@ -153,6 +158,11 @@ namespace LanguageServer.Robot.Monitor.Controller
             get; internal set;
         }
 
+        public CreateSnapshotCommand CreateLastSaveSnapshot
+        {
+            get; internal set;
+        }
+
         /// <summary>
         /// Start Scenario Handler
         /// </summary>
@@ -167,6 +177,11 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// Create Snapshot Handler
         /// </summary>
         public event EventHandler<DocumentItemViewModel> CreateSnapshotHandler;
+
+        /// <summary>
+        /// Create Last Save Snapshot Handler
+        /// </summary>
+        public event EventHandler<DocumentItemViewModel> CreateLastSaveSnapshotHandler;
 
         /// <summary>
         /// View Constructor
@@ -195,7 +210,8 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             StartScenario = new StartScenarioCommand(this);
             StopScenario = new StopScenarioCommand(this);
-            CreateSnapshot = new CreateSnapshotCommand(this);
+            CreateSnapshot = new CreateSnapshotCommand(this, false);
+            CreateLastSaveSnapshot = new CreateSnapshotCommand(this, true);
             Model = new SessionExplorerModel(sessions);
             View = view;
             BindViewModel();
@@ -282,6 +298,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 documentModel.StartScenarioCommand = StartScenario;
                 documentModel.StopScenarioCommand = StopScenario;
                 documentModel.CreateSnapshotCommand = CreateSnapshot;
+                documentModel.CreateLastSaveSnapshotCommand = CreateLastSaveSnapshot;
             }
             return documentModel;
         }

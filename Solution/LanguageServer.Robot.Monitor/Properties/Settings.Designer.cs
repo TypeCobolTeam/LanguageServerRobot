@@ -62,12 +62,12 @@ namespace LanguageServer.Robot.Monitor.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"@ECHO OFF
-SET TEST_NAME=$1
+SET TEST_NAME={0}
 SET PATH_TEST=%~dp0
-REM $2 = LSR Path value
-SET LSR_EXE=$2\LanguageServerRobot.exe
-REM $3 = ServerPath value
-SET LSP_EXE=$3\TypeCobol.LanguageServer.exe
+REM {1} = LSR Path value
+SET LSR_EXE={1}\LanguageServerRobot.exe
+REM {2} = ServerPath value
+SET LSP_EXE={2}\TypeCobol.LanguageServer.exe
 DEL %PATH_TEST%\Results\%TEST_NAME%.rlsp 2> nul
 
 SET result=KO
