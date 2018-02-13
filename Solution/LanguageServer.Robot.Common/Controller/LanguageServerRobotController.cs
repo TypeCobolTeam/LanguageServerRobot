@@ -67,6 +67,14 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Server Option sif any.
+        /// </summary>
+        public string ServerOptions
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Timeoout to wait for the Monitor Application to establish the connection : 30s == 10000ms
         /// </summary>
         private const int MONITOR_CONNECTION_TIMEOUT = 30 * 1000;
@@ -427,7 +435,10 @@ namespace LanguageServer.Robot.Common.Controller
                 string local_dir = fi.DirectoryName;
                 string monitor_path = Path.Combine(local_dir, LSR_MONITOR_EXE);
                 string monitor_argument = string.Format("-pipe \"{0}\"", pipeName);
-
+                if (ServerOptions != null)
+                {
+                    monitor_argument += " -so \"" + ServerOptions + "\"";
+                }
                 this.MonitorProcess = new System.Diagnostics.Process();
                 this.MonitorProcess.StartInfo.FileName = monitor_path;
                 this.MonitorProcess.StartInfo.Arguments = monitor_argument;
@@ -767,12 +778,14 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="script_path">The path of the script to replay</param>
         /// <param name="script">The script model to replay</param>
         /// <param name="serverPath">The Server's path</param>
+        /// <param name="serverOptions">The Server's options</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        public static int ReplayScript(string script_path, Script script, string serverPath, string scriptRepositoryPath)
+        public static int ReplayScript(string script_path, Script script, string serverPath, string serverOptions, string scriptRepositoryPath)
         {
             var server = new ServerRobotConnectionController(new ProcessMessageConnection(serverPath));
             var robot = new LanguageServerRobotController(script_path, script, server, scriptRepositoryPath);
+            robot.ServerOptions = serverOptions;
             robot.PropagateConnectionLogs();
             if (!robot.Start())
             {
@@ -791,9 +804,10 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="session_path">The path of the session to replay</param>
         /// <param name="session">The session model to replay</param>
         /// <param name="serverPath">The Server's path</param>
+        /// <param name="serverOptions">The Server's options</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        public static int ReplaySession(string session_path, Session session, string serverPath, string scriptRepositoryPath)
+        public static int ReplaySession(string session_path, Session session, string serverPath, string serverOptions, string scriptRepositoryPath)
         {
             bool bResult = true;
             foreach (string scriptPath in session.scripts)
@@ -803,7 +817,7 @@ namespace LanguageServer.Robot.Common.Controller
                 bool bValid = Util.ReadScriptFile(scriptPath, out script, out exc);
                 if (bValid)
                 {
-                    if (ReplayScript(scriptPath, script, serverPath, scriptRepositoryPath) != 0)
+                    if (ReplayScript(scriptPath, script, serverPath, serverOptions, scriptRepositoryPath) != 0)
                     {
                         bResult = false;
                     }

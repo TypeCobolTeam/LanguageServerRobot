@@ -260,6 +260,14 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Server options.
+        /// </summary>
+        public static string ServerOptions
+        {
+            get; internal set;
+        }
+
+        /// <summary>
         /// Entry point of the LSRM Controller, with access to the command line arguments.
         /// </summary>
         /// <param name="sender"></param>
@@ -306,6 +314,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 { "p|pipe=","Communication Pipe's name with LSR", (string v) => PipeName = v },
                 { "d|dir=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
+                { "so|soptions=","Server options", (string v) => ServerOptions = v },
             };
             System.Collections.Generic.List<string> arguments;
             try { arguments = p.Parse(e.Args); }
@@ -765,7 +774,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             //Write the batch file
             using (FileStream stream = System.IO.File.Create(Path.Combine(fi.DirectoryName,basename + ".bat")))
             {
-                string templ = string.Format(Settings.Default.BatchTemplate, fi.Name, Settings.Default.LSRPath,
+                string templ = string.Format(Settings.Default.BatchTemplate, basename, Settings.Default.LSRPath,
                     Settings.Default.ServerPath);
                 byte[] bytes = System.Text.Encoding.ASCII.GetBytes(templ);
                 stream.Write(bytes, 0, bytes.Length);

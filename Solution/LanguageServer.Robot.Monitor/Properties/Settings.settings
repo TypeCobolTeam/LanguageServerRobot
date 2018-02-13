@@ -30,7 +30,7 @@ exit %ERRORLEVEL%
 </Value>
     </Setting>
     <Setting Name="LSRReplayArguments" Type="System.String" Scope="User">
-      <Value Profile="(Default)">-c -s {0}\TypeCobol.LanguageServer.exe -script {1}</Value>
+      <Value Profile="(Default)">-c -so "-td" -s {0}\TypeCobol.LanguageServer.exe -script {1}</Value>
     </Setting>
     <Setting Name="LSRExe" Type="System.String" Scope="User">
       <Value Profile="(Default)">LanguageServerRobot.exe</Value>

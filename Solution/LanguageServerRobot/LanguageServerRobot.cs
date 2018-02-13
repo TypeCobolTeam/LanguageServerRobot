@@ -85,6 +85,14 @@ namespace LanguageServerRobot
         }
 
         /// <summary>
+        /// Server options.
+        /// </summary>
+        public static string ServerOptions
+        {
+            get; internal set;
+        }
+
+        /// <summary>
         /// The file type
         /// </summary>
         public enum FileType
@@ -171,6 +179,7 @@ namespace LanguageServerRobot
                     if (!version)Files.Add(new Tuple<string,FileType>(v,FileType.SessionFile)); }
                 },
                 { "s|server=","{PATH} the server path", (string v) => ServerPath = v },
+                { "so|soptions=","Server options", (string v) => ServerOptions = v },
                 { "d|dir=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
                 { "m|monitoring","Show the monitoring Window", _ => monitoring = true },
             };
@@ -248,10 +257,11 @@ namespace LanguageServerRobot
                         {
                             //Create and start Language Server Robot controller.
                             var client = new ClientRobotConnectionController();
-                            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
+                            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath, ServerOptions));
                             var robot = monitoring 
                                 ? new LanguageServerRobotController(client, server, DataConnectionfactory.Create(DataConnectionfactory.ConnectionType.PIPE, DataConnectionfactory.ConnectionSide.Producer), ScriptRepositoryPath)
                                 : new LanguageServerRobotController(client, server, ScriptRepositoryPath);
+                            robot.ServerOptions = ServerOptions;
                             robot.PropagateConnectionLogs();
                             if (!robot.Start())
                             {
@@ -347,7 +357,7 @@ namespace LanguageServerRobot
         /// <returns>0 if no error -1 otherwise.</returns>
         private static int ReplayScript(string script_path, Script script)
         {
-            return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ScriptRepositoryPath);
+            return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath);
         }
 
         /// <summary>
@@ -358,7 +368,7 @@ namespace LanguageServerRobot
         /// <returns>0 if no error -1 otherwise.</returns>
         private static int ReplaySession(string session_path, Session session)
         {
-            return LanguageServerRobotController.ReplaySession(session_path, session, ServerPath, ScriptRepositoryPath);
+            return LanguageServerRobotController.ReplaySession(session_path, session, ServerPath, ServerOptions, ScriptRepositoryPath);
         }
 
         /// <summary>

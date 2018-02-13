@@ -88,7 +88,7 @@ exit %ERRORLEVEL%
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-c -s {0}\\TypeCobol.LanguageServer.exe -script {1}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-c -so \"-td\" -s {0}\\TypeCobol.LanguageServer.exe -script {1}")]
         public string LSRReplayArguments {
             get {
                 return ((string)(this["LSRReplayArguments"]));

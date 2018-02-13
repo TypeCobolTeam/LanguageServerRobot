@@ -148,11 +148,12 @@ namespace LanguageServer.Robot.Monitor.Utilities
                 Title = string.Empty;
                 RootFolder = Environment.SpecialFolder.Desktop;
                 // default options
-                _dialogOptions = FolderBrowserOptions.ShowEditBox
+                _dialogOptions =  FolderBrowserOptions.ShowEditBox
                                  | FolderBrowserOptions.UseNewStyle
                                  | FolderBrowserOptions.BrowseShares
                                  | FolderBrowserOptions.ShowStatusText
-                                 | FolderBrowserOptions.ValidateResult;
+                                 | FolderBrowserOptions.ValidateResult                                
+                                 ;
             }
 
             /// <summary>
