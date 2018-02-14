@@ -629,6 +629,31 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Get the path of the LSR executable application.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetLSRExePath()
+        {
+            string defaultPath = Path.Combine(Settings.Default.LSRPath, Settings.Default.LSRExe);
+            FileInfo LSRInfo = new FileInfo(defaultPath);
+            if (!LSRInfo.Exists)
+            {   //Using user setting we cannot find the LSR application ==> locate it in the current application location directory.
+                string location = Assembly.GetExecutingAssembly().Location;
+                Uri uri = new Uri(location);
+                string localLocation = uri.LocalPath;
+                FileInfo fi = new FileInfo(localLocation);
+                string localDir = fi.DirectoryName;
+                string monitorPath = Path.Combine(localDir, Settings.Default.LSRExe);
+                LSRInfo = new FileInfo(monitorPath);
+                if (LSRInfo.Exists)
+                {
+                    defaultPath = LSRInfo.FullName;
+                }
+            }
+            return defaultPath;
+        }
+
+        /// <summary>
         /// Replays a scenario
         /// </summary>
         /// <param name="scenario_path"></param>
@@ -661,7 +686,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             }
 
             System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.FileName = Path.Combine(Settings.Default.LSRPath, Settings.Default.LSRExe);
+            process.StartInfo.FileName = GetLSRExePath();
             string arguments = string.Format(Settings.Default.LSRReplayArguments,
                 Settings.Default.ServerPath, scenario_path);
             process.StartInfo.Arguments = arguments;
@@ -771,10 +796,11 @@ namespace LanguageServer.Robot.Monitor.Controller
         {
             FileInfo fi = new FileInfo(scenarioFile);
             string basename = scenarioFile.Substring(0, scenarioFile.Length - fi.Extension.Length);
+            string name = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
             //Write the batch file
             using (FileStream stream = System.IO.File.Create(Path.Combine(fi.DirectoryName,basename + ".bat")))
             {
-                string templ = string.Format(Settings.Default.BatchTemplate, basename, Settings.Default.LSRPath,
+                string templ = string.Format(Settings.Default.BatchTemplate, name, Settings.Default.LSRPath,
                     Settings.Default.ServerPath);
                 byte[] bytes = System.Text.Encoding.ASCII.GetBytes(templ);
                 stream.Write(bytes, 0, bytes.Length);
@@ -910,10 +936,13 @@ namespace LanguageServer.Robot.Monitor.Controller
                         snapshot.name = (new FileInfo(saveFileDialog.FileName)).Name;
                         try
                         {
+                            snapshot.uri = new Uri(saveFileDialog.FileName).ToString();
+                            FileInfo fi = new FileInfo(saveFileDialog.FileName);
+                            snapshot.name = fi.Name;
                             using (FileStream stream = System.IO.File.Create(saveFileDialog.FileName))
                             {
                                 snapshot.Write(stream);
-                            }                            
+                            }                                                        
                             e.AddScenario(snapshot);
                             //Write in backgound result files.
                             Task testFile = new Task(() => CreateTestFiles(snapshot, saveFileDialog.FileName));
