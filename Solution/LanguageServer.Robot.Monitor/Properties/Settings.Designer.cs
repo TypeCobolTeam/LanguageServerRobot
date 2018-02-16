@@ -71,7 +71,7 @@ SET LSP_EXE={2}\TypeCobol.LanguageServer.exe
 DEL %PATH_TEST%\Results\%TEST_NAME%.rlsp 2> nul
 
 SET result=KO
-%LSR_EXE% -c -so ""-td"" -s %LSP_EXE% -script %PATH_TEST%\%TEST_NAME%.tlsp 1> nul 2> nul
+%LSR_EXE% -c -s %LSP_EXE% -script %PATH_TEST%\%TEST_NAME%.tlsp 1> nul 2> nul
 FC %PATH_TEST%\%TEST_NAME%.rlsp %PATH_TEST%\Results\%TEST_NAME%.rlsp 1> nul 2> nul
 if %ERRORLEVEL%==0 set result=OK
 echo %PATH_TEST%\%TEST_NAME%.tlsp %result%
@@ -88,7 +88,7 @@ exit %ERRORLEVEL%
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-c -so \"-td\" -s {0}\\TypeCobol.LanguageServer.exe -script {1}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-c -s {0}\\TypeCobol.LanguageServer.exe -script {1}")]
         public string LSRReplayArguments {
             get {
                 return ((string)(this["LSRReplayArguments"]));

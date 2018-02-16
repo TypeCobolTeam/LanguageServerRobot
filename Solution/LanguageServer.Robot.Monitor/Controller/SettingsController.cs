@@ -103,6 +103,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             Model.ServerPath = View.ServerPath.Text;
             Model.LSRPath = View.LSRPath.Text;
             Model.ScriptRepositoryPath = View.ScriptRepository.Text;
+            Model.LSRReplayArguments = View.LSRReplayArguments.Text;
             Model.BatchTemplate = View.BatchTemplate.Text;
             return true;
         }

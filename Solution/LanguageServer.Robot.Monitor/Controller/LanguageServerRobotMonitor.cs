@@ -736,7 +736,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                             Exception exc = null;
                             if (Util.ReadResultFile(resultFile, out result, out exc))
                             {//Here Dispaly a dialog box with the result.                                                    
-                                scenarioResult = result;
+                                scenarioResult = result;                                
                                 if (bPromt)
                                 {
                                     JObject jobject = JObject.FromObject(result);
@@ -809,14 +809,31 @@ namespace LanguageServer.Robot.Monitor.Controller
             Result result = null;
             if (ReplayScenario(scenarioFile, scenario, out result, false))
             {
-                JObject jobject = JObject.FromObject(result);
-                using (
-                    FileStream stream =
-                        System.IO.File.Create(Path.Combine(fi.DirectoryName, basename + Util.RESULT_FILE_EXTENSION )))
+                bool bSaved = false;
+                try
                 {
-                    string text = jobject.ToString();
-                    byte[] bytes = Encoding.UTF8.GetBytes(text);
-                    stream.Write(bytes, 0, bytes.Length);
+                    string result_dir = null;
+                    bool bExist = Util.EnsureResultDirectoryExists(scenarioFile, out result_dir);
+                    string resultFile = System.IO.Path.Combine(result_dir, Util.GetResultFileName(scenarioFile));
+                    if (bExist)
+                    {
+                        File.Copy(resultFile, Path.Combine(fi.DirectoryName, basename + Util.RESULT_FILE_EXTENSION));
+                        bSaved = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);                    
+                }
+                if (!bSaved)
+                {
+                    using (
+                        FileStream stream =
+                            System.IO.File.Create(Path.Combine(fi.DirectoryName, basename + Util.RESULT_FILE_EXTENSION))
+                    )
+                    {
+                        result.Write(stream);
+                    }
                 }
             }
         }
@@ -1019,10 +1036,15 @@ namespace LanguageServer.Robot.Monitor.Controller
             }
         }
 
+        /// <summary>
+        /// Handler when a LSP message is receice, it can be a client or a server message.
+        /// This can be a base point for filtering any message, regardless the target document.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Consumer_LspMessageHandler(object sender, Common.Model.Message.LspMessage e)
         {
-            //RunScenarioController();
-            Log.LogWriter.WriteLine(e.Message);
+            //Log.LogWriter.WriteLine(e.Message);
         }
 
         public bool CanExecute(object parameter)

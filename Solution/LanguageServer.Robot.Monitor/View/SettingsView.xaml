@@ -23,7 +23,9 @@
         <Label Grid.Column="0" Content="Script Repository path:" HorizontalAlignment="Left" Margin="0,60,0,0" VerticalAlignment="Top" Height="26" Width="130"/>
         <TextBox Grid.Column="1" Name="ScriptRepository" HorizontalAlignment="Stretch" Height="23" Margin="1,63,0,0" TextWrapping="Wrap" Text="{Binding ScriptRepositoryPath, Mode=TwoWay}" VerticalAlignment="Top" Width="Auto"/>
         <Button Name="BrowseScriptPath" Content="..." Grid.Column="2" HorizontalAlignment="Stretch" Margin="0,63,-7,0" VerticalAlignment="Top" Width="Auto" Height="23" Click="BrowseScriptPath_OnClick"/>
-        <Label Grid.Column="0" Content="Batch Template:" HorizontalAlignment="Left" Margin="0,100,0,0" VerticalAlignment="Top" Height="26" Width="95"/>
-        <TextBlock Grid.Column="1" Name="BatchTemplate"  HorizontalAlignment="Stretch" Margin="0,105,0,0" TextWrapping="Wrap" Text="{Binding BatchTemplate, Mode=TwoWay}" VerticalAlignment="Top" Height="285" Width="Auto"/>
+        <Label Grid.Column="0" Content="LSR Replay arguments:" HorizontalAlignment="Left" Margin="1,95,0,0" VerticalAlignment="Top" Height="26" Width="130"/>
+        <TextBox Grid.Column="1" Name="LSRReplayArguments" HorizontalAlignment="Stretch" Height="23" Margin="1,96,0,0" TextWrapping="Wrap" Text="{Binding LSRReplayArguments, Mode=TwoWay}" VerticalAlignment="Top" Width="Auto"/>
+        <Label Grid.Column="0" Content="Batch Template:" HorizontalAlignment="Left" Margin="0,127,0,0" VerticalAlignment="Top" Height="26" Width="95"/>
+        <TextBox Grid.Column="1" Name="BatchTemplate" HorizontalAlignment="Stretch" Margin="0,136,0,0" TextWrapping="Wrap" Text="{Binding BatchTemplate, Mode=TwoWay}" VerticalAlignment="Top" Height="254" Width="Auto"/>
     </Grid>
 </UserControl>

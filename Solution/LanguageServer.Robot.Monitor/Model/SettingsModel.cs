@@ -49,15 +49,22 @@ namespace LanguageServer.Robot.Monitor.Model
             get; set;
         }
 
+        public string LSRReplayArguments
+        {
+            get; set;
+        }
+
         /// <summary>
         /// Read Default Values
         /// </summary>
         public void ReadFromDefault()
         {
-            ServerPath = Properties.Resources.DefaultServerPath;
-            LSRPath = Properties.Resources.DefaultLSRPath;
-            ScriptRepositoryPath = Properties.Resources.DefaultScriptRepositoryPath;
-            BatchTemplate = Properties.Resources.DefaultBatchTemplate;
+            Properties.Settings.Default.Reset();
+            ReadFromSettings();
+            //ServerPath = Properties.Resources.DefaultServerPath;
+            //LSRPath = Properties.Resources.DefaultLSRPath;
+            //ScriptRepositoryPath = Properties.Resources.DefaultScriptRepositoryPath;
+            //BatchTemplate = Properties.Resources.DefaultBatchTemplate;
         }
         /// <summary>
         /// Read the model from application setting values
@@ -67,6 +74,7 @@ namespace LanguageServer.Robot.Monitor.Model
             ServerPath = Properties.Settings.Default.ServerPath;
             LSRPath = Properties.Settings.Default.LSRPath;
             ScriptRepositoryPath = Properties.Settings.Default.ScriptPath;
+            LSRReplayArguments = Properties.Settings.Default.LSRReplayArguments;
             BatchTemplate = Properties.Settings.Default.BatchTemplate;
         }
 
@@ -78,6 +86,7 @@ namespace LanguageServer.Robot.Monitor.Model
             Properties.Settings.Default.ServerPath = ServerPath;
             Properties.Settings.Default.LSRPath = LSRPath;
             Properties.Settings.Default.ScriptPath = ScriptRepositoryPath;
+            Properties.Settings.Default.LSRReplayArguments = LSRReplayArguments;
             Properties.Settings.Default.BatchTemplate = BatchTemplate;
             Properties.Settings.Default.Save();
         }
