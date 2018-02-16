@@ -563,6 +563,23 @@ namespace LanguageServer.Robot.Common.Utilities
                     default:
                         break;
                 }
+                try
+                {
+                    if (!bResult && (kind == Message_Kind.Notification || kind == Message_Kind.Request))
+                    {//Check if we have a json object with a "params" field whose first child is a TextDocumentIdentifier
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        if (parameters == null) return bResult;
+                        JToken textDocField = parameters[String.Intern("textDocument")];
+                        if (textDocField == null) return bResult;
+                        var txtDocId = (TextDocumentIdentifier)textDocField.ToObject(typeof(TextDocumentIdentifier));
+                        uri = txtDocId?.uri;
+                        bResult = uri != null;
+                    }
+                }
+                catch (Exception e )
+                {//Ignore this exception the attempt has failed
+                    //Console.WriteLine(e);
+                }
             }
             return bResult;
         }
