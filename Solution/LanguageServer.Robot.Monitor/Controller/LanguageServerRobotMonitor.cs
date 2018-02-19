@@ -629,6 +629,52 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Display the given scenario file
+        /// </summary>
+        /// <param name="fileName">The scenario file name</param>
+        public void DisplayScenario(string fileName)
+        {
+            Script script = null;
+            Exception exc = null;
+            if (Util.ReadScriptFile(fileName, out script, out exc))
+            {
+                if (script.didOpen != null)
+                {
+                    script.didOpen = script.didOpen.Replace("\\r\\n", "\n");
+                }
+                foreach(var msg in script.messages)
+                {
+                    msg.message = msg.message.Replace("\\r\\n", "\n");
+                }
+                JObject jobject = JObject.FromObject(script);
+                JSonTreeController controller = new JSonTreeController(jobject);
+                controller.Show();
+            }
+            else
+            {
+                MessageBox.Show(string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToReadScriptFile, fileName),
+                    LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Hand
+                    );
+            }
+        }
+
+        /// <summary>
+        /// Load a display a scenario
+        /// </summary>
+        public void DisplayScenario()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string fileName = openFileDialog.FileName;
+                DisplayScenario(fileName);
+            }
+        }
+
+        /// <summary>
         /// Get the path of the LSR executable application.
         /// </summary>
         /// <returns></returns>

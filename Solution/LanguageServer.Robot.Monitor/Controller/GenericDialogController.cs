@@ -177,6 +177,8 @@ namespace LanguageServer.Robot.Monitor.Controller
         public virtual GenericDialogResult Show(string title = null)
         {
             DockPanel dock = new DockPanel();
+            dock.VerticalAlignment = VerticalAlignment.Stretch;
+            dock.HorizontalAlignment = HorizontalAlignment.Stretch;
             dock.Children.Add(View);
             Window window = MyWindow = new Window
             {

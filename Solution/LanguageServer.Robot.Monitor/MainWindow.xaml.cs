@@ -39,6 +39,8 @@ namespace LanguageServer.Robot.Monitor
             MenuItemSettings.Command = App.Current as LanguageServer.Robot.Monitor.App;
             MenuPlayScenario.CommandParameter = MenuPlayScenario;
             MenuPlayScenario.Command = App.Current as LanguageServer.Robot.Monitor.App;
+            MenuDisplayScenario.CommandParameter = MenuDisplayScenario;
+            MenuDisplayScenario.Command = App.Current as LanguageServer.Robot.Monitor.App;
         }
     }
 }

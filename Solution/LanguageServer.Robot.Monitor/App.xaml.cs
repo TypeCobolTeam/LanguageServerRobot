@@ -99,6 +99,8 @@ namespace LanguageServer.Robot.Monitor
                 return true;
             else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuPlayScenario)
                 return MonitorController != null;
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuDisplayScenario)
+                return true;
             return false;
         }
 
@@ -115,7 +117,13 @@ namespace LanguageServer.Robot.Monitor
                     MonitorController.PlayScenario();
                 }
             }
-
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuDisplayScenario)
+            {
+                if (MonitorController != null)
+                {
+                    MonitorController.DisplayScenario();
+                }
+            }
         }
     }
 }

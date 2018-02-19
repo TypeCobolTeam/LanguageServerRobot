@@ -16,6 +16,8 @@
             </MenuItem>
             <MenuItem Header="Test" Name="MenuTest">
                 <MenuItem Header="_Play scenario..."  Name="MenuPlayScenario"/>
+                <Separator />
+                <MenuItem Header="_Display scenario..."  Name="MenuDisplayScenario"/>
             </MenuItem>
         </Menu>
 
