@@ -685,10 +685,11 @@ namespace LanguageServer.Robot.Monitor.Controller
                 lastWriteTime = fiResult.LastWriteTime;
             }
 
+            string servOpts = !string.IsNullOrEmpty(ServerOptions) ? ("-so \"" + ServerOptions + "\"") : "";
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             process.StartInfo.FileName = GetLSRExePath();
             string arguments = string.Format(Settings.Default.LSRReplayArguments,
-                Settings.Default.ServerPath, scenario_path);
+                Settings.Default.ServerPath, scenario_path, servOpts);
             process.StartInfo.Arguments = arguments;
             process.StartInfo.UseShellExecute = true;
 
@@ -800,10 +801,12 @@ namespace LanguageServer.Robot.Monitor.Controller
             //Write the batch file
             using (FileStream stream = System.IO.File.Create(Path.Combine(fi.DirectoryName,basename + ".bat")))
             {
+                string servOpts = !string.IsNullOrEmpty(ServerOptions) ? ("-so \"" + ServerOptions + "\"") : "";
                 string templ = string.Format(Settings.Default.BatchTemplate, name, Settings.Default.LSRPath,
-                    Settings.Default.ServerPath);
+                    Settings.Default.ServerPath, servOpts);
                 byte[] bytes = System.Text.Encoding.ASCII.GetBytes(templ);
                 stream.Write(bytes, 0, bytes.Length);
+                System.Diagnostics.Debug.WriteLine(templ);
             }
             //Write the result file ==> Play the Script.
             Result result = null;
