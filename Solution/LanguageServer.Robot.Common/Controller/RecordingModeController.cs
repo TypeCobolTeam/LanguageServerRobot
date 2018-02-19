@@ -279,6 +279,7 @@ namespace LanguageServer.Robot.Common.Controller
                                     LogUnexpectedMessage(Resource.UnexpectedResponseFromServer, message);
                                 }
                             }
+                            RaiseResponseEvent(message, jsonObject);
                         }
                         else if (Utilities.Protocol.IsErrorResponse(jsonObject))
                         {

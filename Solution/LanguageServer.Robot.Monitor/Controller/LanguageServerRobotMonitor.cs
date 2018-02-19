@@ -858,7 +858,8 @@ namespace LanguageServer.Robot.Monitor.Controller
                 ScenarioController.ClientConnection as ScenarioRobotConnectionController;
             if (ScenarioController.Start())
             {
-                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data))
+                int lastSaveIndex = -1;
+                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex))
                 {
                     MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.FailInitalizeScerarioRecording,
                         LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
@@ -931,6 +932,124 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Create a Recorded Snapshot, that is to say a Snapshot that is recorded replayed with a server connection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="bLastSave">true if the last position must be tracked, false otherwise.</param>
+        /// <returns>true if the snapshot has been recorded and create, false o therwise.</returns>
+        private bool CreateRecordedSnapshot(object sender, DocumentItemViewModel e, bool bLastSave, out string message)
+        {
+            message = null;
+            if (!CheckLSRConnection(true))
+            {
+                return false;
+            }
+
+            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
+            var scenarioController = new MonitorLanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
+            ScenarioRobotConnectionController scenarioConnect =
+                scenarioController.ClientConnection as ScenarioRobotConnectionController;
+            if (scenarioController.Start())
+            {
+                int lastSaveIndex = -1;
+                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex, bLastSave))
+                {
+                    message = LanguageServer.Robot.Monitor.Properties.Resources.FailInitalizeScerarioRecording;
+                    MessageBox.Show(
+                        message,
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                    );
+                    scenarioController.Dispose();
+                    return false;
+                }
+                if (
+                    !ScenarioRobotConnectionController.RecordServerSnapshot(
+                        this.MonitoringConnection.Consumer.SessionModel, e.Data, lastSaveIndex,
+                        scenarioController))
+                {
+                    message = LanguageServer.Robot.Monitor.Properties.Resources.FailToRecordTheSnapshotSequence;
+                    MessageBox.Show(
+                        message,
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                    );
+                    scenarioController.Dispose();
+                    return false;
+                }
+                if (!scenarioConnect.StopScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data))
+                {
+                    message = LanguageServer.Robot.Monitor.Properties.Resources.FailStopScenarioRecording;
+                    MessageBox.Show(message,
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                        );
+                    scenarioController.Dispose();
+                    return false;
+                }
+
+                if (!scenarioConnect.StopScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data))
+                {
+                    message = LanguageServer.Robot.Monitor.Properties.Resources.FailStopScenarioRecording;
+                    MessageBox.Show(message,
+                        LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Hand
+                        );
+                    scenarioConnect.Dispose();
+                    return false;
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    Script recordedScenario;
+                    if (scenarioConnect.SaveScenario(e.Data, saveFileDialog.FileName, out recordedScenario))
+                    {
+                        //Add the scenario to its Document
+                        e.AddScenario(recordedScenario);
+                        //Write in backgRound result files.
+                        Task testFile = new Task(() => CreateTestFiles(recordedScenario, saveFileDialog.FileName));
+                        testFile.Start();
+                    }
+                    else
+                    {
+                        message = string.Format(
+                            LanguageServer.Robot.Monitor.Properties.Resources.FailToSaveTheScenario,
+                            saveFileDialog.FileName);
+                        MessageBox.Show(message,
+                            LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Hand
+                            );
+                        scenarioConnect.Dispose();
+                        return false;
+                    }
+                    scenarioConnect.Dispose();
+                    return true;
+                }
+                else
+                {
+                    scenarioConnect.Dispose();
+                    return false;
+                }
+            }
+            else
+            {
+                message = LanguageServer.Robot.Monitor.Properties.Resources.FailToStartServerConnection;
+                MessageBox.Show(message,
+                    LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Hand
+                    );                
+                return false;
+            }
+        }
+        /// <summary>
         /// Creating a snapshot Handler.
         /// </summary>
         /// <param name="sender"></param>
@@ -944,7 +1063,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 {
                     return;
                 }
-                Script snapshot = null;
+                    Script snapshot = null;
                 if (ScenarioRobotConnectionController.CreateSnapshot(this.MonitoringConnection.Consumer.SessionModel,
                     e.Data,
                     out snapshot, bLastSave))
@@ -1012,7 +1131,9 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// <param name="e"></param>
         private void SessionExplorer_CreateLastSaveSnapshotHandler(object sender, DocumentItemViewModel e)
         {
-            CreateSnapshot(sender, e, true);
+            //CreateSnapshot(sender, e, true);
+            string message;
+            CreateRecordedSnapshot(sender, e, true, out message);
         }
 
         private LanguageServerRobotController MyScenarioController;
@@ -1116,7 +1237,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                     //In recording mode add the message
                     ScenarioRobotConnectionController controller =
                         ScenarioController.ClientConnection as ScenarioRobotConnectionController;
-                    controller?.AddMessage(script, message);
+                    controller?.AddMessage(script, message, false);
                 }
             }
             App.Current.Dispatcher.Invoke(() => SetActiveDocument(script));

@@ -237,9 +237,12 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="session"></param>
         /// <param name="script"></param>
-        public bool InitializeScenario(Model.Session session, Model.Script script)
+        /// <param name="lastSaveIndex">[out]lastSaveIndex Last Save Index position</param>
+        /// <param name="bUseLastSave">true if the last save position must be used, false otherwise</param>
+        public bool InitializeScenario(Model.Session session, Model.Script script, out int lastSaveIndex, bool bUseLastSave = true)
         {
             //Don't save the script when the didClose notification arrive.
+            lastSaveIndex = -1;
             this.RecordingController.IsSaveOnDidClose = false;
             ConnectMessageEventHandlers(true);
             this.Session = session;
@@ -280,7 +283,7 @@ namespace LanguageServer.Robot.Common.Controller
                     return false;
                 }
                 //Lookup the position of the last didSave message.
-                int lastSaveIndex = LookupLastSavePosition(script);
+                lastSaveIndex = bUseLastSave ? LookupLastSavePosition(script) : 0;
                 //Apply didOpen all text changes from the beginning.
                 for (int i = lastSaveIndex; i < script.messages.Count; i++)
                 {
@@ -311,11 +314,12 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="script">The Script associated to the message</param>
         /// <param name="msg">The Lsp Message to be added</param>
-        public void AddMessage(Model.Script script, Model.Message.LspMessage msg)
+        /// <param name="bWaitRequestMode">true if we must wait for request return Id, false otherwise.</param>
+        public void AddMessage(Model.Script script, Model.Message.LspMessage msg, bool bWaitRequestMode)
         {
             if (this.Script == script && msg.From == Message.LspMessage.MessageFrom.Client)
             {
-                this.Consume(msg.Message);
+                AddMessage(script, msg.Message, bWaitRequestMode);
             }
         }
 
@@ -324,10 +328,25 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         /// <param name="script">The Script associated to the message</param>
         /// <param name="msg">The message to be added</param>
-        public void AddMessage(Model.Script script, string msg)
+        /// <param name="bWaitRequestMode">true if we must wait for request return Id, false otherwise.</param>
+        public void AddMessage(Model.Script script, string msg, bool bWaitRequestMode)
         {
-            if (this.Script == script)
+            JObject jsonObject = null;
+            if (bWaitRequestMode)
+            {
+                if (Utilities.Protocol.IsRequest(msg, out jsonObject))
+                {
+                    this.SyncReplayRequest(msg, null, jsonObject);
+                }
+                else
+                {
+                    this.Consume(msg);
+                }
+            }
+            else
+            {
                 this.Consume(msg);
+            }
         }
 
         /// <summary>
@@ -513,6 +532,35 @@ namespace LanguageServer.Robot.Common.Controller
                 new DidCloseTextDocumentParams(new TextDocumentIdentifier(didOpen.textDocument.uri));
             string didClosMessage = CreateNotification(DidCloseTextDocumentNotification.Type, didCloseParameters, out jsonObject);
             snapshot.didClose = didClosMessage;
+            return true;
+        }
+
+        /// <summary>
+        /// Record Snapshot using a server connection controller, that is a say the snapshot is created by resending all client messages to the server connection, thus
+        /// establishing a real communication with the server.
+        /// </summary>
+        /// <param name="session">The session to which belongs the script.</param>
+        /// <param name="script">The script to create a session</param>
+        /// <param name="lastSaveIndex">The last save index position</param>
+        /// <param name="scenarioController">The scenario controller in connection with an instantiated server</param>
+        /// <returns>true if the snaphot has been recorded, false otherwise.</returns>
+        public static bool RecordServerSnapshot(Model.Session session, Model.Script script, int lastSaveIndex, MonitorLanguageServerRobotController scenarioController)
+        {
+            if (lastSaveIndex < 0)
+                lastSaveIndex = LookupLastSavePosition(script);
+            if (lastSaveIndex < 0)
+                return false;
+                //Apply didOpen all text changes from the beginning.
+                for (int i = lastSaveIndex; i < script.messages.Count; i++)
+            {
+                var msg = script.messages[i];
+                if (msg.category == Script.MessageCategory.Client)
+                {
+                    ScenarioRobotConnectionController controller =
+                        scenarioController.ClientConnection as ScenarioRobotConnectionController;
+                    controller?.AddMessage(script, msg.message, true);
+                }
+            }
             return true;
         }
     }

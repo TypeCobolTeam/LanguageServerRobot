@@ -183,6 +183,15 @@ namespace LanguageServer.Robot.Monitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to record the snapshot sequence with the server!.
+        /// </summary>
+        public static string FailToRecordTheSnapshotSequence {
+            get {
+                return ResourceManager.GetString("FailToRecordTheSnapshotSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fail to replay scenario: {0}.
         /// </summary>
         public static string FailToReplayAScenario {
@@ -233,6 +242,15 @@ namespace LanguageServer.Robot.Monitor.Properties {
         public static string FailToSaveTheScenarioExc {
             get {
                 return ResourceManager.GetString("FailToSaveTheScenarioExc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to start a connection with the server..
+        /// </summary>
+        public static string FailToStartServerConnection {
+            get {
+                return ResourceManager.GetString("FailToStartServerConnection", resourceCulture);
             }
         }
         
