@@ -111,6 +111,14 @@ namespace LanguageServerRobot
         }
 
         /// <summary>
+        /// Prompt replay.
+        /// </summary>
+        public static bool PromptReplay
+        {
+            get; internal set;
+        }
+
+        /// <summary>
         /// Static constructor
         /// </summary>
         static LanguageServerRobot()
@@ -166,6 +174,7 @@ namespace LanguageServerRobot
                 { "v|version","Show version", _ => version = true },
                 { "h|help","Show help", _ => help = true },
                 { "lf|logfile=","{PATH} the target log file", (string v) => LogFile = v },
+                { "p|prompt",  "Prompt to start a replay", v => PromptReplay = true },
                 { "r|robot",  "Robot Client/Server mode.", v => Mode = (v!=null)
                         ? LanguageServerRobotController.ConnectionMode.ClientServer
                         : LanguageServerRobotController.ConnectionMode.Client
@@ -263,7 +272,7 @@ namespace LanguageServerRobot
                                 : new LanguageServerRobotController(client, server, ScriptRepositoryPath);
                             robot.ServerOptions = ServerOptions;
                             robot.PropagateConnectionLogs();
-                            if (!robot.Start())
+                            if (!robot.Start(false))
                             {
                                 return -1;
                             }
@@ -319,7 +328,7 @@ namespace LanguageServerRobot
                             }
                             if (script != null)
                             {
-                                return ReplayScript(Files[0].Item1, script);
+                                return ReplayScript(Files[0].Item1, script, PromptReplay);
                             }
                             else
                             {
@@ -355,9 +364,9 @@ namespace LanguageServerRobot
         /// <param name="script_path">The path of the script to replay</param>
         /// <param name="script">The script model to replay</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        private static int ReplayScript(string script_path, Script script)
+        private static int ReplayScript(string script_path, Script script, bool promptReplay)
         {
-            return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath);
+            return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath, promptReplay);
         }
 
         /// <summary>

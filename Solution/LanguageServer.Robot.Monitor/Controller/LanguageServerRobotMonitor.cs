@@ -602,8 +602,9 @@ namespace LanguageServer.Robot.Monitor.Controller
 
         /// <summary>
         /// Entry pointfor loading and playing a scenario.
+        /// <param name="bConfirmation">true if user confirmation is asked, false otherwise</param>
         /// </summary>
-        public void PlayScenario()
+        public void PlayScenario(bool bConfirmation)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
@@ -615,7 +616,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 if (Util.ReadScriptFile(fileName, out script, out exc))
                 {
                     Result result = null;
-                    ReplayScenario(fileName, script, out result);
+                    ReplayScenario(fileName, script, out result, bConfirmation);
                 }
                 else
                 {
@@ -632,6 +633,12 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// Display the given scenario file
         /// </summary>
         /// <param name="fileName">The scenario file name</param>
+        /// Think how to replace
+        /// \u003d = 
+        /// \u0027 '
+        /// \u003e >
+        /// \u003c <
+        /// \" "
         public void DisplayScenario(string fileName)
         {
             Script script = null;
@@ -704,9 +711,10 @@ namespace LanguageServer.Robot.Monitor.Controller
         /// </summary>
         /// <param name="scenario_path"></param>
         /// <param name="scenario"></param>
+        /// <param name="bConfirmation">true if user confirmation is asked before replaying the scenario, false otherwise</param>
         /// <param name="bPrompt">True if Dialog Boxes must be displayed, false otherwise.</param>
         /// <returns>true if the scenario has been replayed successfully, false otherwise</returns>
-        private bool ReplayScenario(string scenario_path, Script scenario, out Result scenarioResult, bool bPromt = true)
+        private bool ReplayScenario(string scenario_path, Script scenario, out Result scenarioResult, bool bConfirmation, bool bPromt = true)
         {
             scenarioResult = null;
             //Create a Process and run it
@@ -731,7 +739,8 @@ namespace LanguageServer.Robot.Monitor.Controller
                 lastWriteTime = fiResult.LastWriteTime;
             }
 
-            string servOpts = !string.IsNullOrEmpty(ServerOptions) ? ("-so \"" + ServerOptions + "\"") : "";
+            string servOpts = bConfirmation ? " -p " : "";
+            servOpts += !string.IsNullOrEmpty(ServerOptions) ? ("-so \"" + ServerOptions + "\"") : "";            
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             process.StartInfo.FileName = GetLSRExePath();
             string arguments = string.Format(Settings.Default.LSRReplayArguments,
@@ -902,7 +911,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             ScenarioController = new MonitorLanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
             ScenarioRobotConnectionController scenarioConnect =
                 ScenarioController.ClientConnection as ScenarioRobotConnectionController;
-            if (ScenarioController.Start())
+            if (ScenarioController.Start(false))
             {
                 int lastSaveIndex = -1;
                 if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex))
@@ -996,7 +1005,7 @@ namespace LanguageServer.Robot.Monitor.Controller
             var scenarioController = new MonitorLanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
             ScenarioRobotConnectionController scenarioConnect =
                 scenarioController.ClientConnection as ScenarioRobotConnectionController;
-            if (scenarioController.Start())
+            if (scenarioController.Start(false))
             {
                 int lastSaveIndex = -1;
                 if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex, bLastSave))
@@ -1202,7 +1211,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 string path = "C:\\Users\\MAYANJE\\Source\\Repos\\TypeCobol_Develop\\TypeCobol\\bin\\Debug\\TypeCobol.LanguageServer.exe";
                 var server = new ServerRobotConnectionController(new ProcessMessageConnection(path));
                  ScenarioController = new LanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
-                ScenarioController.Start();
+                ScenarioController.Start(false);
             }
         }
 

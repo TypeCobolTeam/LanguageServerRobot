@@ -554,17 +554,24 @@ namespace LanguageServer.Robot.Common.Controller
             return task.Result;
         }
 
+        private const int START_MINUTE = 5;
         /// <summary>
         /// Start Replaying a script
+        /// <param name="bPromptBeforeReplay">Prompt before starting the client</param>
         /// <returns>true if the server has been launched, false otherwise.</returns>
         /// </summary>
-        protected bool StartReplayingScript()
+        protected bool StartReplayingScript(bool bPromptBeforeReplay)
         {
             StartServer();
             //Ensure that the server has succcesfuly strated
             var serverConnectionSate = ServerTaskConnectionState.Task.Result; ;
             if (!(serverConnectionSate == ConnectionState.Closed || serverConnectionSate == ConnectionState.Disposed))
             {
+                if (bPromptBeforeReplay)
+                {
+                    Util.MessageBoxTimeoutW(IntPtr.Zero, string.Format(Resource.MsgPressOkToStartBeforeMinutes, START_MINUTE),
+                        Resource.LSRTitle, 0, 0, START_MINUTE * 60 * 1000);
+                }
                 StartClient();
                 Task<bool> task = WaitClientServerTermination();
                 return task.Result;
@@ -592,12 +599,13 @@ namespace LanguageServer.Robot.Common.Controller
 
         /// <summary>
         /// Start Replaying
+        /// <param name="bPromptBeforeReplay">true to wait minutes before replaying, false otherwise</param>
         /// <returns>true if the server has been launched, false otherwise.</returns>
         /// </summary>
-        protected bool StartReplaying()
+        protected bool StartReplaying(bool bPromptBeforeReplay)
         {
             if (ClientConnection is ScriptRobotConnectionController)
-                return StartReplayingScript();
+                return StartReplayingScript(bPromptBeforeReplay);
             else
                 return StartReplayingSession();
         }
@@ -662,12 +670,12 @@ namespace LanguageServer.Robot.Common.Controller
         /// <summary>
         /// Start controlling according the mode.
         /// </summary>
-        public bool Start()
+        public bool Start(bool bPromptBeforeReplay)
         {
             switch(Mode)
             {
                 case ConnectionMode.Client:
-                    return StartReplaying();
+                    return StartReplaying(bPromptBeforeReplay);
                 case ConnectionMode.ClientServer:
                     return StartRoboting();
                 case ConnectionMode.Monitor:
@@ -781,13 +789,13 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="serverOptions">The Server's options</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        public static int ReplayScript(string script_path, Script script, string serverPath, string serverOptions, string scriptRepositoryPath)
+        public static int ReplayScript(string script_path, Script script, string serverPath, string serverOptions, string scriptRepositoryPath, bool promptReplay)
         {
             var server = new ServerRobotConnectionController(new ProcessMessageConnection(serverPath));
             var robot = new LanguageServerRobotController(script_path, script, server, scriptRepositoryPath);
             robot.ServerOptions = serverOptions;
             robot.PropagateConnectionLogs();
-            if (!robot.Start())
+            if (!robot.Start(promptReplay))
             {
                 return -1;
             }
@@ -817,7 +825,7 @@ namespace LanguageServer.Robot.Common.Controller
                 bool bValid = Util.ReadScriptFile(scriptPath, out script, out exc);
                 if (bValid)
                 {
-                    if (ReplayScript(scriptPath, script, serverPath, serverOptions, scriptRepositoryPath) != 0)
+                    if (ReplayScript(scriptPath, script, serverPath, serverOptions, scriptRepositoryPath, false) != 0)
                     {
                         bResult = false;
                     }

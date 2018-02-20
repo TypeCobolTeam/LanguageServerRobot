@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using LanguageServer.Robot.Common.Model;
@@ -293,5 +294,24 @@ namespace LanguageServer.Robot.Common.Utilities
             date = date.Replace(':', '_').Replace('.', '_').Replace(' ', '_').Replace('/', '_').Replace('\\', '_');
             return "LSR_" + date;
         }
+
+        /// <summary>
+        /// Signature for a message Box time out
+        /// </summary>
+        /// <param name="hwnd"></param>
+        /// <param name="text"></param>
+        /// <param name="title"></param>
+        /// <param name="type"></param>
+        /// <param name="wLanguageId"></param>
+        /// <param name="milliseconds"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.U4)]
+        public static extern uint MessageBoxTimeoutW(IntPtr hwnd,
+             [MarshalAs(UnmanagedType.LPWStr)]  String text,
+             [MarshalAs(UnmanagedType.LPWStr)] String title,
+             [MarshalAs(UnmanagedType.U4)] uint type,
+             Int16 wLanguageId,
+             Int32 milliseconds);
     }
 }

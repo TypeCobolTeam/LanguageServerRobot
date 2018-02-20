@@ -151,6 +151,15 @@ namespace LanguageServer.Robot.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language Server Robot.
+        /// </summary>
+        public static string LSRTitle {
+            get {
+                return ResourceManager.GetString("LSRTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LangugeServer Robot Monitor connection timeout.
         /// </summary>
         public static string MonitorConnectionTimeout {
@@ -174,6 +183,15 @@ namespace LanguageServer.Robot.Common {
         public static string MonitoringInRomotModeOnly {
             get {
                 return ResourceManager.GetString("MonitoringInRomotModeOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close this message to start before {0} minutes!....
+        /// </summary>
+        public static string MsgPressOkToStartBeforeMinutes {
+            get {
+                return ResourceManager.GetString("MsgPressOkToStartBeforeMinutes", resourceCulture);
             }
         }
         

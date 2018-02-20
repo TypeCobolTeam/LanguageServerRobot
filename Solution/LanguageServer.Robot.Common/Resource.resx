@@ -180,4 +180,10 @@
   <data name="MonitorConnectionTimeout" xml:space="preserve">
     <value>LangugeServer Robot Monitor connection timeout</value>
   </data>
+  <data name="LSRTitle" xml:space="preserve">
+    <value>Language Server Robot</value>
+  </data>
+  <data name="MsgPressOkToStartBeforeMinutes" xml:space="preserve">
+    <value>Close this message to start before {0} minutes!...</value>
+  </data>
 </root>
