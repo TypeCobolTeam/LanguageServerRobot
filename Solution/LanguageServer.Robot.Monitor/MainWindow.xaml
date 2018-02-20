@@ -5,10 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:my="clr-namespace:LanguageServer.Robot.Monitor.View"
         mc:Ignorable="d"
-        Title="Language Server Robot Monitor" Height="350" Width="525">
+        Title="Language Server Robot Monitor" Height="650" Width="525">
     <Grid Name="MainGrid" HorizontalAlignment="Stretch" DockPanel.Dock="Top">
-
-        <Menu Height="20" Name="MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu Height="20" Name="MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top" Grid.Row="0">
             <MenuItem Header="_File" Name="MenuFile">
                 <MenuItem Header="_Settings..."  Name="MenuItemSettings"/>
                 <Separator />
@@ -22,7 +27,7 @@
             </MenuItem>
         </Menu>
 
-        <DockPanel DockPanel.Dock="Bottom" Margin="0,20,0,0">
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,0,0,0" Grid.Row="1">
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -31,7 +36,7 @@
                 </Grid.ColumnDefinitions>
 
                 <DockPanel Grid.Column="0" Name="DockPnlLeft" HorizontalAlignment="Stretch">
-                <my:SessionExplorerView x:Name="SessionExplorerTree"  Margin="0,0,2,0" DockPanel.Dock="Top" />
+                    <my:SessionExplorerView x:Name="SessionExplorerTree"  Margin="0,0,2,0" DockPanel.Dock="Top" />
                 </DockPanel>
 
                 <GridSplitter Grid.Column="1" Width="Auto" HorizontalAlignment="Stretch" />
@@ -40,5 +45,17 @@
                 </DockPanel>
             </Grid>
         </DockPanel>
+
+        <GridSplitter  Height="5" HorizontalAlignment="Stretch" Grid.Row="2"/>
+        <TabControl Grid.Row="3"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <TabItem Name="OutputTabItem" Header="Output">
+                <TextBox Name="Output"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            IsReadOnly="True"
+                            AcceptsReturn="True"
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto"                         
+                         />
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

@@ -630,6 +630,23 @@ namespace LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Helpfull fonction fo testing Test File creation for a .tlsp file.
+        /// </summary>
+        public void CreateTestFiles()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Script file (*.tlsp)|*.tlsp";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Script script = new Script();
+                script.name = "MY TEST";
+
+                var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+                Task.Factory.StartNew(() => CreateTestFiles(script, openFileDialog.FileName), CancellationToken.None, TaskCreationOptions.None , scheduler);
+            }
+        }
+
+        /// <summary>
         /// Display the given scenario file
         /// </summary>
         /// <param name="fileName">The scenario file name</param>
@@ -957,8 +974,8 @@ namespace LanguageServer.Robot.Monitor.Controller
                             //Add the scenario to its Document
                             e.AddScenario(recordedScenario);
                             //Write in backgRound result files.
-                            Task testFile = new Task(() => CreateTestFiles(recordedScenario, saveFileDialog.FileName));
-                            testFile.Start();
+                            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+                            Task.Factory.StartNew(() => CreateTestFiles(recordedScenario, saveFileDialog.FileName), CancellationToken.None, TaskCreationOptions.None, scheduler);
                         }
                         else
                         {
@@ -1068,8 +1085,9 @@ namespace LanguageServer.Robot.Monitor.Controller
                         //Add the scenario to its Document
                         e.AddScenario(recordedScenario);
                         //Write in backgRound result files.
-                        Task testFile = new Task(() => CreateTestFiles(recordedScenario, saveFileDialog.FileName));
-                        testFile.Start();
+                        //Write in backgRound result files.
+                        var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+                        Task.Factory.StartNew(() => CreateTestFiles(recordedScenario, saveFileDialog.FileName), CancellationToken.None, TaskCreationOptions.None, scheduler);
                     }
                     else
                     {
@@ -1139,8 +1157,8 @@ namespace LanguageServer.Robot.Monitor.Controller
                             }                                                        
                             e.AddScenario(snapshot);
                             //Write in backgound result files.
-                            Task testFile = new Task(() => CreateTestFiles(snapshot, saveFileDialog.FileName));
-                            testFile.Start();
+                            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+                            Task.Factory.StartNew(() => CreateTestFiles(snapshot, saveFileDialog.FileName), CancellationToken.None, TaskCreationOptions.None, scheduler);
                         }
                         catch (Exception ex)
                         {
@@ -1224,6 +1242,15 @@ namespace LanguageServer.Robot.Monitor.Controller
         private void Consumer_LspMessageHandler(object sender, Common.Model.Message.LspMessage e)
         {
             //Log.LogWriter.WriteLine(e.Message);
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                if (View != null)
+                {
+                    View.Output.AppendText(e.Message);
+                    View.Output.AppendText(Environment.NewLine);
+                }
+            });
         }
 
         public bool CanExecute(object parameter)
