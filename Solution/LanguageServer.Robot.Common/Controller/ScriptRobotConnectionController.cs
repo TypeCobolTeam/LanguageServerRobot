@@ -97,7 +97,7 @@ namespace LanguageServer.Robot.Common.Controller
             base.Consume(Script.didOpen);
             //2) Run thru all messages and take in account messages that are client requests or notifications.
             int nNotificationCount = 0;//Counting notifications
-            for(int i = 0; i < Script.messages.Count && ReplayController.ErrorIndex < 0; i++)
+            for(int i = 0; i < Script.messages.Count && (ReplayController.ErrorIndex < 0 || !StopAtFirstError); i++)
             {
                 if (Script.messages[i].category == Model.Script.MessageCategory.Client)
                 {
@@ -138,8 +138,10 @@ namespace LanguageServer.Robot.Common.Controller
                         } while (!bStop);
                         if (bFailed)
                         {
-                            ReplayController.ErrorIndex = i;
-                            break;
+                            if (ReplayController.ErrorIndex < 0)
+                                ReplayController.ErrorIndex = i;
+                            if (StopAtFirstError)
+                                break;
                         }
                     }
                 }

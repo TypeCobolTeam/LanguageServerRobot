@@ -109,7 +109,7 @@ namespace LanguageServer.Robot.Common.Controller
             {
                 if (ErrorIndex < 0)
                 {
-                    System.Threading.Interlocked.Exchange(ref m_ScriptMessageIndex, value);
+                    System.Threading.Interlocked.Exchange(ref m_ErrorIndex, value);
                 }
             }
         }
@@ -282,7 +282,8 @@ namespace LanguageServer.Robot.Common.Controller
                                         if (!(this.SourceScript.messages[ResultScript.messages.Count - 1].category == Script.MessageCategory.Server &&
                                             this.SourceScript.messages[ResultScript.messages.Count - 1].message == message))
                                         {//We have a mismatch notification
-                                            this.ErrorIndex = ResultScript.messages.Count - 1;
+                                            if (this.ErrorIndex < 0)
+                                                this.ErrorIndex = ResultScript.messages.Count - 1;
                                         }
                                     }
                                 }
@@ -300,7 +301,8 @@ namespace LanguageServer.Robot.Common.Controller
                                     if (!(this.SourceScript.messages[(int)ScriptMessageIndex + 1].category == Script.MessageCategory.Result &&
                                         this.SourceScript.messages[(int)ScriptMessageIndex + 1].message == message))
                                     {   //We have a mismatch Result.
-                                        this.ErrorIndex = ScriptMessageIndex + 1;
+                                        if (this.ErrorIndex < 0)
+                                            this.ErrorIndex = ScriptMessageIndex + 1;
                                     }
                                 }
                             }

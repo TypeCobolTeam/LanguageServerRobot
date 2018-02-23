@@ -89,16 +89,17 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="script">The script to be replayed</param>
         /// <param name="serverConnection">The target server</param>
         /// <param name="scriptRepositoryPath">The script repository path, if null the default script repository path will be taken</param>
-        public LanguageServerRobotController(string script_path, Script script, ServerRobotConnectionController serverConnection, string scriptRepositoryPath = null)
+        public LanguageServerRobotController(string script_path, Script script, ServerRobotConnectionController serverConnection, bool bStopAtFirstError, string scriptRepositoryPath = null)
         {
             System.Diagnostics.Contracts.Contract.Assert(serverConnection != null);
-            this.ClientConnection = new ScriptRobotConnectionController(script);
+            this.ClientConnection = new ScriptRobotConnectionController(script);            
             this.ServerConnection = serverConnection;
             Mode = ConnectionMode.Client;
             //Transfert the roboting mode controller instance to the client and server controller
-            RobotModeController = new ReplayModeController(script, script_path, scriptRepositoryPath);            
+            RobotModeController = new ReplayModeController(script, script_path, scriptRepositoryPath);
+            (RobotModeController as ReplayModeController).StopAtFirstError = bStopAtFirstError;
             this.ClientConnection.RobotModeController = RobotModeController;
-            this.ServerConnection.RobotModeController = RobotModeController;
+            this.ServerConnection.RobotModeController = RobotModeController;            
         }
 
         /// <summary>
@@ -789,10 +790,10 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="serverOptions">The Server's options</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        public static int ReplayScript(string script_path, Script script, string serverPath, string serverOptions, string scriptRepositoryPath, bool promptReplay)
+        public static int ReplayScript(string script_path, Script script, string serverPath, string serverOptions, string scriptRepositoryPath, bool bStopAtFirstError, bool promptReplay)
         {
             var server = new ServerRobotConnectionController(new ProcessMessageConnection(serverPath));
-            var robot = new LanguageServerRobotController(script_path, script, server, scriptRepositoryPath);
+            var robot = new LanguageServerRobotController(script_path, script, server, bStopAtFirstError, scriptRepositoryPath);
             robot.ServerOptions = serverOptions;
             robot.PropagateConnectionLogs();
             if (!robot.Start(promptReplay))
@@ -813,10 +814,10 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="script">The script model to replay</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        public static int DumpScript(string script_path, Script script, string scriptRepositoryPath)
+        public static int DumpScript(string script_path, Script script, string scriptRepositoryPath, bool bStopAtFirstError)
         {
             var server = new ServerRobotConnectionController(new MessageConnection());
-            var robot = new LanguageServerRobotController(script_path, script, server, scriptRepositoryPath);
+            var robot = new LanguageServerRobotController(script_path, script, server, bStopAtFirstError, scriptRepositoryPath);
             robot.PropagateConnectionLogs();
             if (!robot.Start(false))
             {
@@ -838,7 +839,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// <param name="serverOptions">The Server's options</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        public static int ReplaySession(string session_path, Session session, string serverPath, string serverOptions, string scriptRepositoryPath)
+        public static int ReplaySession(string session_path, Session session, string serverPath, string serverOptions, string scriptRepositoryPath, bool bStopAtFirstError)
         {
             bool bResult = true;
             foreach (string scriptPath in session.scripts)
@@ -848,7 +849,7 @@ namespace LanguageServer.Robot.Common.Controller
                 bool bValid = Util.ReadScriptFile(scriptPath, out script, out exc);
                 if (bValid)
                 {
-                    if (ReplayScript(scriptPath, script, serverPath, serverOptions, scriptRepositoryPath, false) != 0)
+                    if (ReplayScript(scriptPath, script, serverPath, serverOptions, scriptRepositoryPath, bStopAtFirstError, false) != 0)
                     {
                         bResult = false;
                     }

@@ -125,6 +125,14 @@ namespace LanguageServerRobot
         }
 
         /// <summary>
+        /// Stop At first error option.
+        /// </summary>
+        public static bool StopAtFirstError
+        {
+            get; internal set;
+        }
+
+        /// <summary>
         /// Static constructor
         /// </summary>
         static LanguageServerRobot()
@@ -199,6 +207,7 @@ namespace LanguageServerRobot
                 { "so|soptions=","Server options", (string v) => ServerOptions = v },
                 { "d|dir=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
                 { "m|monitoring","Show the monitoring Window", _ => monitoring = true },
+                { "e|stoperror","Stop a replay at the first error", _ => StopAtFirstError = true },
             };
             System.Collections.Generic.List<string> arguments;
             try { arguments = p.Parse(args); }
@@ -336,11 +345,11 @@ namespace LanguageServerRobot
                             }
                             if (script != null)
                             {
-                                return ReplayScript(Files[0].Item1, script, PromptReplay);
+                                return ReplayScript(Files[0].Item1, script, StopAtFirstError, PromptReplay);
                             }
                             else
                             {
-                                return ReplaySession(Files[0].Item1, session);
+                                return ReplaySession(Files[0].Item1, session, StopAtFirstError);
                             }
                             //var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
                             //var robot = script != null ? new LanguageServerRobotController(Files[0].Item1, script, server, ScriptRepositoryPath)
@@ -372,12 +381,12 @@ namespace LanguageServerRobot
         /// <param name="script_path">The path of the script to replay</param>
         /// <param name="script">The script model to replay</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        private static int ReplayScript(string script_path, Script script, bool promptReplay)
+        private static int ReplayScript(string script_path, Script script, bool bStopAtFirstError, bool promptReplay)
         {
             if (InversionOfControl)
-                return LanguageServerRobotController.DumpScript(script_path, script, ScriptRepositoryPath);
+                return LanguageServerRobotController.DumpScript(script_path, script, ScriptRepositoryPath, bStopAtFirstError);
             else
-                return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath, promptReplay);
+                return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath, bStopAtFirstError, promptReplay);
         }
 
         /// <summary>
@@ -386,9 +395,9 @@ namespace LanguageServerRobot
         /// <param name="session_path">The path of the session to replay</param>
         /// <param name="session">The session model to replay</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        private static int ReplaySession(string session_path, Session session)
+        private static int ReplaySession(string session_path, Session session, bool bStopAtFirstError)
         {
-            return LanguageServerRobotController.ReplaySession(session_path, session, ServerPath, ServerOptions, ScriptRepositoryPath);
+            return LanguageServerRobotController.ReplaySession(session_path, session, ServerPath, ServerOptions, ScriptRepositoryPath, bStopAtFirstError);
         }
 
         /// <summary>
