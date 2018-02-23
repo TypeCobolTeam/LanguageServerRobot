@@ -470,7 +470,7 @@ namespace LanguageServer.Robot.Common.Controller
             System.Diagnostics.Contracts.Contract.Requires(script.uri != null);
             if (scriptFile == null)
             {
-                Util.UriToIdentifierName(script.uri + '_' + script.date);
+                scriptFile = Util.UriToIdentifierName(script.uri + '_' + script.date);
                 scriptFile += Util.SCRIPT_FILE_EXTENSION;
                 if (SessionModel.directory == null)
                 {
