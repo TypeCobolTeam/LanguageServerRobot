@@ -104,7 +104,7 @@ namespace LanguageServerRobot
         /// <summary>
         /// The list of Files
         /// </summary>
-        public static List<Tuple<string,FileType>> Files
+        public static List<Tuple<string, FileType>> Files
         {
             get;
             internal set;
@@ -116,6 +116,12 @@ namespace LanguageServerRobot
         public static bool PromptReplay
         {
             get; internal set;
+        }
+
+        public static bool InversionOfControl
+        {
+            get;
+            internal set;
         }
 
         /// <summary>
@@ -181,6 +187,8 @@ namespace LanguageServerRobot
                 },
                 { "c|client",  "Robot Client/Replay mode.", v => Mode = LanguageServerRobotController.ConnectionMode.Client
                 },
+                { "ioc",  "Inversion of control.", _ => InversionOfControl = true
+                },
                 { "script=",  "{PATH} the script file to be replayed.", (string v) => { Mode = LanguageServerRobotController.ConnectionMode.Client;
                     if (!version)Files.Add(new Tuple<string,FileType>(v,FileType.ScriptFile)); }
                 },
@@ -205,7 +213,7 @@ namespace LanguageServerRobot
             {
                 System.Console.WriteLine(Version);
                 return 0;
-            }                        
+            }
             if (monitoring && Mode != LanguageServerRobotController.ConnectionMode.ClientServer)
             {//using monitoring in ClientServer mode only.
                 System.Console.WriteLine(Resource.MonitoringInClientServerModeOnly);
@@ -244,7 +252,7 @@ namespace LanguageServerRobot
 
             //Prepare a Connection logger
             ConnectionLog logger = new ConnectionLog();
-            switch(LogLevel)
+            switch (LogLevel)
             {
                 case ConnectionLogLevel.Lifecycle:
                     logger.LogWriter = logWriter;
@@ -267,7 +275,7 @@ namespace LanguageServerRobot
                             //Create and start Language Server Robot controller.
                             var client = new ClientRobotConnectionController();
                             var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath, ServerOptions));
-                            var robot = monitoring 
+                            var robot = monitoring
                                 ? new LanguageServerRobotController(client, server, DataConnectionfactory.Create(DataConnectionfactory.ConnectionType.PIPE, DataConnectionfactory.ConnectionSide.Producer), ScriptRepositoryPath)
                                 : new LanguageServerRobotController(client, server, ScriptRepositoryPath);
                             robot.ServerOptions = ServerOptions;
@@ -366,7 +374,10 @@ namespace LanguageServerRobot
         /// <returns>0 if no error -1 otherwise.</returns>
         private static int ReplayScript(string script_path, Script script, bool promptReplay)
         {
-            return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath, promptReplay);
+            if (InversionOfControl)
+                return LanguageServerRobotController.DumpScript(script_path, script, ScriptRepositoryPath);
+            else
+                return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath, promptReplay);
         }
 
         /// <summary>

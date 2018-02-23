@@ -807,6 +807,29 @@ namespace LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// Dumps a script using Standard input output streams.
+        /// </summary>
+        /// <param name="script_path">The path of the script to replay</param>
+        /// <param name="script">The script model to replay</param>
+        /// <param name="scriptRepositoryPath">The script repository path</param>
+        /// <returns>0 if no error -1 otherwise.</returns>
+        public static int DumpScript(string script_path, Script script, string scriptRepositoryPath)
+        {
+            var server = new ServerRobotConnectionController(new MessageConnection());
+            var robot = new LanguageServerRobotController(script_path, script, server, scriptRepositoryPath);
+            robot.PropagateConnectionLogs();
+            if (!robot.Start(false))
+            {
+                return -1;
+            }
+            else
+            {
+                bool bResult = robot.WaitExit();
+                return bResult ? 0 : -1;
+            }
+        }
+
+        /// <summary>
         /// Plays a session
         /// </summary>
         /// <param name="session_path">The path of the session to replay</param>
