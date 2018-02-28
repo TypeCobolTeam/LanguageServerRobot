@@ -12,6 +12,7 @@ using LanguageServer.Robot.Common.Controller;
 using LanguageServer.Robot.Common.Utilities;
 using Mono.Options;
 using LanguageServer.Robot.Common.Connection;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServerRobot
 {
@@ -133,6 +134,38 @@ namespace LanguageServerRobot
         }
 
         /// <summary>
+        /// The path to the json file which contains the "initialize" request to be used
+        /// </summary>
+        public static string InitializeRequestPath
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// The Initialize request as read in the -init option file
+        /// </summary>
+        public static string InitializeRequestOption
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// The path to the json file which contains the workspace/didChangeConfiguration notification to be used
+        /// </summary>
+        public static string ConfigNotifyPath
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// The didChangeConfiguration notification as read in the -config option file
+        /// </summary>
+        public static string ConfigNotifyOption
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Static constructor
         /// </summary>
         static LanguageServerRobot()
@@ -208,7 +241,18 @@ namespace LanguageServerRobot
                 { "d|dir=","{PATH} Scripts repository directory", (string v) => ScriptRepositoryPath = v },
                 { "m|monitoring","Show the monitoring Window", _ => monitoring = true },
                 { "e|stoperror","Stop a replay at the first error", _ => StopAtFirstError = true },
+                { "init=",  "{PATH} the json file for a LSP \"initialize\" request.", (string v) =>
+                    {
+                        InitializeRequestPath = v;
+                    }
+                },
+                { "config=",  "{PATH} the json file for a LSP \"workspace/didChangeConfiguration\" notification.", (string v) =>
+                    {
+                        ConfigNotifyPath = v;
+                    }
+                },
             };
+            //Util.MessageBoxTimeoutW(IntPtr.Zero, "TESTING", "TESTING", 0, 0, 40000);
             System.Collections.Generic.List<string> arguments;
             try { arguments = p.Parse(args); }
             catch (OptionException ex) { return exit(1, ex.Message); }
@@ -237,6 +281,36 @@ namespace LanguageServerRobot
             if (ScriptRepositoryPath == null)
             {//Default path the user document path
                 ScriptRepositoryPath = Util.DefaultScriptRepositorPath;
+            }
+
+            if (InitializeRequestPath != null)
+            {
+                string initializeMessage;
+                JObject jsonMessage;
+                Exception exc;
+                if (
+                    !Protocol.LoadInitializeRequest(InitializeRequestPath, out initializeMessage, out jsonMessage,
+                        out exc))
+                {
+                    System.Console.WriteLine(Resource.FailToLoadInitFile);
+                    return -1;
+                }
+                InitializeRequestOption = initializeMessage;
+            }
+
+            if (ConfigNotifyPath != null)
+            {
+                string configMessage;
+                JObject jsonMessage;
+                Exception exc;
+                if (
+                    !Protocol.LoadConfigurationNotification(ConfigNotifyPath, out configMessage, out jsonMessage,
+                        out exc))
+                {
+                    System.Console.WriteLine(Resource.FailToLoadConfigFile);
+                    return -1;
+                }
+                ConfigNotifyOption = configMessage;
             }
 
             TextWriter logWriter = null;
@@ -383,6 +457,12 @@ namespace LanguageServerRobot
         /// <returns>0 if no error -1 otherwise.</returns>
         private static int ReplayScript(string script_path, Script script, bool bStopAtFirstError, bool promptReplay)
         {
+            //Check if we have an initialzie request to apply
+            if (InitializeRequestOption != null)
+                script.initialize = InitializeRequestOption;
+            //Check if we have an workspace/didChangeConfiguration notification to apply
+            if (ConfigNotifyOption != null)
+                script.did_change_configuation = ConfigNotifyOption;
             if (InversionOfControl)
                 return LanguageServerRobotController.DumpScript(script_path, script, ScriptRepositoryPath, bStopAtFirstError);
             else

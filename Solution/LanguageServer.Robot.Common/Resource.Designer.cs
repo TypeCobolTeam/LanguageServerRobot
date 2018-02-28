@@ -115,6 +115,24 @@ namespace LanguageServer.Robot.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fail to load the json &quot;workspace/didChangeConfiguration&quot; notification file..
+        /// </summary>
+        public static string FailToLoadConfigFile {
+            get {
+                return ResourceManager.GetString("FailToLoadConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fail to load the json &quot;initialize&quot; request file.
+        /// </summary>
+        public static string FailToLoadInitFile {
+            get {
+                return ResourceManager.GetString("FailToLoadInitFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fail to save script &apos;{0}&apos; : &apos;{1}&apos;.
         /// </summary>
         public static string FailToSaveScript {

@@ -1,0 +1,24 @@
+{
+  "jsonrpc": "2.0",
+  "method": "workspace/didChangeConfiguration",
+  "params": {
+    "settings": [
+      "C:\\Users\\MAYANJE\\Source\\Repos\\MAYANJE_Incremental\\TypeCobol\\bin\\Debug\\TypeCobol.CLI.exe",
+      "-1",
+      "-s",
+      "C:\\TypeCobol\\Sources\\##Latest_Release##\\skeletons.xml",
+      "-e",
+      "rdz",
+      "-c",
+      "C:\\TypeCobol\\Copys",
+      "-y",
+      "C:\\TypeCobol\\Sources\\##Latest_Release##\\Intrinsic\\Intrinsic.txt",
+      "-t",
+      "--dependencies",
+      "C:\\TypeCobol\\Sources\\##Latest_Release##\\Dependencies\\*.tcbl",
+      "--autoremarks",
+      "-md",
+      "30"
+    ]
+  }
+}

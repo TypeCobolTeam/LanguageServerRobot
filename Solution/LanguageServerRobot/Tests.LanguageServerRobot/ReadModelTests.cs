@@ -75,5 +75,27 @@ namespace Tests.LanguageServer.Robot
             Assert.IsTrue(session.scripts[0] == "C:\\Users\\MAYANJE\\Source\\LSRSessions\\Session2017_11_16_11_03_45_034\\file__C__Users_MAYANJE_AppData_Local_Temp_tcbl_PARA13105124614291384263_cee_2017_11_16_11_03_45_382.tlsp");
         }
 
+        [TestMethod]
+        public void ReadInitializeScript()
+        {
+            string current_dir = Directory.GetCurrentDirectory();
+            string initialize_file = System.IO.Path.Combine(current_dir, "TestFiles\\Session0\\initialize.json");
+            string initializeMessage;
+            JObject jsonMessage;
+            Exception exc;
+            Assert.IsTrue(Protocol.LoadInitializeRequest(initialize_file, out initializeMessage, out jsonMessage, out exc));
+        }
+
+        [TestMethod]
+        public void ReadConfigurationScript()
+        {
+            string current_dir = Directory.GetCurrentDirectory();
+            string config_file = System.IO.Path.Combine(current_dir, "TestFiles\\Session0\\configuration.json");
+            string configMessage;
+            JObject jsonMessage;
+            Exception exc;
+            Assert.IsTrue(Protocol.LoadConfigurationNotification(config_file, out configMessage, out jsonMessage, out exc));
+        }
+
     }
 }

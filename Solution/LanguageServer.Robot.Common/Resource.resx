@@ -186,4 +186,10 @@
   <data name="MsgPressOkToStartBeforeMinutes" xml:space="preserve">
     <value>Close this message to start before {0} minutes!...</value>
   </data>
+  <data name="FailToLoadConfigFile" xml:space="preserve">
+    <value>Fail to load the json "workspace/didChangeConfiguration" notification file.</value>
+  </data>
+  <data name="FailToLoadInitFile" xml:space="preserve">
+    <value>Fail to load the json "initialize" request file</value>
+  </data>
 </root>

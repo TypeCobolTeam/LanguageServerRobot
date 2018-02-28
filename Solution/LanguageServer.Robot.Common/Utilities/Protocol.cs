@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -854,6 +855,76 @@ namespace LanguageServer.Robot.Common.Utilities
             {
             }
             return uri;
+        }
+
+        /// <summary>
+        /// Load a file which shall contains an LSP initialize request.
+        /// </summary>
+        /// <param name="initializeFile">The json initialze request file</param>
+        /// <param name="initializeMessage">[out]The json initialze request as string</param>
+        /// <param name="jsonMessage">[out]The json initialze request as a json object</param>
+        /// <param name="exc">[out]Any Exception that might occured</param>
+        /// <returns>true if the file contains an initialize message, false otherwise</returns>
+        public static bool LoadInitializeRequest(string initializeFile, out string initializeMessage, out JObject jsonMessage, out Exception exc)
+        {
+            System.Diagnostics.Debug.Assert(initializeFile != null);
+            exc = null;
+            initializeMessage = null;
+            jsonMessage = null;
+            {//Read the file using UTF8.
+                try
+                {
+                    using (FileStream fs = new FileStream(initializeFile, FileMode.Open, FileAccess.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                        {
+                            initializeMessage = sr.ReadToEnd();
+                            jsonMessage = JObject.Parse(initializeMessage);
+                            return IsInitializeRequest(initializeMessage, out jsonMessage);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    exc = e;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Load a file which shall contains an LSP workspace/didChangeConfiguration notification.
+        /// </summary>
+        /// <param name="configFile">The json configuration request file</param>
+        /// <param name="configMessage">[out]The json configuration request as string</param>
+        /// <param name="jsonMessage">[out]The json configuration request as a json object</param>
+        /// <param name="exc">[out]Any Exception that might occured</param>
+        /// <returns>true if the file contains an configuration message, false otherwise</returns>
+        public static bool LoadConfigurationNotification(string configFile, out string configMessage, out JObject jsonMessage, out Exception exc)
+        {
+            System.Diagnostics.Debug.Assert(configFile != null);
+            exc = null;
+            configMessage = null;
+            jsonMessage = null;
+            {//Read the file using UTF8.
+                try
+                {
+                    using (FileStream fs = new FileStream(configFile, FileMode.Open, FileAccess.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                        {
+                            configMessage = sr.ReadToEnd();
+                            jsonMessage = JObject.Parse(configMessage);
+                            return IsDidChangeConfigurationNotification(configMessage, out jsonMessage);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    exc = e;
+                }
+            }
+            return false;
         }
 
     }
