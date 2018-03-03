@@ -1,0 +1,61 @@
+﻿<Window x:Class="TypeCobol.LanguageServer.Robot.Monitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:my="clr-namespace:TypeCobol.LanguageServer.Robot.Monitor.View"
+        mc:Ignorable="d"
+        Title="TypeCobol Language Server Robot Monitor" Height="650" Width="525">
+    <Grid Name="MainGrid" HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu Height="20" Name="MenuBar" DockPanel.Dock="Top" VerticalAlignment="Top" Grid.Row="0">
+            <MenuItem Header="_File" Name="MenuFile">
+                <MenuItem Header="_Settings..."  Name="MenuItemSettings"/>
+                <Separator />
+                <MenuItem Header="_Quit"  Name="MenuItemQuit"/>
+            </MenuItem>
+            <MenuItem Header="Test" Name="MenuTest">
+                <MenuItem Header="_Play scenario..."  Name="MenuPlayScenario"/>
+                <MenuItem Header="_Play scenario with confirmation..."  Name="MenuPlayScenarioConfirmation"/>
+                <Separator />
+                <MenuItem Header="_Display scenario..."  Name="MenuDisplayScenario"/>
+            </MenuItem>
+        </Menu>
+
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,0,0,0" Grid.Row="1">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition Width="70*" />
+                </Grid.ColumnDefinitions>
+
+                <DockPanel Grid.Column="0" Name="DockPnlLeft" HorizontalAlignment="Stretch">
+                    <my:SessionExplorerView x:Name="SessionExplorerTree"  Margin="0,0,2,0" DockPanel.Dock="Top" />
+                </DockPanel>
+
+                <GridSplitter Grid.Column="1" Width="Auto" HorizontalAlignment="Stretch" />
+
+                <DockPanel Name="AttributesPanel" Grid.Column="2">
+                </DockPanel>
+            </Grid>
+        </DockPanel>
+
+        <GridSplitter  Height="5" HorizontalAlignment="Stretch" Grid.Row="2"/>
+        <TabControl Grid.Row="3"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <TabItem Name="OutputTabItem" Header="Output">
+                <TextBox Name="Output"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            IsReadOnly="True"
+                            AcceptsReturn="True"
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto"                         
+                         />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
