@@ -403,6 +403,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// </summary>
         private bool StartMonitor()
         {
+            //Util.MessageBoxTimeoutW(IntPtr.Zero, "TESTING", "TESTING", 0, 0, 500000);
             //Create a nammed pipe
             string pipeName = Util.CreatePipeName();
             MonitorTaskCompletionSource = new TaskCompletionSource<bool>();
@@ -792,7 +793,7 @@ namespace LanguageServer.Robot.Common.Controller
         /// <returns>0 if no error -1 otherwise.</returns>
         public static int ReplayScript(string script_path, Script script, string serverPath, string serverOptions, string scriptRepositoryPath, bool bStopAtFirstError, bool promptReplay)
         {
-            var server = new ServerRobotConnectionController(new ProcessMessageConnection(serverPath));
+            var server = new ServerRobotConnectionController(new ProcessMessageConnection(serverPath, serverOptions));
             var robot = new LanguageServerRobotController(script_path, script, server, bStopAtFirstError, scriptRepositoryPath);
             robot.ServerOptions = serverOptions;
             robot.PropagateConnectionLogs();

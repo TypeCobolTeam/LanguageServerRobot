@@ -1018,7 +1018,7 @@ namespace LanguageServer.Robot.Monitor.Controller
                 return false;
             }
 
-            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
+            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath, ServerOptions));
             var scenarioController = new MonitorLanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
             ScenarioRobotConnectionController scenarioConnect =
                 scenarioController.ClientConnection as ScenarioRobotConnectionController;
