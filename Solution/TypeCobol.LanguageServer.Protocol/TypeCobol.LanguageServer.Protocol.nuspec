@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>TypeCobol.LanguageServer.Protocol</id>
+    <version>0.5.0</version>
+    <authors>TypeCobol Team</authors>
+    <owners>TypeCobol Team</owners>
+<!--
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+-->
+    <licenseUrl>https://github.com/TypeCobolTeam/LanguageServerRobot/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/TypeCobolTeam/LanguageServerRobot</projectUrl>
+    <description>Language Server Protocol: types implementation.</description>
+    <repository type="git" url="https://github.com/TypeCobolTeam/LanguageServerRobot.git" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">	
+        <dependency id="Newtonsoft.Json" version="11.0.1" exclude="Build,Analyzers" />
+        <dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src=".\bin\Release\TypeCobol.LanguageServer.Protocol.dll" target="lib\net45\TypeCobol.LanguageServer.Protocol.dll" />
+  </files>
+</package>
