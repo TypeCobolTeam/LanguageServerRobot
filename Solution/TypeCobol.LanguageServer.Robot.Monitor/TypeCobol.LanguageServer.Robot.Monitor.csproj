@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DF8B4274-0B85-4CF5-809F-5A3C8A1531D5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TypeCobol.LanguageServer.Robot.Monitor</RootNamespace>
+    <AssemblyName>TypeCobol.LanguageServer.Robot.Monitor</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DoNotCopyLocalIfInGac>true</DoNotCopyLocalIfInGac>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\TypeCobol.LanguageServerRobot\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\TypeCobol.LanguageServerRobot\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\TypeCobol.LanguageServerRobot\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Compile Include="Controller\DataController.cs" />
+    <Compile Include="Controller\GenericDialogButton.cs" />
+    <Compile Include="Controller\GenericDialogController.cs" />
+    <Compile Include="Controller\GenericDialogResult.cs" />
+    <Compile Include="Controller\JSonTreeController.cs" />
+    <Compile Include="Controller\LanguageServerRobotMonitor.cs" />
+    <Compile Include="Controller\ScenarioAttributesController.cs" />
+    <Compile Include="Controller\SessionExplorerController.cs" />
+    <Compile Include="Controller\SettingsController.cs" />
+    <Compile Include="Model\CheckedDataItem.cs" />
+    <Compile Include="Model\CheckedListItem.cs" />
+    <Compile Include="Model\DataModel.cs" />
+    <Compile Include="Model\DocumentItemViewModel.cs" />
+    <Compile Include="Model\ITreeViewItemViewModelVisitor.cs" />
+    <Compile Include="Model\ScenarioAttributesModel.cs" />
+    <Compile Include="Model\ScenarioItemViewModel.cs" />
+    <Compile Include="Model\SessionExplorerItemViewModelVisitor.cs" />
+    <Compile Include="Model\SessionExplorerModel.cs" />
+    <Compile Include="Model\SessionItemViewModel.cs" />
+    <Compile Include="Model\SettingsModel.cs" />
+    <Compile Include="Model\TreeViewDataViewModel.cs" />
+    <Compile Include="Model\TreeViewItemViewModel.cs" />
+    <Compile Include="Utilities\FolderBrowserDialog.cs" />
+    <Compile Include="Utilities\MethodToValueConverter.cs" />
+    <Compile Include="Utilities\WaitCursor.cs" />
+    <Compile Include="View\DataView.xaml.cs">
+      <DependentUpon>DataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\GenericDialogView.xaml.cs">
+      <DependentUpon>GenericDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\JSonTreeViewer.xaml.cs">
+      <DependentUpon>JSonTreeViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ScenarioAttributesView.xaml.cs">
+      <DependentUpon>ScenarioAttributesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SessionExplorerView.xaml.cs">
+      <DependentUpon>SessionExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="View\DataView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\GenericDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\JSonTreeViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ScenarioAttributesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SessionExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TypeCobol.LanguageServer.JsonRPC\TypeCobol.LanguageServer.JsonRPC.csproj">
+      <Project>{5a4cad5c-f178-45d2-86e8-a75d7eac13f4}</Project>
+      <Name>TypeCobol.LanguageServer.JsonRPC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TypeCobol.LanguageServer.Protocol\TypeCobol.LanguageServer.Protocol.csproj">
+      <Project>{2950dac0-494d-46b6-a836-7eab4810952a}</Project>
+      <Name>TypeCobol.LanguageServer.Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TypeCobol.LanguageServer.Robot.Common\TypeCobol.LanguageServer.Robot.Common.csproj">
+      <Project>{f0390474-09d7-41ee-b01c-fe4d2a57ecda}</Project>
+      <Name>TypeCobol.LanguageServer.Robot.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
