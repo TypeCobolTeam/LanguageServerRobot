@@ -81,7 +81,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// <summary>
         /// The LSR Executable name.
         /// </summary>LSR_MONITOR_EXE
-        private static readonly string LSR_MONITOR_EXE = "LanguageServer.Robot.Monitor.exe";
+        private static readonly string LSR_MONITOR_EXE = "TypeCobol.LanguageServer.Robot.Monitor.exe";
 
         /// <summary>
         /// Constructor for the LanguageServerRobot running as Client for the Script Test replay mode.
