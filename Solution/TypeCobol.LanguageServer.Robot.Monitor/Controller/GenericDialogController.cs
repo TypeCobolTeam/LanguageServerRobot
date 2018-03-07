@@ -63,10 +63,10 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
         /// <param name="b"></param>
         protected void AddButton(Button b)
         {
-            b.HorizontalAlignment = HorizontalAlignment.Stretch;
-            b.VerticalAlignment = VerticalAlignment.Stretch;
-            b.Width = System.Double.NaN;
-            b.Height = System.Double.NaN;
+            b.HorizontalAlignment = HorizontalAlignment.Right;
+            b.VerticalAlignment = VerticalAlignment.Bottom;
+            b.Margin = new Thickness(5.0,0.0,0.0,0.0);
+            DockPanel.SetDock(b, Dock.Right);
             b.Click += Button_Click;
             View.ButtonPanel.Children.Add(b);
         }
@@ -97,7 +97,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             {
                 Result = GenericDialogResult.No;
             }
-            MyWindow.Close();
+            View.Close();
         }
 
         /// <summary>
@@ -176,23 +176,9 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
         /// <param name="title"></param>
         public virtual GenericDialogResult Show(string title = null)
         {
-            DockPanel dock = new DockPanel();
-            dock.VerticalAlignment = VerticalAlignment.Stretch;
-            dock.HorizontalAlignment = HorizontalAlignment.Stretch;
-            dock.Children.Add(View);
-            Window window = MyWindow = new Window
-            {
-                Title = title ?? Properties.Resources.LSRMName,
-                Content = dock
-            };                        
-            window.SizeToContent = SizeToContent.WidthAndHeight;
-            window.VerticalContentAlignment = VerticalAlignment.Top;
-            window.HorizontalContentAlignment = HorizontalAlignment.Left;
-
-            window.ShowDialog();
+            View.Title = title ?? Properties.Resources.LSRMName;
+            View.ShowDialog();
             return Result;
         }
-
-        protected Window MyWindow;
     }
 }

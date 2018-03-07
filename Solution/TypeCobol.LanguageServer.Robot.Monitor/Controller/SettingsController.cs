@@ -82,21 +82,21 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             DirectoryInfo di = new DirectoryInfo(View.ServerPath.Text);
             if (!di.Exists)
             {
-                MessageBox.Show(MyWindow, string.Format(Properties.Resources.InvalidServerPath, View.ServerPath.Text),
+                MessageBox.Show(base.View, string.Format(Properties.Resources.InvalidServerPath, View.ServerPath.Text),
                     Properties.Resources.LSRMName, MessageBoxButton.OK, MessageBoxImage.Hand);
                 return false;
             }
             di = new DirectoryInfo(View.ServerPath.Text);
             if (!di.Exists)
             {
-                MessageBox.Show(MyWindow, string.Format(Properties.Resources.InvalidLSRPath, View.LSRPath.Text),
+                MessageBox.Show(base.View, string.Format(Properties.Resources.InvalidLSRPath, View.LSRPath.Text),
                     Properties.Resources.LSRMName, MessageBoxButton.OK, MessageBoxImage.Hand);
                 return false;
             }
             di = new DirectoryInfo(View.ScriptRepository.Text);
             if (!di.Exists)
             {
-                MessageBox.Show(MyWindow, string.Format(Properties.Resources.InvalidScriptRepositoryPath, View.ScriptRepository.Text),
+                MessageBox.Show(base.View, string.Format(Properties.Resources.InvalidScriptRepositoryPath, View.ScriptRepository.Text),
                     Properties.Resources.LSRMName, MessageBoxButton.OK, MessageBoxImage.Hand);
                 return false;
             }
@@ -109,7 +109,8 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
         }
 
         public override GenericDialogResult Show(string title = null)
-        {            
+        {
+            base.View.SizeToContent = SizeToContent.WidthAndHeight;
             if (base.Show() == GenericDialogResult.Yes)
             {
                 Model.WriteToSettings();

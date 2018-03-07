@@ -42,7 +42,7 @@
 
     </UserControl.Resources>
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <TreeView Margin="3" Name="TreeView" Width="800" Height="600" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <TreeView Margin="3" Name="TreeView" Width="Auto" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="True" />

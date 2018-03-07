@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TypeCobol.LanguageServer.Robot.Monitor.View"
-             mc:Ignorable="d" d:DesignHeight="400" Width="656" HorizontalAlignment="Center">
-    <Grid Margin="0,0,10,0" Width="Auto">
+             mc:Ignorable="d" d:DesignHeight="400" Width="Auto" HorizontalAlignment="Left">
+    <DockPanel DockPanel.Dock="Left">
+        <Grid Margin="0,0,10,0"  DockPanel.Dock="Left">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="131*"/>
             <ColumnDefinition Width="510*"/>
@@ -28,4 +29,5 @@
         <Label Grid.Column="0" Content="Batch Template:" HorizontalAlignment="Left" Margin="0,127,0,0" VerticalAlignment="Top" Height="26" Width="95"/>
         <TextBox Grid.Column="1" Name="BatchTemplate" HorizontalAlignment="Stretch" Margin="0,136,0,0" TextWrapping="Wrap" Text="{Binding BatchTemplate, Mode=TwoWay}" VerticalAlignment="Top" Height="254" Width="Auto"/>
     </Grid>
+    </DockPanel>
 </UserControl>

@@ -17,7 +17,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.View
     /// <summary>
     /// Logique d'interaction pour GenericDialogBox.xaml
     /// </summary>
-    public partial class GenericDialogView : UserControl
+    public partial class GenericDialogView : Window
     {
         public GenericDialogView()
         {
