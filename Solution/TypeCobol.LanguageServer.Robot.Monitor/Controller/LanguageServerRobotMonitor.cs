@@ -924,14 +924,14 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             {
                 return;
             }
-            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath));
+            var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath, ServerOptions));
             ScenarioController = new MonitorLanguageServerRobotController(server, Util.DefaultScriptRepositorPath);
             ScenarioRobotConnectionController scenarioConnect =
                 ScenarioController.ClientConnection as ScenarioRobotConnectionController;
             if (ScenarioController.Start(false))
             {
                 int lastSaveIndex = -1;
-                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex))
+                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex, true, true))
                 {
                     MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.FailInitalizeScerarioRecording,
                         LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
@@ -1025,7 +1025,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             if (scenarioController.Start(false))
             {
                 int lastSaveIndex = -1;
-                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex, bLastSave))
+                if (!scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data, out lastSaveIndex, bLastSave, false))
                 {
                     message = LanguageServer.Robot.Monitor.Properties.Resources.FailInitalizeScerarioRecording;
                     MessageBox.Show(

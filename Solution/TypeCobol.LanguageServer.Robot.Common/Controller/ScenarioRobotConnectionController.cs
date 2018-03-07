@@ -239,7 +239,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// <param name="script"></param>
         /// <param name="lastSaveIndex">[out]lastSaveIndex Last Save Index position</param>
         /// <param name="bUseLastSave">true if the last save position must be used, false otherwise</param>
-        public bool InitializeScenario(Model.Session session, Model.Script script, out int lastSaveIndex, bool bUseLastSave = true)
+        /// <param name="bReplayTextChanges">true if the replay of didSave and textChange must be performed</param>
+        public bool InitializeScenario(Model.Session session, Model.Script script, out int lastSaveIndex, bool bUseLastSave, bool bReplayTextChanges)
         {
             //Don't save the script when the didClose notification arrive.
             lastSaveIndex = -1;
@@ -281,9 +282,11 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                 else
                 {
                     return false;
-                }
+                }                
                 //Lookup the position of the last didSave message.
                 lastSaveIndex = bUseLastSave ? LookupLastSavePosition(script) : 0;
+                if (!bReplayTextChanges)
+                    return true;
                 //Apply didOpen all text changes from the beginning.
                 for (int i = lastSaveIndex; i < script.messages.Count; i++)
                 {
