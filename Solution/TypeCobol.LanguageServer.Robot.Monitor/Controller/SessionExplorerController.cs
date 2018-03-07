@@ -358,6 +358,8 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
         {
             StartScenario?.RaiseCanExecuteChanged(this); ;
             StopScenario?.RaiseCanExecuteChanged(this);
+            CreateSnapshot?.RaiseCanExecuteChanged(this);
+            CreateLastSaveSnapshot?.RaiseCanExecuteChanged(this);
         }
 
         /// <summary>
