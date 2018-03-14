@@ -103,6 +103,8 @@ namespace TypeCobol.LanguageServer.Robot.Monitor
                 return MonitorController != null;            
             else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuDisplayScenario)
                 return true;
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemOutput)
+                return true;
             return false;
         }
 
@@ -133,6 +135,13 @@ namespace TypeCobol.LanguageServer.Robot.Monitor
                     MonitorController.DisplayScenario();
                 }
             }
+            else if (parameter == (MainWindow as LanguageServer.Robot.Monitor.MainWindow).MenuItemOutput)
+            {
+                if (MonitorController != null)
+                {
+                    MonitorController.ToggleOutput();
+                }
+            }            
         }
     }
 }

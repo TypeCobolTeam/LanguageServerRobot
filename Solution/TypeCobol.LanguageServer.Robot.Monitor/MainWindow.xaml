@@ -19,6 +19,9 @@
                 <Separator />
                 <MenuItem Header="_Quit"  Name="MenuItemQuit"/>
             </MenuItem>
+            <MenuItem Header="_View" Name="MenuView">
+                <MenuItem Header="_Output"  Name="MenuItemOutput" IsCheckable="true" IsChecked="True"/>
+            </MenuItem>
             <MenuItem Header="Test" Name="MenuTest">
                 <MenuItem Header="_Play scenario..."  Name="MenuPlayScenario"/>
                 <MenuItem Header="_Play scenario with confirmation..."  Name="MenuPlayScenarioConfirmation"/>
@@ -47,7 +50,7 @@
         </DockPanel>
 
         <GridSplitter  Height="5" HorizontalAlignment="Stretch" Grid.Row="2"/>
-        <TabControl Grid.Row="3"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+        <TabControl Grid.Row="3"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="OutputTabControl">
             <TabItem Name="OutputTabItem" Header="Output">
                 <TextBox Name="Output"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             IsReadOnly="True"

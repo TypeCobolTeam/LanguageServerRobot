@@ -583,6 +583,24 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
         }
 
         /// <summary>
+        /// Detertime if the output is made displayed or not
+        /// </summary>
+        public void ToggleOutput()
+        {
+            if (View.MenuItemOutput.IsChecked)
+            {
+                View.OutputTabItem.Visibility = Visibility.Visible;
+                View.Output.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                View.OutputTabItem.Visibility = Visibility.Hidden;
+                View.Output.Visibility = Visibility.Hidden;
+            }
+        }
+
+
+        /// <summary>
         /// Chech weither the LSR connection is active or not.
         /// </summary>
         /// <param name="bPrompt">true if a message box must be promted to the in case of an interrupted connection.</param>
@@ -1247,8 +1265,11 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             {
                 if (View != null)
                 {
-                    View.Output.AppendText(e.Message);
-                    View.Output.AppendText(Environment.NewLine);
+                    if (View.MenuItemOutput.IsChecked)
+                    {
+                        View.Output.AppendText(e.Message);
+                        View.Output.AppendText(Environment.NewLine);
+                    }
                 }
             });
         }
