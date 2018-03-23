@@ -13,9 +13,9 @@ For the [TypeCobol project](https://github.com/TypeCobolTeam/TypeCobol), its sou
 # Architecture overview
 ## Projects
 The solution contains 5 projects
-- **TypeCobol.LanguageServer.JsonRPC** is a C# class library that implements [JSON RPC](https://en.wikipedia.org/wiki/JSON-RPC) protocol based on the Producer/Consumer Pattern.
-- **TypeCobol.LanguageServer.Protocol** is a C# class library that implements [Microsoft Language Server](https://github.com/Microsoft/language-server-protocol) protocol's types and signatures.
-- **TypeCobol.LanguageServer.Robot.Common** is a C# class library that implements core and common Language Server Robot features.
-- **TypeCobol.LanguageServerRobot** is a C# implementation of the Language Server Robot(LSR) application.
+- **TypeCobol.LanguageServer.JsonRPC** is a C# class library that implements [JSON RPC](https://en.wikipedia.org/wiki/JSON-RPC) protocol based on the Producer/Consumer Pattern. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServer.JsonRPC).
+- **TypeCobol.LanguageServer.Protocol** is a C# class library that implements [Microsoft Language Server](https://github.com/Microsoft/language-server-protocol) protocol's types and signatures. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServer.Protocol).
+- **TypeCobol.LanguageServer.Robot.Common** is a C# class library that implements core and common Language Server Robot features. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServer.Robot.Common).
+- **TypeCobol.LanguageServerRobot** is a C# implementation of the Language Server Robot(LSR) application. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServerRobot).
 - **TypeCobol.LanguageServer.Robot.Monitor** is a C#/WPF application for monitoring LSR sessions and scenario recording and replay.
 ## Projects Dependencies
