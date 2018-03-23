@@ -22,4 +22,4 @@ The solution contains 5 projects
 The projets use the folowing tools aand SDK.
 - Visual Studio 2015
 - [.Net Framework 4.5](https://www.microsoft.com/net/download/windows)
-- Json.NET [Newtonsodt](https://www.newtonsoft.com/json)
+- Json.NET [Newtonsoft](https://www.newtonsoft.com/json)
