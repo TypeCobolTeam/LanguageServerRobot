@@ -19,3 +19,7 @@ The solution contains 5 projects
 - **TypeCobol.LanguageServerRobot** is a C# implementation of the Language Server Robot(LSR) application. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServerRobot).
 - **TypeCobol.LanguageServer.Robot.Monitor** is a C#/WPF application for monitoring LSR sessions and scenario recording and replay.
 ## Projects Dependencies
+The projets use the folowing tools aand SDK.
+- Visual Studio 2015
+- [.Net Framework 4.5](https://www.microsoft.com/net/download/windows)
+- Json.NET [Newtonsodt](https://www.newtonsoft.com/json)
