@@ -575,6 +575,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
                 this.SessionExplorer.StartScenarioHandler += SessionExplorer_StartScenarioHandler;
                 this.SessionExplorer.CreateSnapshotHandler += SessionExplorer_CreateSnapshotHandler;
                 this.SessionExplorer.CreateLastSaveSnapshotHandler += SessionExplorer_CreateLastSaveSnapshotHandler;
+                this.SessionExplorer.EmailLastSaveSnapshotHandler += SessionExplorer_EmailSnapshotCommand;
                 //Add any pending session
                 SessionExplorer.AddSessions(PendingSession);
                 PendingSession.Clear();
@@ -1131,6 +1132,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             }
             else
             {
+                scenarioController.Dispose();
                 message = LanguageServer.Robot.Monitor.Properties.Resources.FailToStartServerConnection;
                 MessageBox.Show(message,
                     LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
@@ -1225,6 +1227,116 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             //CreateSnapshot(sender, e, true);
             string message;
             CreateRecordedSnapshot(sender, e, true, out message);
+        }
+
+        /// <summary>
+        /// Email the last save snapshot.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SessionExplorer_EmailSnapshotCommand(object sender, DocumentItemViewModel e)
+        {
+            string message = null;
+            WaitCursor wc = new WaitCursor();
+            try
+            {
+                if (!CheckLSRConnection(true))
+                {
+                    return;
+                }
+                var server = new ServerRobotConnectionController(new ProcessMessageConnection(ServerPath, ServerOptions));
+                var scenarioController = new MonitorLanguageServerRobotController(server,
+                    Util.DefaultScriptRepositorPath);
+                try
+                {
+
+                    ScenarioRobotConnectionController scenarioConnect =
+                        scenarioController.ClientConnection as ScenarioRobotConnectionController;
+                    if (scenarioController.Start(false))
+                    {
+                        int lastSaveIndex = -1;
+                        if (
+                            !scenarioConnect.InitializeScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data,
+                                out lastSaveIndex, true, false))
+                        {
+                            message = LanguageServer.Robot.Monitor.Properties.Resources.FailInitalizeScerarioRecording;
+                            MessageBox.Show(
+                                message,
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                            );
+                            return;
+                        }
+                        if (
+                            !ScenarioRobotConnectionController.RecordServerSnapshot(
+                                this.MonitoringConnection.Consumer.SessionModel, e.Data, lastSaveIndex,
+                                scenarioController))
+                        {
+                            message = LanguageServer.Robot.Monitor.Properties.Resources.FailToRecordTheSnapshotSequence;
+                            MessageBox.Show(
+                                message,
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                            );
+                            return;
+                        }
+                        if (!scenarioConnect.StopScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data))
+                        {
+                            message = LanguageServer.Robot.Monitor.Properties.Resources.FailStopScenarioRecording;
+                            MessageBox.Show(message,
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                            );
+                            return;
+                        }
+
+                        if (!scenarioConnect.StopScenario(this.MonitoringConnection.Consumer.SessionModel, e.Data))
+                        {
+                            message = LanguageServer.Robot.Monitor.Properties.Resources.FailStopScenarioRecording;
+                            MessageBox.Show(message,
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                            );
+                            return;
+                        }
+
+                        Script snapshot = scenarioConnect.Scenario;
+                        if (snapshot != null)
+                        {
+                            MailSender.SendScriptMail(snapshot);
+                        }
+                        else
+                        {
+                            MessageBox.Show(LanguageServer.Robot.Monitor.Properties.Resources.FailToCreateSnapshot,
+                                LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Hand
+                            );
+                        }
+                    }
+                }
+                finally
+                {
+                    scenarioController.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    string.Format(LanguageServer.Robot.Monitor.Properties.Resources.FailToEmailTheScenario, ex.Message),
+                    LanguageServer.Robot.Monitor.Properties.Resources.LSRMName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Hand
+                );
+            }
+            finally
+            {
+                wc.Dispose();
+            }
         }
 
         private LanguageServerRobotController MyScenarioController;

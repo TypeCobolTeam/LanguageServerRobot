@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace TypeCobol.LanguageServer.Robot.Monitor.Model
 {
@@ -54,6 +55,21 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Model
             get; set;
         }
 
+        public string MailReceiver
+        {
+            get; set;
+        }
+
+        public string SmtpServer
+        {
+            get; set;
+        }
+
+        public string SmtpPort
+        {
+            get; set;
+        }
+
         /// <summary>
         /// Read Default Values
         /// </summary>
@@ -76,6 +92,9 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Model
             ScriptRepositoryPath = Properties.Settings.Default.ScriptPath;
             LSRReplayArguments = Properties.Settings.Default.LSRReplayArguments;
             BatchTemplate = Properties.Settings.Default.BatchTemplate;
+            MailReceiver = Properties.Settings.Default.MailReceiver;
+            SmtpServer = Properties.Settings.Default.SmtpServer;
+            SmtpPort = Properties.Settings.Default.SmtpPort;
         }
 
         /// <summary>
@@ -88,6 +107,9 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Model
             Properties.Settings.Default.ScriptPath = ScriptRepositoryPath;
             Properties.Settings.Default.LSRReplayArguments = LSRReplayArguments;
             Properties.Settings.Default.BatchTemplate = BatchTemplate;
+            Properties.Settings.Default.MailReceiver = MailReceiver;
+            Properties.Settings.Default.SmtpServer = SmtpServer;
+            Properties.Settings.Default.SmtpPort = SmtpPort;
             Properties.Settings.Default.Save();
         }
     }

@@ -77,6 +77,8 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Model
 
         public ICommand CreateLastSaveSnapshotCommand { get; set; }
 
+        public ICommand EmailLastSaveSnapshotCommand { get; set; }
+
         /// <summary>
         /// Add a scenario to this document.
         /// </summary>

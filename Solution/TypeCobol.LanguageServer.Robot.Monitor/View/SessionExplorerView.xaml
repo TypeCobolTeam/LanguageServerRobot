@@ -52,7 +52,9 @@
                                     <MenuItem Header ="_Start Scenario..." Name="StartScenario" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding StartScenarioCommand}"   />
                                     <!-- <MenuItem Header ="Stop Scenario" Name="StopScenario" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding StopScenarioCommand}" /> -->
                                     <MenuItem Header ="_Create Snapshot..." Name="CreateSnapshot" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding CreateSnapshotCommand}"   />
-                                    <MenuItem Header ="_Create last save Snapshot..." Name="CreateLastSaveSnapshot" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding CreateLastSaveSnapshotCommand}"   />
+                                    <MenuItem Header ="Create _last save Snapshot..." Name="CreateLastSaveSnapshot" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding CreateLastSaveSnapshotCommand}"   />
+                                    <Separator />
+                                    <MenuItem Header ="_Email last save Snapshot" Name="EmailLastSaveSnapshot" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Self}}" Command="{Binding EmailLastSaveSnapshotCommand}"   />
                                 </ContextMenu>
                             </TextBlock.ContextMenu>
                         </TextBlock>

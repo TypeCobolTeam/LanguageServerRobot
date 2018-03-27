@@ -35,5 +35,14 @@ exit %ERRORLEVEL%
     <Setting Name="LSRExe" Type="System.String" Scope="User">
       <Value Profile="(Default)">TypeCobol.LanguageServerRobot.exe</Value>
     </Setting>
+    <Setting Name="MailReceiver" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SmtpServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SmtpPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

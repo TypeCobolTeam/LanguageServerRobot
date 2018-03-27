@@ -143,6 +143,47 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             public event EventHandler CanExecuteChanged;
         }
 
+        /// <summary>
+        /// The Create Snapshot command
+        /// </summary>
+        public class EmailSnapshotCommand : ICommand
+        {
+            /// <summary>
+            /// The Session Explorer Controller.
+            /// </summary>
+            public SessionExplorerController Controller
+            { get; internal set; }
+            public EmailSnapshotCommand(SessionExplorerController controller)
+            {
+                this.Controller = controller;
+            }
+            public bool CanExecute(object parameter)
+            {
+                if (parameter is DocumentItemViewModel)
+                {
+                    return (parameter as DocumentItemViewModel).IsCurrent && !(parameter as DocumentItemViewModel).IsRecording;
+                }
+                return false;
+            }
+
+            public void Execute(object parameter)
+            {
+                if (CanExecute(parameter))
+                {
+                    Controller.EmailLastSaveSnapshotHandler?.Invoke(Controller, parameter as DocumentItemViewModel);
+                }
+            }
+
+            public void RaiseCanExecuteChanged(object parameter)
+            {
+                if (CanExecuteChanged != null)
+                {
+                    CanExecuteChanged(parameter, EventArgs.Empty);
+                }
+            }
+            public event EventHandler CanExecuteChanged;
+        }
+
         public StartScenarioCommand StartScenario
         {
             get; internal set;
@@ -159,6 +200,11 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
         }
 
         public CreateSnapshotCommand CreateLastSaveSnapshot
+        {
+            get; internal set;
+        }
+
+        public EmailSnapshotCommand EmailLastSaveSnapshot
         {
             get; internal set;
         }
@@ -182,6 +228,11 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
         /// Create Last Save Snapshot Handler
         /// </summary>
         public event EventHandler<DocumentItemViewModel> CreateLastSaveSnapshotHandler;
+
+        /// <summary>
+        /// Email Last Save Snapshot Handler
+        /// </summary>
+        public event EventHandler<DocumentItemViewModel> EmailLastSaveSnapshotHandler;
 
         /// <summary>
         /// View Constructor
@@ -212,6 +263,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
             StopScenario = new StopScenarioCommand(this);
             CreateSnapshot = new CreateSnapshotCommand(this, false);
             CreateLastSaveSnapshot = new CreateSnapshotCommand(this, true);
+            EmailLastSaveSnapshot = new EmailSnapshotCommand(this);
             Model = new SessionExplorerModel(sessions);
             View = view;
             BindViewModel();
@@ -299,6 +351,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Controller
                 documentModel.StopScenarioCommand = StopScenario;
                 documentModel.CreateSnapshotCommand = CreateSnapshot;
                 documentModel.CreateLastSaveSnapshotCommand = CreateLastSaveSnapshot;
+                documentModel.EmailLastSaveSnapshotCommand = EmailLastSaveSnapshot;
             }
             return documentModel;
         }
