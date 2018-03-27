@@ -229,6 +229,17 @@ namespace TypeCobol.LanguageServer.Robot.Common.Model
         }
 
         /// <summary>
+        /// Write the script in the given TextWriter using UTF8 encoding.
+        /// </summary>
+        public void Write(System.IO.TextWriter writer)
+        {
+            System.Diagnostics.Contracts.Contract.Assert(writer != null);
+            JObject jobject = JObject.FromObject(this);
+            string text = jobject.ToString();
+            writer.Write(text);
+        }
+
+        /// <summary>
         /// Check if messages contained in this scripts are equals to messages of the other script.
         /// </summary>
         /// <param name="other"></param>

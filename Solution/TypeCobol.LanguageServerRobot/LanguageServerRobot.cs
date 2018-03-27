@@ -370,6 +370,7 @@ namespace LanguageServerRobot
                             else
                             {
                                 bool bResult = robot.WaitExit();
+                                robot.Dispose();
                                 return bResult ? 0 : -1;
                             }
                         }

@@ -450,6 +450,21 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// The Scenario hold by this controller
+        /// </summary>
+        public Script Scenario
+        {
+            get
+            {
+                if (DidCloseTextDocument != null && DidOpenParameters != null)
+                {
+                    return this.RecordingController[DidOpenParameters.textDocument.uri];
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Lookup the last save position in the script
         /// </summary>
         /// <param name="script">Last save position</param>
