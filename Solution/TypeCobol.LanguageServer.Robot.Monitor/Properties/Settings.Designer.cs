@@ -49,7 +49,7 @@ namespace TypeCobol.LanguageServer.Robot.Monitor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TypeCobol\\Sources\\Sessions")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TypeCobol\\Sources\\")]
         public string ScriptPath {
             get {
                 return ((string)(this["ScriptPath"]));

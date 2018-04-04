@@ -9,7 +9,7 @@
       <Value Profile="(Default)">C:\TypeCobol\Sources\##Latest_Release##</Value>
     </Setting>
     <Setting Name="ScriptPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\TypeCobol\Sources\Sessions</Value>
+      <Value Profile="(Default)">C:\TypeCobol\Sources\</Value>
     </Setting>
     <Setting Name="LSRReplayArguments" Type="System.String" Scope="User">
       <Value Profile="(Default)">-c {2} -s {0}\TypeCobol.LanguageServer.exe -script {1}</Value>
