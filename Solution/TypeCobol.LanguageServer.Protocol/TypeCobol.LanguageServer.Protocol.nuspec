@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TypeCobol.LanguageServer.Protocol</id>
-    <version>0.5.1</version>
+    <version>1.0.0</version>
     <authors>TypeCobol Team</authors>
     <owners>TypeCobol Team</owners>
 <!--
