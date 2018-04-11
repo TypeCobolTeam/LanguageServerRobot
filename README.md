@@ -17,7 +17,7 @@ The solution contains 5 projects
 - **TypeCobol.LanguageServer.Protocol** is a C# class library that implements [Microsoft Language Server](https://github.com/Microsoft/language-server-protocol) protocol's types and signatures. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServer.Protocol).
 - **TypeCobol.LanguageServer.Robot.Common** is a C# class library that implements core and common Language Server Robot features. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServer.Robot.Common).
 - **TypeCobol.LanguageServerRobot** is a C# implementation of the Language Server Robot(LSR) application. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServerRobot).
-- **TypeCobol.LanguageServer.Robot.Monitor** is a C#/WPF application for monitoring LSR sessions and scenario recording and replay.
+- **TypeCobol.LanguageServer.Robot.Monitor** is a C#/WPF application for monitoring LSR sessions and scenario recording and replay. [Nuget](https://www.nuget.org/packages/TypeCobol.LanguageServer.Robot.Monitor).
 ## Projects Dependencies
 The projets use the folowing tools aand SDK.
 - Visual Studio 2015
