@@ -334,7 +334,7 @@ namespace LanguageServerRobot
             }
 
             //Prepare a Connection logger
-            ConnectionLog logger = new ConnectionLog();
+            ConnectionLog logger = ConnectionLog.GetInstance();
             switch (LogLevel)
             {
                 case ConnectionLogLevel.Lifecycle:
