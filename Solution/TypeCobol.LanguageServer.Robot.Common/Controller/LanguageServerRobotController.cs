@@ -75,6 +75,15 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
+        /// For Inversion of control mode.
+        /// </summary>
+        public bool InversionOfControl
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
         /// Timeoout to wait for the Monitor Application to establish the connection : 30s == 10000ms
         /// </summary>
         private const int MONITOR_CONNECTION_TIMEOUT = 30 * 1000;
@@ -778,7 +787,11 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
             else
             {
                 ServerConnection.FromServer(message);
-                ClientConnection.SendMessage(message);
+                //In ioc Mode don't resent to the Server any message as the server is also the client.
+                if (!InversionOfControl)
+                {
+                    ClientConnection.SendMessage(message);
+                }
             }
         }
 
@@ -790,6 +803,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// <param name="serverPath">The Server's path</param>
         /// <param name="serverOptions">The Server's options</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
+        /// <param name="promptReplay">Display a wait message before starting replay</param>
         /// <returns>0 if no error -1 otherwise.</returns>
         public static int ReplayScript(string script_path, Script script, string serverPath, string serverOptions, string scriptRepositoryPath, bool bStopAtFirstError, bool promptReplay)
         {
@@ -814,13 +828,16 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// <param name="script_path">The path of the script to replay</param>
         /// <param name="script">The script model to replay</param>
         /// <param name="scriptRepositoryPath">The script repository path</param>
+        /// <param name="inversionOfControl">Inform about an inversion of control mode</param>
+        /// <param name="promptReplay">Display a wait message before starting replay</param>
         /// <returns>0 if no error -1 otherwise.</returns>
-        public static int DumpScript(string script_path, Script script, string scriptRepositoryPath, bool bStopAtFirstError)
+        public static int DumpScript(string script_path, Script script, string scriptRepositoryPath, bool bStopAtFirstError, bool inversionOfControl, bool promptReplay)
         {
             var server = new ServerRobotConnectionController(new MessageConnection());
             var robot = new LanguageServerRobotController(script_path, script, server, bStopAtFirstError, scriptRepositoryPath);
+            robot.InversionOfControl = inversionOfControl;
             robot.PropagateConnectionLogs();
-            if (!robot.Start(false))
+            if (!robot.Start(promptReplay))
             {
                 return -1;
             }

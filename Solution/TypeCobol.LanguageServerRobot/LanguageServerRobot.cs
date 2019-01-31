@@ -464,8 +464,9 @@ namespace LanguageServerRobot
             //Check if we have an workspace/didChangeConfiguration notification to apply
             if (ConfigNotifyOption != null)
                 script.did_change_configuation = ConfigNotifyOption;
+
             if (InversionOfControl)
-                return LanguageServerRobotController.DumpScript(script_path, script, ScriptRepositoryPath, bStopAtFirstError);
+                return LanguageServerRobotController.DumpScript(script_path, script, ScriptRepositoryPath, bStopAtFirstError, true, promptReplay);
             else
                 return LanguageServerRobotController.ReplayScript(script_path, script, ServerPath, ServerOptions, ScriptRepositoryPath, bStopAtFirstError, promptReplay);
         }
