@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TypeCobol.LanguageServerRobot</id>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <authors>TypeCobol Team</authors>
     <owners>TypeCobol Team</owners>
 <!--
@@ -17,7 +17,7 @@
         <dependency id="Newtonsoft.Json" version="11.0.0" exclude="Build,Analyzers" />
         <dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.0.1" />
 	<dependency id="TypeCobol.LanguageServer.Protocol" version="1.0.0" />
-	<dependency id="TypeCobol.LanguageServer.Robot.Common" version="1.0.0" />
+	<dependency id="TypeCobol.LanguageServer.Robot.Common" version="1.1.0" />
       </group>
     </dependencies>
   </metadata>
