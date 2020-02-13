@@ -3,23 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServerRobot", "TypeCobol.LanguageServerRobot.csproj", "{ADC9412F-26E7-4C05-8352-2573FBEB9E88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServerRobot", "TypeCobol.LanguageServerRobot\TypeCobol.LanguageServerRobot.csproj", "{ADC9412F-26E7-4C05-8352-2573FBEB9E88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.JsonRPC", "..\TypeCobol.LanguageServer.JsonRPC\TypeCobol.LanguageServer.JsonRPC.csproj", "{5A4CAD5C-F178-45D2-86E8-A75D7EAC13F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.JsonRPC", "TypeCobol.LanguageServer.JsonRPC\TypeCobol.LanguageServer.JsonRPC.csproj", "{5A4CAD5C-F178-45D2-86E8-A75D7EAC13F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.LanguageServer.JsonRPC", "..\TypeCobol.LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC.csproj", "{35D8C4D8-9477-4A15-8BFD-3B729906018D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.LanguageServer.JsonRPC", "TypeCobol.LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC\Tests.LanguageServer.JsonRPC.csproj", "{35D8C4D8-9477-4A15-8BFD-3B729906018D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.Protocol", "..\TypeCobol.LanguageServer.Protocol\TypeCobol.LanguageServer.Protocol.csproj", "{2950DAC0-494D-46B6-A836-7EAB4810952A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.Protocol", "TypeCobol.LanguageServer.Protocol\TypeCobol.LanguageServer.Protocol.csproj", "{2950DAC0-494D-46B6-A836-7EAB4810952A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.LanguageServerRobot", "Tests.LanguageServerRobot\Tests.LanguageServerRobot.csproj", "{27912F85-E779-4EE0-A1BD-09469EB12863}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.LanguageServerRobot", "TypeCobol.LanguageServerRobot\Tests.LanguageServerRobot\Tests.LanguageServerRobot.csproj", "{27912F85-E779-4EE0-A1BD-09469EB12863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.Robot.Common", "..\TypeCobol.LanguageServer.Robot.Common\TypeCobol.LanguageServer.Robot.Common.csproj", "{F0390474-09D7-41EE-B01C-FE4D2A57ECDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.Robot.Common", "TypeCobol.LanguageServer.Robot.Common\TypeCobol.LanguageServer.Robot.Common.csproj", "{F0390474-09D7-41EE-B01C-FE4D2A57ECDA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5A4CAD5C-F178-45D2-86E8-A75D7EAC13F4} = {5A4CAD5C-F178-45D2-86E8-A75D7EAC13F4}
 		{2950DAC0-494D-46B6-A836-7EAB4810952A} = {2950DAC0-494D-46B6-A836-7EAB4810952A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.Robot.Monitor", "..\TypeCobol.LanguageServer.Robot.Monitor\TypeCobol.LanguageServer.Robot.Monitor.csproj", "{DF8B4274-0B85-4CF5-809F-5A3C8A1531D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCobol.LanguageServer.Robot.Monitor", "TypeCobol.LanguageServer.Robot.Monitor\TypeCobol.LanguageServer.Robot.Monitor.csproj", "{DF8B4274-0B85-4CF5-809F-5A3C8A1531D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

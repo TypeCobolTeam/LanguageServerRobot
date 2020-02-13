@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TypeCobol.LanguageServer.Protocol</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <authors>TypeCobol Team</authors>
     <owners>TypeCobol Team</owners>
 <!--
@@ -13,13 +13,13 @@
     <description>Language Server Protocol: types implementation.</description>
     <repository type="git" url="https://github.com/TypeCobolTeam/LanguageServerRobot.git" />
     <dependencies>
-      <group targetFramework=".NETFramework4.5">	
-        <dependency id="Newtonsoft.Json" version="11.0.0" exclude="Build,Analyzers" />
-        <dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.0.1" />
+      <group targetFramework="net47">	
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+        <dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.1.1" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src=".\bin\Release\TypeCobol.LanguageServer.Protocol.dll" target="lib\net45\TypeCobol.LanguageServer.Protocol.dll" />
+    <file src=".\bin\Release\TypeCobol.LanguageServer.Protocol.dll" target="lib\net47\TypeCobol.LanguageServer.Protocol.dll" />
   </files>
 </package>
