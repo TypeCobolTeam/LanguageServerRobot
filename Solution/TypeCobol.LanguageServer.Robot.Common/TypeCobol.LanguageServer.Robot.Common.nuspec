@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TypeCobol.LanguageServer.Robot.Common</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <authors>TypeCobol Team</authors>
     <owners>TypeCobol Team</owners>
 <!--
@@ -13,7 +13,7 @@
     <description>TypeCobol Language Server Robot common classes and features.</description>
     <repository type="git" url="https://github.com/TypeCobolTeam/LanguageServerRobot.git" />
     <dependencies>
-      <group targetFramework="net47">	
+      <group targetFramework="net472">	
         <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
         <dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.1.1" />
 	<dependency id="TypeCobol.LanguageServer.Protocol" version="1.1.0" />
@@ -21,6 +21,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src=".\bin\Release\TypeCobol.LanguageServer.Robot.Common.dll" target="lib\net47\TypeCobol.LanguageServer.Robot.Common.dll" />
+    <file src=".\bin\Release\TypeCobol.LanguageServer.Robot.Common.dll" target="lib\net472\TypeCobol.LanguageServer.Robot.Common.dll" />
   </files>
 </package>
