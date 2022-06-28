@@ -1,25 +1,23 @@
 <?xml version="1.0"?>
-<package >
-  <metadata>
-    <id>TypeCobol.LanguageServer.Protocol</id>
-    <version>1.1.1</version>
-    <authors>TypeCobol Team</authors>
-    <owners>TypeCobol Team</owners>
-<!--
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
--->
-    <licenseUrl>https://github.com/TypeCobolTeam/LanguageServerRobot/blob/master/LICENSE.md</licenseUrl>
-    <projectUrl>https://github.com/TypeCobolTeam/LanguageServerRobot</projectUrl>
-    <description>Language Server Protocol: types implementation.</description>
-    <repository type="git" url="https://github.com/TypeCobolTeam/LanguageServerRobot.git" />
-    <dependencies>
-      <group targetFramework="net472">	
-        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
-        <dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.1.1" />
-      </group>
-    </dependencies>
-  </metadata>
-  <files>
-    <file src=".\bin\Release\TypeCobol.LanguageServer.Protocol.dll" target="lib\net472\TypeCobol.LanguageServer.Protocol.dll" />
-  </files>
+<package>
+	<metadata>
+		<id>TypeCobol.LanguageServer.Protocol</id>
+		<version>1.1.2</version>
+		<authors>TypeCobol Team</authors>
+		<owners>TypeCobol Team</owners>
+		<!--<requireLicenseAcceptance>true</requireLicenseAcceptance>-->
+		<licenseUrl>https://github.com/TypeCobolTeam/LanguageServerRobot/blob/master/LICENSE.md</licenseUrl>
+		<projectUrl>https://github.com/TypeCobolTeam/LanguageServerRobot</projectUrl>
+		<description>Language Server Protocol: types implementation.</description>
+		<repository type="git" url="https://github.com/TypeCobolTeam/LanguageServerRobot.git"/>
+		<dependencies>
+			<group targetFramework="net472">
+				<dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers"/>
+				<dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.1.3"/>
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src=".\bin\Release\TypeCobol.LanguageServer.Protocol.dll" target="lib\net472\TypeCobol.LanguageServer.Protocol.dll"/>
+	</files>
 </package>

@@ -1,27 +1,25 @@
 <?xml version="1.0"?>
-<package >
-  <metadata>
-    <id>TypeCobol.LanguageServer.Robot.Monitor</id>
-    <version>1.1.1</version>
-    <authors>TypeCobol Team</authors>
-    <owners>TypeCobol Team</owners>
-<!--
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
--->
-    <licenseUrl>https://github.com/TypeCobolTeam/LanguageServerRobot/blob/master/LICENSE.md</licenseUrl>
-    <projectUrl>https://github.com/TypeCobolTeam/LanguageServerRobot</projectUrl>
-    <description>TypeCobol Language Server Robot Monitoring Application.</description>
-    <repository type="git" url="https://github.com/TypeCobolTeam/LanguageServerRobot.git" />
-    <dependencies>
-      <group targetFramework="net472">	
-        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
-        <dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.1.1" />
-	<dependency id="TypeCobol.LanguageServer.Protocol" version="1.1.0" />
-	<dependency id="TypeCobol.LanguageServer.Robot.Common" version="1.1.0" />
-      </group>
-    </dependencies>
-  </metadata>
-  <files>
-    <file src="..\TypeCobol.LanguageServerRobot\bin\Release\TypeCobol.LanguageServer.Robot.Monitor.exe" target="lib\net472\TypeCobol.LanguageServer.Robot.Monitor.exe" />
-  </files>
+<package>
+	<metadata>
+		<id>TypeCobol.LanguageServer.Robot.Monitor</id>
+		<version>1.1.2</version>
+		<authors>TypeCobol Team</authors>
+		<owners>TypeCobol Team</owners>
+		<!--<requireLicenseAcceptance>true</requireLicenseAcceptance>-->
+		<licenseUrl>https://github.com/TypeCobolTeam/LanguageServerRobot/blob/master/LICENSE.md</licenseUrl>
+		<projectUrl>https://github.com/TypeCobolTeam/LanguageServerRobot</projectUrl>
+		<description>TypeCobol Language Server Robot Monitoring Application.</description>
+		<repository type="git" url="https://github.com/TypeCobolTeam/LanguageServerRobot.git"/>
+		<dependencies>
+			<group targetFramework="net472">
+				<dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers"/>
+				<dependency id="TypeCobol.LanguageServer.JsonRPC" version="1.1.3"/>
+				<dependency id="TypeCobol.LanguageServer.Protocol" version="1.1.2"/>
+				<dependency id="TypeCobol.LanguageServer.Robot.Common" version="1.2.2"/>
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="..\TypeCobol.LanguageServerRobot\bin\Release\TypeCobol.LanguageServer.Robot.Monitor.exe" target="lib\net472\TypeCobol.LanguageServer.Robot.Monitor.exe"/>
+	</files>
 </package>
