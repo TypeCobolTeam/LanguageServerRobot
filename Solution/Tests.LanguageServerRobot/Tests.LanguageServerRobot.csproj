@@ -20,4 +20,19 @@
     <ProjectReference Include="..\TypeCobol.LanguageServer.Robot.Common\TypeCobol.LanguageServer.Robot.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestFiles\Session0\configuration.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Session0\initialize.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Session0\Script01.tlsp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Session0\TestSuite01.slsp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
