@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <NuspecFile>TypeCobol.LanguageServer.Robot.Common.nuspec</NuspecFile>
   </PropertyGroup>
 
   <ItemGroup>
