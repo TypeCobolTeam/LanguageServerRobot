@@ -20,7 +20,7 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src=".\bin\Release\net6.0\TypeCobol.LanguageServerRobot.targets" target="build\TypeCobol.LanguageServerRobot.targets"/>
+		<file src=".\TypeCobol.LanguageServerRobot.targets" target="build\TypeCobol.LanguageServerRobot.targets"/>
 		<file src=".\bin\Release\net6.0\TypeCobol.LanguageServerRobot.exe" target="lib\net6.0\TypeCobol.LanguageServerRobot.exe"/>
 		<file src=".\bin\Release\net6.0\TypeCobol.LanguageServerRobot.dll" target="lib\net6.0\TypeCobol.LanguageServerRobot.dll"/>
 		<file src=".\bin\Release\net6.0\TypeCobol.LanguageServerRobot.runtimeconfig.json" target="lib\net6.0\TypeCobol.LanguageServerRobot.runtimeconfig.json"/>

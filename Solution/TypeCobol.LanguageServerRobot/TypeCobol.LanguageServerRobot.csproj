@@ -12,10 +12,4 @@
     <ProjectReference Include="..\TypeCobol.LanguageServer.Robot.Common\TypeCobol.LanguageServer.Robot.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="TypeCobol.LanguageServerRobot.targets">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
