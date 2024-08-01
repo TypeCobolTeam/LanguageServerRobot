@@ -2,10 +2,6 @@
 using TypeCobol.LanguageServer.Robot.Common.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace TypeCobol.LanguageServer.Robot.Common.Controller
@@ -292,13 +288,13 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                         }
                         else if (Utilities.Protocol.IsResponse(jsonObject))
                         {
-                            this.ResultScript.AddMessage(Script.MessageCategory.Result, message);
+                            this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
                             RaiseResponseEvent(message, jsonObject);
                             if (StopAtFirstError)
                             {
                                 if ((ScriptMessageIndex + 1) < this.SourceScript.messages.Count)
                                 {
-                                    if (!(this.SourceScript.messages[(int)ScriptMessageIndex + 1].category == Script.MessageCategory.Result &&
+                                    if (!(this.SourceScript.messages[(int)ScriptMessageIndex + 1].category == Script.MessageCategory.Server &&
                                         this.SourceScript.messages[(int)ScriptMessageIndex + 1].message == message))
                                     {   //We have a mismatch Result.
                                         if (this.ErrorIndex < 0)

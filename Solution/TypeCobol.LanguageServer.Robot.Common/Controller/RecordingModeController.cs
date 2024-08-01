@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TypeCobol.LanguageServer.JsonRPC;
 using TypeCobol.LanguageServer.Robot.Common.Model;
 using TypeCobol.LanguageServer.Robot.Common.Utilities;
 using Newtonsoft.Json.Linq;
@@ -272,7 +268,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                                 if (RequestIdUriMap.ContainsKey(id))
                                 {//So this is another response for a request ==> just record it
                                     uri = RequestIdUriMap[id];
-                                    consumed = RecordScriptMessage(Script.MessageCategory.Result, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
+                                    consumed = RecordScriptMessage(Script.MessageCategory.Server, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
                                 }
                                 else
                                 {//Hum...There is a response from the server without a registered request
@@ -287,7 +283,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                             if (RequestIdUriMap.ContainsKey(id))
                             {
                                 uri = RequestIdUriMap[id];
-                                consumed = RecordScriptMessage(Script.MessageCategory.Result, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
+                                consumed = RecordScriptMessage(Script.MessageCategory.Server, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
                             }
                             else
                             {//Hum...There is a response from the server without a registered request
@@ -411,7 +407,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                     string id = Utilities.Protocol.GetRequestId(jsonObject);
                     RequestIdUriMap[id] = uri;
                 }
-                else if (category == Script.MessageCategory.Result && kind == Utilities.Protocol.Message_Kind.Response)
+                else if (category == Script.MessageCategory.Server && kind == Utilities.Protocol.Message_Kind.Response)
                 {//Rmove the reference to the request
                     string id = Utilities.Protocol.GetRequestId(jsonObject);
                     RequestIdUriMap.Remove(id);
