@@ -17,8 +17,8 @@ namespace TypeCobol.LanguageServer.Protocol
 
         /// <summary>
         /// Creates a new TextDocumentIdentifier literal.
-        /// @param uri The document's uri.
         /// </summary>
+        /// <param name="uri">The document's uri.</param>
         public TextDocumentIdentifier(string uri)
         {
             this.uri = uri;
