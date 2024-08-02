@@ -208,9 +208,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                                 consumed = true;
                             }
                         }
-                        else if (Utilities.Protocol.IsErrorResponse(jsonObject))
-                        {//Hum...A response receive from the Client this cannot happend ==> Log it.
-                            LogUnexpectedMessage(Resource.UnexpectedResponseFromClient, message);
+                        else if (Utilities.Protocol.IsResponse(jsonObject))
+                        {
+                            this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
+                            consumed = true;
+                        }
+                        else
+                        {
+                            LogUnexpectedMessage(Resource.UnexpectedMessageFromClient, message);
                             //But we must register it has result
                             this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
                             consumed = true;
@@ -299,6 +304,23 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                                     {   //We have a mismatch Result.
                                         if (this.ErrorIndex < 0)
                                             this.ErrorIndex = ScriptMessageIndex + 1;
+                                    }
+                                }
+                            }
+                            consumed = true;
+                        }
+                        else if (Utilities.Protocol.IsRequest(jsonObject))
+                        {
+                            this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
+                            if (StopAtFirstError)
+                            {
+                                if ((ResultScript.messages.Count - 1) < this.SourceScript.messages.Count)
+                                {
+                                    if (!(this.SourceScript.messages[ResultScript.messages.Count - 1].category == Script.MessageCategory.Server &&
+                                          this.SourceScript.messages[ResultScript.messages.Count - 1].message == message))
+                                    {//We have a mismatch notification
+                                        if (this.ErrorIndex < 0)
+                                            this.ErrorIndex = ResultScript.messages.Count - 1;
                                     }
                                 }
                             }
