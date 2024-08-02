@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TypeCobol.LanguageServer.JsonRPC;
 using TypeCobol.LanguageServer.Protocol;
 using Newtonsoft.Json.Linq;
@@ -313,6 +312,18 @@ namespace TypeCobol.LanguageServer.Robot.Common.Utilities
                             return null;
                         TextDocumentPosition data = (TextDocumentPosition)parameters.ToObject(type.ParamsType);
                         return data == null ? null : data.uri;
+                    }
+                )
+            );
+
+            //Workspace Apply Edit
+            RequestsWithUriMap.Add(WorkspaceApplyEditRequest.Type.Method, new Tuple<RequestType, UriExtractor<RequestType>>(
+                    WorkspaceApplyEditRequest.Type,
+                    (RequestType type, JObject jsonObject, out object data_params) => {
+                        data_params = null;
+                        JToken parameters = jsonObject[String.Intern("params")];
+                        ApplyWorkspaceEditParams applyWorkspaceEditParams = parameters.ToObject<ApplyWorkspaceEditParams>();
+                        return applyWorkspaceEditParams?.edit?.changes?.FirstOrDefault().Key; // TODO Handle requests affecting multiple files !
                     }
                 )
             );

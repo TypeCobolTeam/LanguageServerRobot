@@ -19,9 +19,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         { get; set; }
 
         /// <summary>
-        /// The Map that associate a Request Id from the Client to its Uri.
+        /// The map that associates a client request id to its Uri.
         /// </summary>
-        Dictionary<string, string> RequestIdUriMap;
+        private readonly Dictionary<string, string> _clientRequestIdToUri;
+
+        /// <summary>
+        /// The map that associates a server request id to its Uri.
+        /// </summary>
+        private readonly Dictionary<string, string> _serverRequestIdToUri;
 
         /// <summary>
         /// The list of valid script of the session.
@@ -36,7 +41,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         {
             IsSaveOnDidClose = true;
             State = ModeState.NotInitialized;
-            RequestIdUriMap = new Dictionary<string, string> ();
+            _clientRequestIdToUri = new Dictionary<string, string>();
+            _serverRequestIdToUri = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -185,8 +191,22 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                                 consumed = true;
                             }
                         }
-                        else if (Utilities.Protocol.IsErrorResponse(jsonObject))
-                        {//Hum...A response receive from the Client this cannot happend ==> Log it.
+                        else if (Utilities.Protocol.IsResponse(jsonObject))
+                        {
+                            string id = Utilities.Protocol.GetRequestId(jsonObject);
+                            if (_serverRequestIdToUri.TryGetValue(id, out uri))
+                            {
+                                consumed = RecordScriptMessage(Script.MessageCategory.Client, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
+                            }
+                            else
+                            {
+                                // No matching request found for this response
+                                LogUnexpectedMessage(Resource.UnexpectedResponseFromClient, message);
+                            }
+                        }
+                        else
+                        {
+                            // Unexpected message kind
                             LogUnexpectedMessage(Resource.UnexpectedResponseFromClient, message);
                         }
                     }
@@ -265,9 +285,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                             }
                             if (!consumed)
                             {
-                                if (RequestIdUriMap.ContainsKey(id))
+                                if (_clientRequestIdToUri.TryGetValue(id, out uri))
                                 {//So this is another response for a request ==> just record it
-                                    uri = RequestIdUriMap[id];
                                     consumed = RecordScriptMessage(Script.MessageCategory.Server, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
                                 }
                                 else
@@ -280,9 +299,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                         else if (Utilities.Protocol.IsErrorResponse(jsonObject))
                         {
                             string id = Utilities.Protocol.GetRequestId(jsonObject);
-                            if (RequestIdUriMap.ContainsKey(id))
+                            if (_clientRequestIdToUri.TryGetValue(id, out uri))
                             {
-                                uri = RequestIdUriMap[id];
                                 consumed = RecordScriptMessage(Script.MessageCategory.Server, Utilities.Protocol.Message_Kind.Response, message, uri, jsonObject);
                             }
                             else
@@ -291,9 +309,20 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                             }
                             RaiseResponseEvent(message, jsonObject);
                         }
+                        else if (Utilities.Protocol.IsRequest(jsonObject))
+                        {
+                            if (Utilities.Protocol.IsMessageWithUri(jsonObject, out uri))
+                            {
+                                consumed = RecordScriptMessage(Script.MessageCategory.Server, Utilities.Protocol.Message_Kind.Notification, message, uri, jsonObject);
+                            }
+                            else
+                            {
+                                LogUnexpectedMessage(Resource.UnexpectedRequestFromServer, message);
+                            }
+                        }
                         else
-                        {//It's a Request from the server??? cannot happend a Server cannot send a request to a client.
-                         // Log this ==>
+                        {
+                            // Unexpected message kind
                             LogUnexpectedMessage(Resource.UnexpectedRequestFromServer, message);
                         }
                     }
@@ -400,21 +429,42 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                 LogWriter?.WriteLine(string.Format(Resource.UriNotAssociatedToAScript, uri));
                 return false;
             }
-            else
-            {   //Record the message
-                if (category == Script.MessageCategory.Client && kind == Utilities.Protocol.Message_Kind.Request)
-                {//This is a request from the client ==> so remember its ID and its associated Uri.
+
+            // Handle request/response uri tracking
+            if (category == Script.MessageCategory.Client)
+            {
+                if (kind == Utilities.Protocol.Message_Kind.Request)
+                {
+                    // This is a request from the client: store uri to find it back later when response come
                     string id = Utilities.Protocol.GetRequestId(jsonObject);
-                    RequestIdUriMap[id] = uri;
+                    _clientRequestIdToUri.Add(id, uri);
                 }
-                else if (category == Script.MessageCategory.Server && kind == Utilities.Protocol.Message_Kind.Response)
-                {//Rmove the reference to the request
+                else if (kind == Utilities.Protocol.Message_Kind.Response)
+                {
+                    // This is a response from the client, remove from map
                     string id = Utilities.Protocol.GetRequestId(jsonObject);
-                    RequestIdUriMap.Remove(id);
+                    _clientRequestIdToUri.Remove(id);
                 }
-                script.AddMessage(category, kind, message, jsonObject);
-                return true;
-            }            
+            }
+            else if (category == Script.MessageCategory.Server)
+            {
+                if (kind == Utilities.Protocol.Message_Kind.Request)
+                {
+                    // This is a request from the server: store uri to find it back later when response is sent
+                    string id = Utilities.Protocol.GetRequestId(jsonObject);
+                    _serverRequestIdToUri.Add(id, uri);
+                }
+                else if (kind == Utilities.Protocol.Message_Kind.Response)
+                {
+                    // This is a response from the server, remove from map
+                    string id = Utilities.Protocol.GetRequestId(jsonObject);
+                    _serverRequestIdToUri.Remove(id);
+                }
+            }
+
+            //Record the message
+            script.AddMessage(category, kind, message, jsonObject);
+            return true;
         }
 
         /// <summary>
