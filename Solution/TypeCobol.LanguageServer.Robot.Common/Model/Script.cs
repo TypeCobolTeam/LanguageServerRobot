@@ -127,21 +127,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Model
         public void AddMessage(MessageCategory category, string message)
         {
             JObject jsonObject = null;
-            Utilities.Protocol.MessageKind(message, out jsonObject);
-            AddMessage(category, message, jsonObject);
-        }
-
-        /// <summary>
-        /// Adda a message
-        /// </summary>
-        /// <param name="category">The Message's category</param>
-        /// <param name="message">The message</param>
-        /// <param name="jsonObject">The Json object corresponding to the message</param>
-        public void AddMessage(MessageCategory category, string message, JObject jsonObject)
-        {
-            Utilities.Protocol.Message_Kind kind = Utilities.Protocol.MessageKind(jsonObject);
+            var kind = Utilities.Protocol.MessageKind(message, out jsonObject);
             AddMessage(category, kind, message, jsonObject);
-
         }
 
         /// <summary>

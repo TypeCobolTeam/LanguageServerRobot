@@ -113,12 +113,17 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// <summary>
         /// Event handlers when a Response to a request is received from the server.
         /// </summary>
-        public event EventHandler< Tuple<string,JObject> > ResponseEvent;
+        public event EventHandler<Tuple<string,JObject>> ResponseEvent;
 
         /// <summary>
         /// Event handlers when a Notification is received from the server.
         /// </summary>
-        public event EventHandler<Tuple<string, JObject> > NotificationEvent;
+        public event EventHandler<Tuple<string, JObject>> NotificationEvent;
+
+        /// <summary>
+        /// Event handlers when a Request is received from the server.
+        /// </summary>
+        public event EventHandler<Tuple<string, JObject>> RequestEvent;
 
         public override void FromClient(string message)
         {
@@ -312,6 +317,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                         else if (Utilities.Protocol.IsRequest(jsonObject))
                         {
                             this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
+                            RaiseRequestEvent(message, jsonObject);
                             if (StopAtFirstError)
                             {
                                 if ((ResultScript.messages.Count - 1) < this.SourceScript.messages.Count)
@@ -358,6 +364,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
             if (NotificationEvent != null)
             {//Notify all listener
                 NotificationEvent(this, new Tuple<string, JObject>(message, jsonObject));
+            }
+        }
+
+        private void RaiseRequestEvent(string message, JObject jsonObject)
+        {
+            if (RequestEvent != null)
+            {//Notify all listener
+                RequestEvent(this, new Tuple<string, JObject>(message, jsonObject));
             }
         }
 

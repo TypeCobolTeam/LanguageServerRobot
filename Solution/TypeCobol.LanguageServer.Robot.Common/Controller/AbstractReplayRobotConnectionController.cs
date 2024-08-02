@@ -2,8 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace TypeCobol.LanguageServer.Robot.Common.Controller
@@ -19,7 +17,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         protected AbstractReplayRobotConnectionController()
         {
             ControllerState = ConnectionState.New;
-            InCommingNotification = new List<string>();
+            IncomingNotifications = new List<string>();
+            IncomingRequests = new List<string>();
         }
 
         /// <summary>
@@ -30,7 +29,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         public AbstractReplayRobotConnectionController(IMessageConnection messageConnection) : base(messageConnection)
         {
             ControllerState = ConnectionState.New;
-            InCommingNotification = new List<string>();
+            IncomingNotifications = new List<string>();
+            IncomingRequests = new List<string>();
         }
 
         private long MyConnectionState;
@@ -80,11 +80,13 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// <summary>
         /// Tracking incoming notifications
         /// </summary>
-        protected List<String> InCommingNotification
-        {
-            get;
-            set;
-        }
+        protected List<string> IncomingNotifications { get; }
+
+        /// <summary>
+        /// Tracking incoming requests
+        /// </summary>
+        protected List<string> IncomingRequests { get; }
+
         event EventHandler StageChangedEvent;
 
         /// <summary>
@@ -124,11 +126,13 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
             {
                 this.ReplayController.ResponseEvent += ReplayControllerResponseEvent;
                 this.ReplayController.NotificationEvent += ReplayControllerNotificationEvent;
+                this.ReplayController.RequestEvent += ReplayControllerRequestEvent;
             }
             else
             {
                 this.ReplayController.ResponseEvent -= ReplayControllerResponseEvent;
                 this.ReplayController.NotificationEvent -= ReplayControllerNotificationEvent;
+                this.ReplayController.RequestEvent -= ReplayControllerRequestEvent;
             }
         }
 
@@ -257,16 +261,32 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// Handle a notification event from the ReplayController
         /// </summary>
         /// <param name="sender">Sender of the message in fact the ReplayController</param>
-        /// <param name="e">The response message.</param>
+        /// <param name="message_jsonObject">Notification message (raw and as JObject)</param>
         protected void ReplayControllerNotificationEvent(object sender, Tuple<string, JObject> message_jsonObject)
         {
             System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsNotification(message_jsonObject.Item2));
-            string uri = null;
-            if (Utilities.Protocol.IsMessageWithUri(message_jsonObject.Item2, out uri))
+            if (Utilities.Protocol.IsMessageWithUri(message_jsonObject.Item2, out _))
             {
-                lock (InCommingNotification)
+                lock (IncomingNotifications)
                 {
-                    InCommingNotification.Add(message_jsonObject.Item1);
+                    IncomingNotifications.Add(message_jsonObject.Item1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handle a notification event from the ReplayController
+        /// </summary>
+        /// <param name="sender">Sender of the message in fact the ReplayController</param>
+        /// <param name="message_jsonObject">Request message (raw and as JObject)</param>
+        protected void ReplayControllerRequestEvent(object sender, Tuple<string, JObject> message_jsonObject)
+        {
+            System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsRequest(message_jsonObject.Item2));
+            if (Utilities.Protocol.IsMessageWithUri(message_jsonObject.Item2, out _))
+            {
+                lock (IncomingRequests)
+                {
+                    IncomingRequests.Add(message_jsonObject.Item1);
                 }
             }
         }
