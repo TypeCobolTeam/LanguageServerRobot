@@ -187,19 +187,15 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// Replay a request
         /// </summary>
         /// <param name="message">The message corresponding to the request</param>
-        /// <param name="jsonObject">The Json object corresponding to the request if any</param>
         /// <returns>The ResponseResultOrError instance of the message</returns>
-        private async Task<ResponseResultOrError> AsyncReplayRequest(string message, RequestType requestType, JObject jsonObject = null)
+        private async Task<ResponseResultOrError> AsyncReplayRequest(string message, RequestType requestType)
         {
             System.Diagnostics.Contracts.Contract.Requires(message != null);
-            if (jsonObject != null)
+            if (!Utilities.Protocol.IsRequest(message, out var jsonObject))
             {
-                System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsRequest(message, out jsonObject));
+                throw new InvalidOperationException($"Invalid request message: '{message}'");
             }
-            else
-            {
-                System.Diagnostics.Contracts.Contract.Requires(Utilities.Protocol.IsRequest(jsonObject));
-            }
+            
             string requestId = Utilities.Protocol.GetRequestId(jsonObject);
             TaskCompletionSource<ResponseResultOrError> taskCompletionSource = new TaskCompletionSource<ResponseResultOrError>();
             ResponseWaitState responseWaitState = new ResponseWaitState(requestType, requestId, taskCompletionSource);
