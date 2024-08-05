@@ -441,9 +441,9 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                 }
                 else if (kind == Utilities.Protocol.Message_Kind.Response)
                 {
-                    // This is a response from the client, remove from map
+                    // This is a response from the client, remove from server map
                     string id = Utilities.Protocol.GetRequestId(jsonObject);
-                    _clientRequestIdToUri.Remove(id);
+                    _serverRequestIdToUri.Remove(id);
                 }
             }
             else if (category == Script.MessageCategory.Server)
@@ -456,9 +456,9 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                 }
                 else if (kind == Utilities.Protocol.Message_Kind.Response)
                 {
-                    // This is a response from the server, remove from map
+                    // This is a response from the server, remove from client map
                     string id = Utilities.Protocol.GetRequestId(jsonObject);
-                    _serverRequestIdToUri.Remove(id);
+                    _clientRequestIdToUri.Remove(id);
                 }
             }
 
