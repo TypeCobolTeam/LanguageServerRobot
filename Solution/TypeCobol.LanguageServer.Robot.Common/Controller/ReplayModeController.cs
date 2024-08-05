@@ -283,13 +283,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                                 RaiseNotificationEvent(message, jsonObject);
                                 if (StopAtFirstError)
                                 {
-                                    if ((ResultScript.messages.Count - 1) < this.SourceScript.messages.Count)
+                                    int lastMessageIndex = ResultScript.messages.Count - 1;
+                                    if (lastMessageIndex < this.SourceScript.messages.Count)
                                     {
-                                        if (!(this.SourceScript.messages[ResultScript.messages.Count - 1].category == Script.MessageCategory.Server &&
-                                            this.SourceScript.messages[ResultScript.messages.Count - 1].message == message))
+                                        if (!(this.SourceScript.messages[lastMessageIndex].category == Script.MessageCategory.Server &&
+                                            this.SourceScript.messages[lastMessageIndex].message == message))
                                         {//We have a mismatch notification
                                             if (this.ErrorIndex < 0)
-                                                this.ErrorIndex = ResultScript.messages.Count - 1;
+                                                this.ErrorIndex = lastMessageIndex;
                                         }
                                     }
                                 }
@@ -302,13 +303,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                             RaiseResponseEvent(message, jsonObject);
                             if (StopAtFirstError)
                             {
-                                if ((ScriptMessageIndex + 1) < this.SourceScript.messages.Count)
+                                int expectedResponseIndex = (int)ScriptMessageIndex + 1;
+                                if (expectedResponseIndex < this.SourceScript.messages.Count)
                                 {
-                                    if (!(this.SourceScript.messages[(int)ScriptMessageIndex + 1].category == Script.MessageCategory.Server &&
-                                        this.SourceScript.messages[(int)ScriptMessageIndex + 1].message == message))
+                                    if (!(this.SourceScript.messages[expectedResponseIndex].category == Script.MessageCategory.Server &&
+                                        this.SourceScript.messages[expectedResponseIndex].message == message))
                                     {   //We have a mismatch Result.
                                         if (this.ErrorIndex < 0)
-                                            this.ErrorIndex = ScriptMessageIndex + 1;
+                                            this.ErrorIndex = expectedResponseIndex;
                                     }
                                 }
                             }
@@ -320,13 +322,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                             RaiseRequestEvent(message, jsonObject);
                             if (StopAtFirstError)
                             {
-                                if ((ResultScript.messages.Count - 1) < this.SourceScript.messages.Count)
+                                int lastMessageIndex = ResultScript.messages.Count - 1;
+                                if (lastMessageIndex < this.SourceScript.messages.Count)
                                 {
-                                    if (!(this.SourceScript.messages[ResultScript.messages.Count - 1].category == Script.MessageCategory.Server &&
-                                          this.SourceScript.messages[ResultScript.messages.Count - 1].message == message))
+                                    if (!(this.SourceScript.messages[lastMessageIndex].category == Script.MessageCategory.Server &&
+                                          this.SourceScript.messages[lastMessageIndex].message == message))
                                     {//We have a mismatch notification
                                         if (this.ErrorIndex < 0)
-                                            this.ErrorIndex = ResultScript.messages.Count - 1;
+                                            this.ErrorIndex = lastMessageIndex;
                                     }
                                 }
                             }

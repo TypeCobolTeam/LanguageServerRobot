@@ -275,7 +275,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         }
 
         /// <summary>
-        /// Handle a notification event from the ReplayController
+        /// Handle a request event from the ReplayController
         /// </summary>
         /// <param name="sender">Sender of the message in fact the ReplayController</param>
         /// <param name="message_jsonObject">Request message (raw and as JObject)</param>
