@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using TypeCobol.LanguageServer.Robot.Common.Utilities;
 using Newtonsoft.Json.Linq;
 
 namespace TypeCobol.LanguageServer.Robot.Common.Model
@@ -27,12 +23,7 @@ namespace TypeCobol.LanguageServer.Robot.Common.Model
             /// <summary>
             /// A Message received from the server
             /// </summary>
-            Server,
-
-            /// <summary>
-            /// A result (response) received from the server.
-            /// </summary>
-            Result
+            Server
         }
 
         public class Message
@@ -136,21 +127,8 @@ namespace TypeCobol.LanguageServer.Robot.Common.Model
         public void AddMessage(MessageCategory category, string message)
         {
             JObject jsonObject = null;
-            Utilities.Protocol.MessageKind(message, out jsonObject);
-            AddMessage(category, message, jsonObject);
-        }
-
-        /// <summary>
-        /// Adda a message
-        /// </summary>
-        /// <param name="category">The Message's category</param>
-        /// <param name="message">The message</param>
-        /// <param name="jsonObject">The Json object corresponding to the message</param>
-        public void AddMessage(MessageCategory category, string message, JObject jsonObject)
-        {
-            Utilities.Protocol.Message_Kind kind = Utilities.Protocol.MessageKind(jsonObject);
+            var kind = Utilities.Protocol.MessageKind(message, out jsonObject);
             AddMessage(category, kind, message, jsonObject);
-
         }
 
         /// <summary>
@@ -167,22 +145,10 @@ namespace TypeCobol.LanguageServer.Robot.Common.Model
             System.Diagnostics.Contracts.Contract.Assert(jsonObject != null);
             System.Diagnostics.Contracts.Contract.Assume(kind == Utilities.Protocol.MessageKind(jsonObject));
             System.Diagnostics.Contracts.Contract.Requires(category == MessageCategory.Client ||
-                                                           category == MessageCategory.Server ||
-                                                           category == MessageCategory.Result);
+                                                           category == MessageCategory.Server);
             System.Diagnostics.Contracts.Contract.Requires(kind == Utilities.Protocol.Message_Kind.Request ||
                                                            kind == Utilities.Protocol.Message_Kind.Notification ||
                                                            kind == Utilities.Protocol.Message_Kind.Response);
-            // client ==> (Request || Notification) && !Result
-            // Server || Result ==> (Notification || Result) && !Request            
-            System.Diagnostics.Contracts.Contract.Requires((kind == Utilities.Protocol.Message_Kind.Response &&
-                                                            (category == MessageCategory.Server ||
-                                                             category == MessageCategory.Result)) ||
-                                                           (kind == Utilities.Protocol.Message_Kind.Request &&
-                                                            category == MessageCategory.Client) ||
-                                                           (kind == Utilities.Protocol.Message_Kind.Notification &&
-                                                            (category == MessageCategory.Client ||
-                                                             category == MessageCategory.Server)));
-
             Message msg = new Message(category, message);
             lock (this)
             {

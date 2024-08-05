@@ -1,9 +1,6 @@
 ﻿using TypeCobol.LanguageServer.JsonRPC;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace TypeCobol.LanguageServer.Robot.Common.Controller
@@ -96,7 +93,9 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
             //1) Send the "textDocument/didOpen" notification
             base.Consume(Script.didOpen);
             //2) Run thru all messages and take in account messages that are client requests or notifications.
-            int nNotificationCount = 0;//Counting notifications
+            //Counting notifications and requests
+            int nNotificationCount = 0;
+            int nRequestCount = 0;
             for(int i = 0; i < Script.messages.Count && (ReplayController.ErrorIndex < 0 || !StopAtFirstError); i++)
             {
                 if (Script.messages[i].category == Model.Script.MessageCategory.Client)
@@ -106,37 +105,25 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                 }    
                 else if (Script.messages[i].category == Model.Script.MessageCategory.Server)
                 {
-                    JObject jsonObject = null;
-                    if (Utilities.Protocol.IsNotification(Script.messages[i].message, out jsonObject))
+                    if (Utilities.Protocol.IsNotification(Script.messages[i].message, out var jsonObject))
                     {
-                        nNotificationCount += 1;
                         //This is a message from the server.
-                        //Wait for a similar notification comming from the server, so here we wait 8s
-                        bool bStop = false;
-                        bool bFailed = false;
-                        DateTime startSecond = DateTime.Now;
-                        do
-                        {                            
-                            lock (InCommingNotification)
-                            {
-                                int count = InCommingNotification.Count;
-                                if (nNotificationCount <= count)
-                                {
-                                    bStop = true;
-                                }
-                            }
-                            if (!bStop)
-                            {
-                                System.Threading.Thread.Sleep(50);
-                                DateTime curSecond = DateTime.Now;
-                                if ((curSecond - startSecond).TotalSeconds >= 8)
-                                {
-                                    bStop = true;
-                                    bFailed = true;
-                                }
-                            }
-                        } while (!bStop);
-                        if (bFailed)
+                        //Wait for a similar notification coming from the server, so here we wait 8s
+                        nNotificationCount++;
+                        if (WaitFor(IncomingNotifications, nNotificationCount))
+                        {
+                            if (ReplayController.ErrorIndex < 0)
+                                ReplayController.ErrorIndex = i;
+                            if (StopAtFirstError)
+                                break;
+                        }
+                    }
+                    else if (Utilities.Protocol.IsRequest(jsonObject))
+                    {
+                        //This is a message from the server.
+                        //Wait for a similar request coming from the server, so here we wait 8s
+                        nRequestCount++;
+                        if (WaitFor(IncomingRequests, nRequestCount))
                         {
                             if (ReplayController.ErrorIndex < 0)
                                 ReplayController.ErrorIndex = i;
@@ -150,6 +137,37 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
             if (ReplayController.ErrorIndex < 0)
                 base.Consume(Script.didClose);
             return ReplayController.ErrorIndex < 0;
+        }
+
+        private bool WaitFor(List<string> incomingMessagesList, int messageCount)
+        {
+            bool bStop = false;
+            bool bFailed = false;
+            DateTime startSecond = DateTime.Now;
+            do
+            {
+                lock (incomingMessagesList)
+                {
+                    int count = incomingMessagesList.Count;
+                    if (messageCount <= count)
+                    {
+                        bStop = true;
+                    }
+                }
+                if (!bStop)
+                {
+                    System.Threading.Thread.Sleep(50);
+                    DateTime curSecond = DateTime.Now;
+                    if ((curSecond - startSecond).TotalSeconds >= 8)
+                    {
+                        // Timeout
+                        bStop = true;
+                        bFailed = true;
+                    }
+                }
+            } while (!bStop);
+
+            return bFailed;
         }
 
         /// <summary>

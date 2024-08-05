@@ -85,5 +85,15 @@ namespace TypeCobol.LanguageServer.Protocol
         /// The server provides rename support.
         /// </summary>
         public bool renameProvider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value which indicates if execute command is supported.
+        /// </summary>
+        public ExecuteCommandOptions executeCommandProvider { get; set; }
+
+        /// <summary>
+        /// Experimental value.
+        /// </summary>
+        public object experimental;
     }
 }

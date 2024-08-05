@@ -2,10 +2,6 @@
 using TypeCobol.LanguageServer.Robot.Common.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace TypeCobol.LanguageServer.Robot.Common.Controller
@@ -117,12 +113,17 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
         /// <summary>
         /// Event handlers when a Response to a request is received from the server.
         /// </summary>
-        public event EventHandler< Tuple<string,JObject> > ResponseEvent;
+        public event EventHandler<Tuple<string,JObject>> ResponseEvent;
 
         /// <summary>
         /// Event handlers when a Notification is received from the server.
         /// </summary>
-        public event EventHandler<Tuple<string, JObject> > NotificationEvent;
+        public event EventHandler<Tuple<string, JObject>> NotificationEvent;
+
+        /// <summary>
+        /// Event handlers when a Request is received from the server.
+        /// </summary>
+        public event EventHandler<Tuple<string, JObject>> RequestEvent;
 
         public override void FromClient(string message)
         {
@@ -212,9 +213,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                                 consumed = true;
                             }
                         }
-                        else if (Utilities.Protocol.IsErrorResponse(jsonObject))
-                        {//Hum...A response receive from the Client this cannot happend ==> Log it.
-                            LogUnexpectedMessage(Resource.UnexpectedResponseFromClient, message);
+                        else if (Utilities.Protocol.IsResponse(jsonObject))
+                        {
+                            this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
+                            consumed = true;
+                        }
+                        else
+                        {
+                            LogUnexpectedMessage(Resource.UnexpectedMessageFromClient, message);
                             //But we must register it has result
                             this.ResultScript.AddMessage(Script.MessageCategory.Client, message);
                             consumed = true;
@@ -277,13 +283,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                                 RaiseNotificationEvent(message, jsonObject);
                                 if (StopAtFirstError)
                                 {
-                                    if ((ResultScript.messages.Count - 1) < this.SourceScript.messages.Count)
+                                    int lastMessageIndex = ResultScript.messages.Count - 1;
+                                    if (lastMessageIndex < this.SourceScript.messages.Count)
                                     {
-                                        if (!(this.SourceScript.messages[ResultScript.messages.Count - 1].category == Script.MessageCategory.Server &&
-                                            this.SourceScript.messages[ResultScript.messages.Count - 1].message == message))
+                                        if (!(this.SourceScript.messages[lastMessageIndex].category == Script.MessageCategory.Server &&
+                                            this.SourceScript.messages[lastMessageIndex].message == message))
                                         {//We have a mismatch notification
                                             if (this.ErrorIndex < 0)
-                                                this.ErrorIndex = ResultScript.messages.Count - 1;
+                                                this.ErrorIndex = lastMessageIndex;
                                         }
                                     }
                                 }
@@ -292,17 +299,37 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
                         }
                         else if (Utilities.Protocol.IsResponse(jsonObject))
                         {
-                            this.ResultScript.AddMessage(Script.MessageCategory.Result, message);
+                            this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
                             RaiseResponseEvent(message, jsonObject);
                             if (StopAtFirstError)
                             {
-                                if ((ScriptMessageIndex + 1) < this.SourceScript.messages.Count)
+                                int expectedResponseIndex = (int)ScriptMessageIndex + 1;
+                                if (expectedResponseIndex < this.SourceScript.messages.Count)
                                 {
-                                    if (!(this.SourceScript.messages[(int)ScriptMessageIndex + 1].category == Script.MessageCategory.Result &&
-                                        this.SourceScript.messages[(int)ScriptMessageIndex + 1].message == message))
+                                    if (!(this.SourceScript.messages[expectedResponseIndex].category == Script.MessageCategory.Server &&
+                                        this.SourceScript.messages[expectedResponseIndex].message == message))
                                     {   //We have a mismatch Result.
                                         if (this.ErrorIndex < 0)
-                                            this.ErrorIndex = ScriptMessageIndex + 1;
+                                            this.ErrorIndex = expectedResponseIndex;
+                                    }
+                                }
+                            }
+                            consumed = true;
+                        }
+                        else if (Utilities.Protocol.IsRequest(jsonObject))
+                        {
+                            this.ResultScript.AddMessage(Script.MessageCategory.Server, message);
+                            RaiseRequestEvent(message, jsonObject);
+                            if (StopAtFirstError)
+                            {
+                                int lastMessageIndex = ResultScript.messages.Count - 1;
+                                if (lastMessageIndex < this.SourceScript.messages.Count)
+                                {
+                                    if (!(this.SourceScript.messages[lastMessageIndex].category == Script.MessageCategory.Server &&
+                                          this.SourceScript.messages[lastMessageIndex].message == message))
+                                    {//We have a mismatch notification
+                                        if (this.ErrorIndex < 0)
+                                            this.ErrorIndex = lastMessageIndex;
                                     }
                                 }
                             }
@@ -340,6 +367,14 @@ namespace TypeCobol.LanguageServer.Robot.Common.Controller
             if (NotificationEvent != null)
             {//Notify all listener
                 NotificationEvent(this, new Tuple<string, JObject>(message, jsonObject));
+            }
+        }
+
+        private void RaiseRequestEvent(string message, JObject jsonObject)
+        {
+            if (RequestEvent != null)
+            {//Notify all listener
+                RequestEvent(this, new Tuple<string, JObject>(message, jsonObject));
             }
         }
 
